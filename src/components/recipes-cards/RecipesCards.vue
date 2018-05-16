@@ -43,16 +43,16 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions } from 'vuex';
 export default {
   props: {
     transformMarkdown: Function
   },
-  computed: { ...mapGetters(["recipes", "hasChanges"]) },
+  computed: { ...mapGetters(['recipes', 'hasChanges']) },
   // st about modules needing to be namespaced to use mapState?
   // computed: mapState('recipesModule', ['recipes']),
   methods: {
-    ...mapActions(["selectRecipe"])
+    ...mapActions(['selectRecipe'])
   }
 };
 </script>

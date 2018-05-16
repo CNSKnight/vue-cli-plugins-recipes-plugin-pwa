@@ -8,14 +8,14 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters } from 'vuex';
 export default {
   data() {
     return {
       infoIcon: '<i class="material-icons">info</i>'
     };
   },
-  computed: mapGetters(["notifications"])
+  computed: mapGetters(['notifications'])
 };
 </script>
 

@@ -1,5 +1,5 @@
-import axios from "axios";
-import { findIndex } from "lodash";
+import axios from 'axios';
+import { findIndex } from 'lodash';
 
 const apiBase = process.env.VUE_APP_RECIPES_APIBASE;
 
@@ -23,14 +23,14 @@ const actions = {
         // transformResponse: []
       });
       if (resp && resp.status === 200) {
-        commit("setCollection", { recipes: resp.data });
+        commit('setCollection', { recipes: resp.data });
       }
     } catch (err) {
       return err;
     }
   },
   selectRecipe({ commit }, recipe) {
-    commit("setSelected", { ...recipe });
+    commit('setSelected', { ...recipe });
   }
 };
 
@@ -42,7 +42,7 @@ const mutations = {
     state.selected = payload;
   },
   update(state, payload) {
-    this.commit("updateListingItem", payload);
+    this.commit('updateListingItem', payload);
   },
   updateListingItem(state, payload) {
     if (payload.id) {

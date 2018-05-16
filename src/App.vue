@@ -31,14 +31,13 @@
 </template>
 
 <script>
-import Notifications from "@/components/notifications/Notifications";
+import Notifications from '@/components/notifications/Notifications';
 export default {
-  name: "app",
+  name: 'app',
   components: {
-    "app-notifications": Notifications
+    'app-notifications': Notifications
   }
 };
 </script>
 
-<style src="./assets/app.css">
-</style>
+<style src="@/assets/app.css"/>

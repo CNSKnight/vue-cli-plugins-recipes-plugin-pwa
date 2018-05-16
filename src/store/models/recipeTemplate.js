@@ -2,42 +2,42 @@
 export default {
   id: undefined,
   acapID: null,
-  creator: "",
+  creator: '',
   creationDate: undefined,
-  originalUrl: "",
-  description: "",
+  originalUrl: '',
+  description: '',
   ingredients: [
     {
-      group: "",
-      qty: "",
-      unit: "",
-      name: "",
+      group: '',
+      qty: '',
+      unit: '',
+      name: '',
       optional: false,
-      preparation: ""
+      preparation: ''
     }
   ],
   method: [
     {
       step: 1,
-      text: ""
+      text: ''
     }
   ],
   published: false,
   publishedDate: undefined,
   updatedDate: undefined,
   rating: 0,
-  subTitle: "",
+  subTitle: '',
   tags: [
     {
       priority: 0,
-      text: ""
+      text: ''
     }
   ],
-  title: "",
+  title: '',
   variations: [
     {
-      text: ""
+      text: ''
     }
   ],
-  notes: ""
+  notes: ''
 };

@@ -8,16 +8,16 @@ const getters = {
 
 const actions = {
   handleError({ commit }, { service, severity, error, parent }) {
-    let errMsg = service + " failed: ";
+    let errMsg = service + ' failed: ';
     if (error instanceof Response) {
       const err = error.error || JSON.stringify(error);
-      errMsg += `${err.status} - ${err.statusText || ""}`;
+      errMsg += `${err.status} - ${err.statusText || ''}`;
     } else {
       errMsg += error.message || error.toString();
     }
-    commit("notify", {
+    commit('notify', {
       service: service,
-      severity: severity || "error",
+      severity: severity || 'error',
       error: errMsg
     });
 

@@ -30,11 +30,11 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
-import RecipesListing from "@/components/recipes-listing/RecipesListing";
-import RecipesCards from "@/components/recipes-cards/RecipesCards";
-import RecipeDetails from "@/components/recipe-details/RecipeDetails";
-import * as MarkdownIt from "markdown-it";
+import { mapActions } from 'vuex';
+import RecipesListing from '@/components/recipes-listing/RecipesListing';
+import RecipesCards from '@/components/recipes-cards/RecipesCards';
+import RecipeDetails from '@/components/recipe-details/RecipeDetails';
+import * as MarkdownIt from 'markdown-it';
 const md = MarkdownIt({
   html: true,
   linkify: false,
@@ -44,9 +44,9 @@ const md = MarkdownIt({
 
 export default {
   components: {
-    "recipes-listing": RecipesListing,
-    "recipes-cards": RecipesCards,
-    "recipe-details": RecipeDetails
+    'recipes-listing': RecipesListing,
+    'recipes-cards': RecipesCards,
+    'recipe-details': RecipeDetails
   },
   data: () => {
     return { showCards: false, isPreAuth: null };
@@ -54,7 +54,6 @@ export default {
   // computed: {...mapGetters(['recipes'])},
   computed: {
     hasRecipes() {
-      console.log(this.$store);
       return this.$store.getters.recipes.length;
     }
   },
@@ -68,7 +67,7 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch("loadRecipes");
+    this.$store.dispatch('loadRecipes');
   }
 };
 </script>

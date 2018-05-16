@@ -2,14 +2,14 @@
 // will be used very frequently. Components are registered using the
 // PascalCased version of their file name.
 
-import Vue from "vue";
-import upperFirst from "lodash/upperFirst";
-import camelCase from "lodash/camelCase";
+import Vue from 'vue';
+import upperFirst from 'lodash/upperFirst';
+import camelCase from 'lodash/camelCase';
 
 // https://webpack.js.org/guides/dependency-management/#require-context
 const requireComponent = require.context(
   // Look for files in the current directory
-  ".",
+  '.',
   // Do not look in subdirectories
   false,
   // Only include "_base-" prefixed .vue files
@@ -25,9 +25,9 @@ requireComponent.keys().forEach(fileName => {
     camelCase(
       fileName
         // Remove the "./_" from the beginning
-        .replace(/^\.\/_/, "")
+        .replace(/^\.\/_/, '')
         // Remove the file extension from the end
-        .replace(/\.\w+$/, "")
+        .replace(/\.\w+$/, '')
     )
   );
   // Globally register the component
