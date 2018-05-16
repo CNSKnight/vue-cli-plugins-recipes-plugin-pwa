@@ -40,9 +40,10 @@
                 <div class="row" v-if="recipe.description">
                     <div class="col s12" :html="transformMarkdown(recipe.description)"></div>
                 </div>
-                <div v-if="recipe.ingredients && recipe.ingredients.length" class="row ">
+                <div v-if="recipe.ingredients && recipe.ingredients.length" class="row">
                     <div class="col s12 ">
-                        <table class="striped ">
+                        <table class="ing striped">
+                            <caption>{{recipe.title}} Ingredients</caption>
                             <thead>
                                 <tr>
                                     <th>Qty</th>
@@ -52,17 +53,22 @@
                                     <th>Optional</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr v-for="(ingredient, idx) in recipe.ingredients" :key="idx">
-                                    <td>{{ingredient.qty}}</td>
-                                    <td>{{ingredient.unit}}</td>
-                                    <td>{{ingredient.name}}</td>
-                                    <td>{{ingredient.preparation}}</td>
-                                    <td>
-                                        <i v-if="ingredient.optional" class="material-icons light-green-text ">check</i>
-                                    </td>
-                                </tr>
-                            </tbody>
+                            <template>
+                                <tbody v-for="(group, idx) in ingredientGroups" :key="idx">
+                                    <tr v-if="ingredientGroups.length > 1 && ingCountByGroup(group)">
+                                        <th colspan="5">{{group == 'default' ? 'Other' : group}}</th>
+                                    </tr>
+                                    <tr v-for="(ing, idx) in recipe.ingredients" v-if="ing.group == group" :key="idx">
+                                        <td>{{ing.qty}}</td>
+                                        <td>{{ing.unit}}</td>
+                                        <td>{{ing.name}}</td>
+                                        <td>{{ing.preparation}}</td>
+                                        <td>
+                                            <i v-if="ing.optional" class="material-icons light-green-text ">check</i>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </template>
                         </table>
                     </div>
                 </div>
@@ -105,13 +111,20 @@
 </template>
 
 <script>
-import dateFormat from "dateformat";
-import { mapGetters } from "vuex";
+import dateFormat from 'dateformat';
+import { mapGetters } from 'vuex';
 export default {
   props: {
     transformMarkdown: Function
   },
-  computed: { ...mapGetters(["recipe", "updatedDate"]) },
+  computed: {
+    ...mapGetters([
+      'recipe',
+      'updatedDate',
+      'ingredientGroups',
+      'ingCountByGroup'
+    ])
+  },
   methods: {
     dateFormated: (date, format) => dateFormat(date, format)
   }
@@ -145,5 +158,11 @@ header {
 .closer:hover {
   background-color: rgba(211, 211, 211, 0.9);
   cursor: pointer;
+}
+table.ing td:nth-child(5) {
+  text-align: center;
+}
+table.ing caption {
+  color: rgb(158, 157, 36);
 }
 </style>

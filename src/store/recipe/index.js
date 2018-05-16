@@ -1,12 +1,12 @@
 // actions commit mutations
 // actions can cantain arbitrary asynchronous operations
-import uiActions from "./uiActions";
-import asyncActions from "./asyncActions";
-import recipeTemplate from "../models/recipeTemplate";
-import { getField, updateField } from "vuex-map-fields";
-import { isEqual, cloneDeep } from "lodash";
-import VuexPersistence from "vuex-persist";
-import Vue from "vue";
+import uiActions from './uiActions';
+import asyncActions from './asyncActions';
+import recipeTemplate from '../models/recipeTemplate';
+import { getField, updateField } from 'vuex-map-fields';
+import { reduce, isEqual, isFinite, cloneDeep, countBy } from 'lodash';
+import VuexPersistence from 'vuex-persist';
+import Vue from 'vue';
 
 const state = {
   staged: cloneDeep(recipeTemplate),
@@ -17,6 +17,28 @@ const state = {
 const getters = {
   recipe(state) {
     return state.recipe;
+  },
+  ingredientGroups(state) {
+    const groups = reduce(
+      state.recipe.ingredients,
+      (accum, ing) => {
+        ing.group && !accum.includes(ing.group) && accum.push(ing.group);
+        return accum;
+      },
+      ['default']
+    );
+    if (groups.length > 1 && groups[groups.length - 1] !== 'default') {
+      const def = groups.splice(groups.indexOf('default'), 1);
+      groups.push(def[0]);
+    }
+    return groups;
+  },
+  ingCountByGroup: ({ recipe }) => group => {
+    const counts = countBy(recipe.ingredients, [
+      'group',
+      group == 'default' ? '' : group
+    ]);
+    return counts.true;
   },
   isModified(state) {
     return !isEqual(state.recipe, state.staged);
@@ -62,25 +84,33 @@ const mutations = {
     Vue.delete(state.modifieds, state.recipe.id);
   },
   updateField,
-  addTo(state, payload) {
-    payload.prop &&
-      state.recipe[payload.prop] &&
-      state.recipe[payload.prop].push(payload.item);
-  },
-  replaceProperty: (state, payload) => {
-    payload.prop && (state.recipe[payload.prop] = payload.val);
-  },
-  setModified: (state, payload) => {
-    if (payload.key) {
-      if (payload.val) {
-        Vue.set(state.modifieds, payload.key, payload.val);
+  // implies augmenting arrays
+  addTo(state, { prop, item, index }) {
+    if (!prop) return;
+    if (state.recipe[prop]) {
+      if (isFinite(index)) {
+        state.recipe[prop].splice(index, 0, item);
       } else {
-        Vue.delete(state.modifieds, payload.key);
+        state.recipe[prop].push(item);
+      }
+    } else {
+      state.recipe[prop] = item;
+    }
+  },
+  replaceProperty: (state, { prop, val }) => {
+    prop && (state.recipe[prop] = val);
+  },
+  setModified: (state, { key, val }) => {
+    if (key) {
+      if (val) {
+        Vue.set(state.modifieds, key, val);
+      } else {
+        Vue.delete(state.modifieds, key);
       }
     }
   },
   update(state, recipe) {
-    this.commit("stage", recipe);
+    this.commit('stage', recipe);
   }
 };
 
@@ -89,8 +119,8 @@ const mutations = {
 const syncModifiedsPlugin = store => {
   // called when the store is initialized
   store.subscribe((mutation, state) => {
-    if (["updateField", "replaceProperty"].indexOf(mutation.type) !== -1) {
-      store.commit("setModified", {
+    if (['updateField', 'replaceProperty'].indexOf(mutation.type) !== -1) {
+      store.commit('setModified', {
         key: state.recipeModule.recipe.id,
         val: cloneDeep(state.recipeModule.recipe)
       });
@@ -99,7 +129,7 @@ const syncModifiedsPlugin = store => {
 };
 const vuexLocal = new VuexPersistence({
   storage: window.localStorage,
-  key: "recipe",
+  key: 'recipe',
   reducer: state => ({ modifieds: state.recipeModule.modifieds })
 });
 

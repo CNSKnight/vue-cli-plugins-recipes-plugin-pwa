@@ -12,25 +12,24 @@
     margin-bottom: 0;
 }
 
-.sr-only {
-    position: absolute;
+.input-field input + label.sr-only {
     width: 1px;
     height: 1px;
     margin: -1px;
     padding: 0;
     overflow: hidden;
     clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
     border: 0;
 }
 
-.sr-only-focusable:active,
-.sr-only-focusable:focus {
-    position: static;
+.input-field input:focus + label.sr-only-focusable {
     width: auto;
     height: auto;
     margin: 0;
     overflow: visible;
     clip: auto;
+    white-space: normal;
 }
 
 .secondary-content.left {
@@ -68,15 +67,19 @@ legend,
     color: rgb(158, 157, 36);
 }
 
-.recipe-card [ngmodelgroup]+[ngmodelgroup] {
+.recipe-card fieldset.col {
+    padding-top: 1em;
+}
+
+.recipe-card .ing + .ing {
     border-top: 3px dashed rgb(224, 224, 224);
 }
 
-.recipe-card fieldset .row {
+.recipe-card fieldset > .row {
     margin-bottom: 0;
 }
 
-.recipe-card fieldset .row:last-child {
+.recipe-card fieldset > .row:last-child {
     margin-bottom: 0.5rem;
 }
 
@@ -152,4 +155,13 @@ form .input-field input[type="checkbox"]+label {
 form .input-field input[type="checkbox"]+label {
     color: rgb(136, 27, 237);
     pointer-events: auto;
+}
+.tip-wrapper {
+    display: fles;
+}
+.tip-wrapper.centered {
+    justify-content: center;
+}
+.tip {
+    color: #424242;
 }

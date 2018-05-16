@@ -1,4 +1,4 @@
-import { isEmpty, isObject } from "lodash";
+import { isEmpty, isObject } from 'lodash';
 
 export default {
   /*
@@ -51,5 +51,9 @@ export default {
       }
     });
     return valids;
+  },
+
+  groupIngredients(ingredients) {
+    return ingredients;
   }
 };

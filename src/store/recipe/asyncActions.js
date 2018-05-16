@@ -1,9 +1,9 @@
-import axios from "axios";
-import recipeTemplate from "../models/recipeTemplate";
-import helpers from "./actionHelpers";
-import { cloneDeep } from "lodash";
+import axios from 'axios';
+import recipeTemplate from '../models/recipeTemplate';
+import helpers from './actionHelpers';
+import { cloneDeep } from 'lodash';
 
-const isProd = process.env.NODE_ENV === "production";
+const isProd = process.env.NODE_ENV === 'production';
 const apiBase = process.env.VUE_APP_RECIPES_APIBASE;
 const acap = (isProd && parent.acap) || {
   ADMIN_TAPPADS: {
@@ -11,7 +11,7 @@ const acap = (isProd && parent.acap) || {
       getInfo() {
         return {
           ad_unit_id: 27,
-          ad_unit_name: "_Nu_Testr_"
+          ad_unit_name: '_Nu_Testr_'
         };
       },
       setMessages(msg) {
@@ -35,7 +35,7 @@ export default {
         const recipe = cloneDeep(recipeTemplate);
         recipe.acapID = info.ad_unit_id;
         recipe.title = info.ad_unit_name;
-        commit("stage", recipe);
+        commit('stage', recipe);
       }
     }
 
@@ -47,33 +47,33 @@ export default {
       // may not get back an existing
       try {
         const resp = await axios({
-          url: apiBase + '/findOne?filter={"where":{"acapID":' + acapID + "}}"
+          url: apiBase + '/findOne?filter={"where":{"acapID":' + acapID + '}}'
         });
         if (resp.status === 200 && resp.data && resp.data.id) {
           const cached = getters.getModified(resp.id);
           if (cached) {
             if (resp.data.updatedDate <= cached.updatedDate) {
-              return commit("stage", cached);
+              return commit('stage', cached);
             } else {
-              dispatch("setModified", {
+              dispatch('setModified', {
                 key: state.recipeModule.recipe.id,
                 val: undefined
               });
             }
           }
-          commit("stage", resp.data);
+          commit('stage', resp.data);
         } else {
-          dispatch("handleError", {
-            service: "recipe:load",
-            severity: "error",
+          dispatch('handleError', {
+            service: 'recipe:load',
+            severity: 'error',
             error: `Error ${resp.status}: ${resp.statusText}`,
             parent: contUnitsMgr
           });
         }
       } catch (err) {
-        dispatch("handleError", {
-          service: "loadRecipe",
-          severity: "fatal",
+        dispatch('handleError', {
+          service: 'loadRecipe',
+          severity: 'fatal',
           error: err,
           parent: contUnitsMgr
         });
@@ -83,14 +83,14 @@ export default {
   async save({ state, commit, dispatch }) {
     let recipe = { ...state.recipe };
     if (!recipe.id) {
-      return dispatch("handleError", {
-        service: "save",
-        err: "Recipe has no ID? " + JSON.stringify(recipe),
+      return dispatch('handleError', {
+        service: 'save',
+        err: 'Recipe has no ID? ' + JSON.stringify(recipe),
         parent: contUnitsMgr
       });
     }
     let url = apiBase;
-    url += isProd ? "/preAuth/" : "/";
+    url += isProd ? '/preAuth/' : '/';
     url += recipe.id;
 
     delete recipe.id;
@@ -98,26 +98,26 @@ export default {
     let params = isProd
       ? {
           recipe,
-          actionStatus: "cont-units:recipes:update"
+          actionStatus: 'cont-units:recipes:update'
         }
       : recipe;
 
     try {
       const resp = await axios.put(url, params);
       if (resp.status === 200) {
-        resp.data && commit("update", resp.data);
+        resp.data && commit('update', resp.data);
       } else {
-        dispatch("handleError", {
-          service: "recipes:update",
-          severity: "error",
+        dispatch('handleError', {
+          service: 'recipes:update',
+          severity: 'error',
           error: `Error ${resp.status}: ${resp.statusText}`,
           parent: contUnitsMgr
         });
       }
     } catch (err) {
-      dispatch("handleError", {
-        service: "recipes:update",
-        severity: "fatal",
+      dispatch('handleError', {
+        service: 'recipes:update',
+        severity: 'fatal',
         error: err,
         parent: contUnitsMgr
       });

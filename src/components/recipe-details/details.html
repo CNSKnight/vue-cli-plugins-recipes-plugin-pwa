@@ -35,8 +35,8 @@
     -->
             <div class="row">
                 <div class="input-field col s12">
-                    <input class="" name="subTitle" v-model="subTitle" placeholder="Recipe Sub-Title" type="text">
-                    <label>Recipe Sub-Title
+                    <input id="rSubTitle" name="subTitle" v-model="subTitle" placeholder="Recipe Sub-Title" type="text">
+                    <label for="rSubTitle">Recipe Sub-Title
                         <em>(optional)</em>
                     </label>
                 </div>
@@ -44,70 +44,33 @@
 
             <div class="row">
                 <div class="input-field col s12">
-                    <input name="creator" v-model="creator" placeholder="Creator Name/Attribution" type="text">
-                    <label>Original Creator</label>
+                    <input id="rCreator" name="creator" v-model="creator" placeholder="Creator Name/Attribution" type="text">
+                    <label for="rCreator">Original Creator</label>
                 </div>
             </div>
             <div class="row">
                 <div class="input-field col s12">
-                    <input name="originalUrl" v-model="originalUrl" placeholder="Address where originally published" type="url">
-                    <label>Originaly Published URL</label>
+                    <input id="rOrigUrl" name="originalUrl" v-model="originalUrl" placeholder="Address where originally published" type="url">
+                    <label for="rOrigUrl">Originaly Published URL</label>
                 </div>
             </div>
             <div class="row">
                 <div class="input-field col s12">
-                    <textarea class="materialize-textarea" name="description" placeholder="Brief and Catchy Description" rows="2" v-model="description"></textarea>
-                    <label>Description</label>
+                    <textarea id="rDescript" class="materialize-textarea" name="description" placeholder="Brief and Catchy Description" rows="2"
+                        v-model="description"></textarea>
+                    <label for="rDescript">Description</label>
                 </div>
             </div>
             <!--rating-comp-->
             <!--recipe-tips-->
-            <div class="row">
-                <fieldset class="col s12">
-                    <legend>Ingredients</legend>
-                    <div v-for="(ingredient, idx) in ingredients" :key="idx">
-                        <div class="row">
-                            <div class="input-field col s6 m3">
-                                <input :name="`ing-${idx}-qty`" v-model="ingredient.qty" placeholder="qty?" type="text">
-                            </div>
-                            <div class="input-field col s6 m3">
-                                <input :name="`ing-${idx}-unit`" v-model="ingredient.unit" placeholder="Units?" type="text">
-                            </div>
-                            <div class="input-field col s6 m3 center-align">
-                                <input :id="`ing-${idx}-opt`" :name="`ing-${idx}-opt`" v-model="ingredient.optional" placeholder="optional?" type="checkbox">
-                                <label :for="`ing-${idx}-opt`">Optional?</label>
-                            </div>
-                            <div class="input-field col s6 m3 center-align">
-                                <button class="btn-flat btn-sm red-text" type="button" @click="deleteItem('ingredients', idx)">
-                                    <i class="material-icons">delete</i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="input-field col s12 m6">
-                                <input :name="`ing-${idx}-name`" v-model="ingredient.name" placeholder="Name?" type="text">
-                            </div>
-                            <div class="input-field col s12 m6">
-                                <input :name="`ing-${idx}-prep`" v-model="ingredient.preparation" placeholder="Preparation?" type="text">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col s12 center-align">
-                            <button class="btn btn-sm grey lighten-5" type="button" @click="addItem('ingredients')" title="adds an Ingredient to a group">
-                                <i class="material-icons">add</i>
-                            </button>
-                        </div>
-                    </div>
-                </fieldset>
-            </div>
+            <ingredient-groups @addItem="addItem" @deleteItem="deleteItem" />
             <div class="row">
                 <fieldset class="col s12">
                     <legend>Method Steps</legend>
                     <div class="row" v-for="(method, idx) in method" :key="idx">
                         <input :name="`method-${idx}-step`" v-model="method.step" hidden>
                         <div class="input-field col s12 m10">
-                            <textarea class="materialize-textarea" :id="getTAID(id, idx)" name="`method-${idx}-text`" v-model="method.text" placeholder="Step Content"></textarea>
+                            <textarea :id="getTAID(id, idx)" class="materialize-textarea" name="`method-${idx}-text`" v-model="method.text" placeholder="Step Content"></textarea>
                             <label :for="getTAID(id, idx)">{{getTALabel(idx)}}</label>
                         </div>
                         <div class="input-field col s12 m2 center-align">
@@ -118,7 +81,7 @@
                     </div>
                     <div class="row">
                         <div class="col s12 center-align">
-                            <button class="btn btn-sm grey lighten-5" type="button" @click="addItem('method')">
+                            <button class="btn btn-sm grey lighten-5" type="button" @click="addItem({prop: 'method'})">
                                 <i class="material-icons">add</i>
                             </button>
                         </div>
@@ -140,7 +103,7 @@
                     </div>
                     <div class="row">
                         <div class="col s12 center-align">
-                            <button class="btn btn-sm grey lighten-5" type="button" @click="addItem('variations')">
+                            <button class="btn btn-sm grey lighten-5" type="button" @click="addItem({prop: 'variations'})">
                                 <i class="material-icons">add</i>
                             </button>
                         </div>
@@ -162,7 +125,7 @@
                     </div>
                     <div class="row">
                         <div class="col s12 center-align">
-                            <button class="btn btn-sm grey lighten-5" type="button" @click="addItem('tags')">
+                            <button class="btn btn-sm grey lighten-5" type="button" @click="addItem({prop: 'tags'})">
                                 <i class="material-icons">add</i>
                             </button>
                         </div>
