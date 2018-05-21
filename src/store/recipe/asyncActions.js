@@ -20,14 +20,13 @@ const acap = (isProd && parent.acap) || {
     }
   }
 };
-
 const contUnitsMgr = acap.ADMIN_TAPPADS && acap.ADMIN_TAPPADS.contUnitsMgr;
 
 export default {
   // used outside of listing context to load a single
   async loadRecipe({ state, getters, commit, dispatch }, recipe) {
     let acapID = recipe && recipe.acapID;
-    if (!acapID && !isProd) {
+    if (acapID === undefined) {
       // pull from the contUnitsMgr
       const info = contUnitsMgr && contUnitsMgr.getInfo();
       acapID = info && info.ad_unit_id;
@@ -97,9 +96,9 @@ export default {
     recipe = helpers.filterRecipe(recipe);
     let params = isProd
       ? {
-          recipe,
-          actionStatus: 'cont-units:recipes:update'
-        }
+        recipe,
+        actionStatus: 'cont-units:recipes:update'
+      }
       : recipe;
 
     try {

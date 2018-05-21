@@ -62,7 +62,7 @@
                 <!--rating-comp-->
                 <!--recipe-tips-->
                 <ingredient-groups @addItem="addItem" @deleteItem="deleteItem" />
-                <div class="row">
+                <div class="row mets">
                     <fieldset class="col s12">
                         <legend>Method Steps</legend>
                         <div class="row" v-for="(method, idx) in method" :key="idx">
@@ -86,7 +86,7 @@
                         </div>
                     </fieldset>
                 </div>
-                <div class="row">
+                <div class="row vars">
                     <fieldset class="col s12">
                         <legend>Recipe Variations</legend>
                         <div class="row" v-for="(variation, idx) in variations" :key="idx">
@@ -108,7 +108,7 @@
                         </div>
                     </fieldset>
                 </div>
-                <div class="row">
+                <div class="row tags">
                     <fieldset class="col s12">
                         <legend>Tags</legend>
                         <div class="row" v-for="(tag, idx) in tags" :key="idx">
@@ -130,7 +130,7 @@
                         </div>
                     </fieldset>
                 </div>
-                <div class="row">
+                <div class="row notes">
                     <fieldset class="col s12">
                         <legend>*Notes</legend>
                         <div class="row">

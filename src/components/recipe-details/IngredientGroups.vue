@@ -4,7 +4,7 @@
             <fieldset class="col s12">
                 <legend v-text="group !== 'default' ? 'Ingredients Group' : 'Ingredients'" />
                 <template v-if="group !== 'default'">
-                    <div class="row">
+                    <div class="row group">
                         <div class="input-field col s12">
                             <input :id="'group-'+idx" :value="group == 'Unnamed' ? '' : group" @input="updateGroupName(idx, $event.target.value)"
                                 :idx="idx" type="text" placeholder="Unnamed Group">

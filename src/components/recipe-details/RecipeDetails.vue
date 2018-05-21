@@ -71,7 +71,6 @@ export default {
       return label.toString().concat('-rTA-', count.toString());
     },
     addItem(payload) {
-      debugger;
       this.$store.dispatch('addItem', payload);
     },
     deleteItem(payload) {
@@ -95,16 +94,38 @@ export default {
 };
 </script>
 
-<style>
-.formview.fade.in {
-  opacity: 1;
+<style lang="scss">
+.formview {
+  .fade.in {
+    opacity: 1;
+  }
+  .fade.out {
+    opacity: 0;
+  }
+  .fade {
+    transition: opacity 0.8s;
+  }
+
+  fieldset.col {
+    padding-top: 1em;
+  }
+
+  .group + .ing,
+  .ing + .ing {
+    border-top: 3px dashed rgb(224, 224, 224);
+  }
+
+  fieldset > .row {
+    margin-bottom: 0;
+    &:last-child {
+      margin-bottom: 0.5rem;
+    }
+  }
+  .vars textarea {
+    padding-bottom: 0;
+  }
 }
-.formview.fade.out {
-  opacity: 0;
-}
-.formview.fade {
-  transition: opacity 0.8s;
-}
+
 /* --------------------------------- */
 .preview {
   position: absolute;
