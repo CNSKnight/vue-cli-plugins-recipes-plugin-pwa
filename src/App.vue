@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div>
     <header>
       <nav class="lime darken-2 mb-lg">
         <div class="nav-wrapper">
