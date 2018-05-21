@@ -4,7 +4,7 @@ import Home from '@/views/Home.vue';
 import About from '@/views/About.vue';
 // import Hello from '@/components/Hello'
 import Recipes from '@/components/recipes/Recipes';
-import RecipeDetails from '@/components/recipe-details/RecipeDetails';
+import RecipeDetailsPlugin from '@/components/recipe-details/RecipeDetailsPlugin';
 
 Vue.use(Router);
 
@@ -28,7 +28,7 @@ export default new Router({
     {
       path: '/recipe-details',
       name: 'Details',
-      component: RecipeDetails
+      component: RecipeDetailsPlugin
     }
   ]
 });

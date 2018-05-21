@@ -11,7 +11,7 @@
               <router-link to="/recipes">Recipes</router-link>
             </li>
             <li>
-              <router-link to="/details">Details</router-link>
+              <router-link to="/recipe-details">Details</router-link>
             </li>
           </ul>
         </div>
