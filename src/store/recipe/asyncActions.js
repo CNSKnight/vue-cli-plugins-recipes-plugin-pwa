@@ -26,7 +26,7 @@ const contUnitsMgr = acap.ADMIN_TAPPADS && acap.ADMIN_TAPPADS.contUnitsMgr;
 export default {
   // used outside of listing context to load a single
   async loadRecipe({ state, getters, commit, dispatch }, recipe) {
-    let acapID = recipe.acapID;
+    let acapID = recipe && recipe.acapID;
     if (!acapID && !isProd) {
       // pull from the contUnitsMgr
       const info = contUnitsMgr && contUnitsMgr.getInfo();
