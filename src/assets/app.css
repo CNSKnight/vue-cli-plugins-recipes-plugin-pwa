@@ -1,3 +1,6 @@
+.contained {
+    position: relative;
+}
 .mb-sm {
     margin-bottom: 0.5rem;
 }
@@ -157,7 +160,7 @@ form .input-field input[type="checkbox"]+label {
     pointer-events: auto;
 }
 .tip-wrapper {
-    display: fles;
+    display: flex;
 }
 .tip-wrapper.centered {
     justify-content: center;
