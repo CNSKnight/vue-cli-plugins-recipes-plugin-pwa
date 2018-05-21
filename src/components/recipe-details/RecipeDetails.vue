@@ -96,14 +96,14 @@ export default {
 
 <style lang="scss">
 .formview {
-  .fade.in {
-    opacity: 1;
-  }
-  .fade.out {
-    opacity: 0;
-  }
-  .fade {
+  &.fade {
     transition: opacity 0.8s;
+    &.in {
+      opacity: 1;
+    }
+    &.out {
+      opacity: 0;
+    }
   }
 
   fieldset.col {
