@@ -70,22 +70,6 @@ legend,
     color: rgb(158, 157, 36);
 }
 
-.recipe-card fieldset.col {
-    padding-top: 1em;
-}
-
-.recipe-card .ing + .ing {
-    border-top: 3px dashed rgb(224, 224, 224);
-}
-
-.recipe-card fieldset > .row {
-    margin-bottom: 0;
-}
-
-.recipe-card fieldset > .row:last-child {
-    margin-bottom: 0.5rem;
-}
-
 details-plugin .modal {
     max-height: 97%;
     min-width: 67%;
