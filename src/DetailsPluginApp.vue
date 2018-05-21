@@ -1,7 +1,5 @@
 <template>
-    <div id="app">
-        <header>
-        </header>
+    <div>
         <aside>
             <div class="row">
                 <div class="col s12">
