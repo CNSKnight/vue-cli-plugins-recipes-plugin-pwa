@@ -18,6 +18,9 @@ const getters = {
   recipe(state) {
     return state.recipe;
   },
+  recipeId(state) {
+    return state.recipe.acapID;
+  },
   ingredientGroups(state) {
     const groups = reduce(
       state.recipe.ingredients,
