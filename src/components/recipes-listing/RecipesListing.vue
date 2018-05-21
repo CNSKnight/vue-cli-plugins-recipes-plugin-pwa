@@ -20,9 +20,6 @@
 import { mapGetters, mapActions } from 'vuex';
 export default {
   computed: { ...mapGetters(['recipes', 'hasChanges']) },
-  created() {
-    this.$store.dispatch('loadRecipes');
-  },
   // st about modules needing to be namespaced to use mapState?
   // computed: mapState('recipesModule', ['recipes']),
   methods: {
