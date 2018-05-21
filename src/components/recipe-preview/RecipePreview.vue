@@ -133,7 +133,6 @@ export default {
 
 <style scoped>
 .preview {
-  position: relative;
   padding-right: 0.8em;
   background-color: rgba(251, 251, 251, 0.9);
 }

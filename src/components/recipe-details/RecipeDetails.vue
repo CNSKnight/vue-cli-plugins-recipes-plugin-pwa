@@ -36,15 +36,30 @@ export default {
       return true;
     }
   },
-  watch: {
-    // data(newValue, oldValue) {}
+  created() {
+    this.preview = false;
+  },
+  mounted() {
+    this.onFormUpdated();
   },
   updated() {
-    this.$nextTick(() => window && window.Materialize.updateTextFields());
+    this.onFormUpdated();
   },
-
+  watch: {
+    $route(to, from) {
+      console.log(to, '|', from);
+    }
+  },
+  // RecipeDetails does not concern itself with sourcing it's data
+  // ie whatever employs RecipeDetails should init data used here
   methods: {
-    ...mapActions(['loadRecipe', 'save', 'cancel', 'reset', 'addTo']),
+    onFormUpdated() {
+      window &&
+        window.Materialize &&
+        window.Materialize.updateTextFields &&
+        this.$nextTick(() => window.Materialize.updateTextFields());
+    },
+    ...mapActions(['save', 'cancel', 'reset', 'addTo']),
     // get textarea label
     getTALabel(idx) {
       return 'Step #'.concat(padStart((idx + 1).toString(), 2, '0'));
@@ -70,6 +85,7 @@ export default {
       this.$store.dispatch('save');
     },
     openPreview() {
+      window && window.scrollTo({ top: 0 });
       this.preview = true;
     },
     closePreview() {
@@ -80,7 +96,19 @@ export default {
 </script>
 
 <style>
+.formview.fade.in {
+  opacity: 1;
+}
+.formview.fade.out {
+  opacity: 0;
+}
+.formview.fade {
+  transition: opacity 0.8s;
+}
+/* --------------------------------- */
 .preview {
+  position: absolute;
+  top: 0;
   overflow: hidden;
 }
 .preview-enter,
@@ -94,6 +122,6 @@ export default {
 }
 .preview-enter-active,
 .preview-leave-active {
-  transition: transform 1s, opacity 2s;
+  transition: transform 1s, opacity 0.8s;
 }
 </style>
