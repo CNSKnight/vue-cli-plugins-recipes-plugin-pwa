@@ -1,10 +1,8 @@
 <template>
-    <div>
-        <aside>
-            <div class="row">
-                <div class="col s12">
-                    <app-notifications/>
-                </div>
+    <div class="detailsPlugin">
+        <aside class="row">
+            <div class="col s12">
+                <app-notifications/>
             </div>
         </aside>
         <main>
@@ -25,4 +23,4 @@ export default {
 };
 </script>
 
-<style src="@/assets/app.css"/>
+<style src="@/assets/details-plugin.scss"/>
