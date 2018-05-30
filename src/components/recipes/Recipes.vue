@@ -1,11 +1,11 @@
 <template>
-  <div class="row">
+  <div class="row recipes">
     <div class="col s12 m5 stack">
       <template v-if="!hasRecipes">
         <p v-if="!hasRecipes">No recipes were provided</p>
       </template>
       <template v-else>
-        <ul class="recipes collection with-header">
+        <ul class="listing collection with-header">
           <li class="collection-header">
             <h4 class="action-bar">Recipes
               <button class="btn btn-flat right" @click="toggle('showCards')">
@@ -73,10 +73,11 @@ export default {
 </script>
 
 <style scoped>
+/* these all specific to transitions setup */
 .stack {
   position: relative;
 }
-.recipes {
+.listing {
   z-index: 2;
 }
 .preview {
