@@ -45,11 +45,6 @@ export default {
   updated() {
     this.onFormUpdated();
   },
-  watch: {
-    $route(to, from) {
-      console.log(to, '|', from);
-    }
-  },
   // RecipeDetails does not concern itself with sourcing it's data
   // ie whatever employs RecipeDetails should init data used here
   methods: {
@@ -84,7 +79,12 @@ export default {
       this.$store.dispatch('save');
     },
     openPreview() {
-      window && window.scrollTo({ top: 0 });
+      const modal = window.$$ && window.$$('.modal-content');
+      if (modal && modal.length) {
+        modal.scrollto({ top: 0 });
+      } else if (window) {
+        window.scrollTo({ top: 0 });
+      }
       this.preview = true;
     },
     closePreview() {
@@ -95,6 +95,9 @@ export default {
 </script>
 
 <style lang="scss">
+.recipes .container {
+  width: auto;
+}
 .formview {
   &.fade {
     transition: opacity 0.8s;
