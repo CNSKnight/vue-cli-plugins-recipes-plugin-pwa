@@ -1,10 +1,11 @@
 {
-  "name": "recipes-cli-plugins",
+  "name": "vue-cli-plugins-recipes-plugin-pwa",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "build-plugin-lib": "vue-cli-service build --target lib --name detailsPluginAppLib ./src/detailsPlugin.js",
     "test": "vue-cli-service test",
     "e2e": "vue-cli-service e2e",
     "lint": "vue-cli-service lint"
