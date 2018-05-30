@@ -41,3 +41,4 @@ export default {
 </script>
 
 <style src="@/assets/app.css"/>
+<style src="@/assets/details-plugin.scss"/>
