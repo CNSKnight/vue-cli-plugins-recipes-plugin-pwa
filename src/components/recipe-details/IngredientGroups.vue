@@ -13,8 +13,8 @@
                     </div>
                 </template>
                 <div v-if="group == 'default' && !ingCountByGroup(group)" class="tip-wrapper centered mb-lg">
-                    <p class="tip">Here you can:<br>- Add a new "named" Recipes Group<br>- Add
-                        Recipes to this "default" Group</p>
+                    <p class="tip">Here you can:<br>- Add a new "named" Ingredients Group<br>-
+                        Add Recipes to this "default" Group</p>
                 </div>
                 <group-ingredients v-for="(ingredient, idx) in ingredients" :key="idx" v-if="isInGroup(group, ingredient.group)"
                     :ingredient="ingredient" :idx="idx" :canDrag="ingCountByGroup(group)>1"
