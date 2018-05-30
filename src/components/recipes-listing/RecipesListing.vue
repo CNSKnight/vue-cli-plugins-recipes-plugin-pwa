@@ -4,8 +4,7 @@
     <li class="collection-item" :class="{active: recipes.selected && (recipes.selected.id === recipe.id)}"
       v-for="recipe in recipes" :key="recipe.acapID" @click="selectRecipe(recipe)">
       <span class="secondary-content left">
-        <i class="material-icons amber-text" v-if="! recipe.published">visibility_off</i>
-        <i class="material-icons green-text" v-if="recipe.published">visibility</i>
+        <i class="material-icons amber-text text-lighten-2" v-text="recipe.published ? 'visibility' : 'visibility_off'"></i>
       </span>
       <span v-if="hasChanges(recipe.id)" class="modified">M</span>
       {{recipe.title}}
@@ -40,5 +39,8 @@ span.modified {
   border-radius: 12px;
   margin-right: 0.3em;
   font-variant: small-caps;
+}
+.secondary-content.left {
+  margin-right: 0.5em;
 }
 </style>
