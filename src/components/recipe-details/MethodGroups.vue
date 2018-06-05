@@ -1,6 +1,9 @@
 <template>
-    <div>
+    <div id="method-groups">
         <div class="row" v-for="(group, idx) in methodGroups" :key="idx">
+            <div v-if="group == lastGroup" class="col s12">
+                <notifs-local />
+            </div>
             <fieldset class="col s12">
                 <legend v-text="group !== 'default' ? 'Method Group' : 'Method'" />
                 <template v-if="group !== 'default'">
@@ -49,12 +52,14 @@
 </template>
 
 <script>
+import NotificationsLocal from '@/components/notifications/NotificationsLocal';
 import GroupMethod from './GroupMethod';
 import { mapGetters } from 'vuex';
 import { mapFields } from 'vuex-map-fields';
 import { isEqual, isObject } from 'lodash';
 export default {
   components: {
+    'notifs-local': NotificationsLocal,
     'group-method': GroupMethod
   },
   data() {
@@ -87,9 +92,8 @@ export default {
     // Remember! the parent component must be listening for the 'event' via @event="parentHandler"
     // we also don't otherwise need to define that 'event' on our props
     onEvent(event, prop, attr, val) {
-      const payload = isObject(prop)
-        ? { ...prop, context: this.$el }
-        : { prop, attr, val, context: this.$el };
+      const payload = isObject(prop) ? { ...prop } : { prop, attr, val };
+      this.$el.id && (payload.context = this.$el.id);
       this.$emit(event, payload);
     }
   },

@@ -70,7 +70,7 @@ export default {
             service: 'recipe:load',
             severity: 'error',
             error: `Error ${resp.status}: ${resp.statusText}`,
-            parent: contUnitsMgr
+            context: contUnitsMgr
           });
         }
       } catch (err) {
@@ -78,7 +78,7 @@ export default {
           service: 'loadRecipe',
           severity: 'fatal',
           error: err,
-          parent: contUnitsMgr
+          context: contUnitsMgr
         });
       }
     }
@@ -89,7 +89,7 @@ export default {
       return dispatch('handleError', {
         service: 'save',
         err: 'Recipe has no ID? ' + JSON.stringify(recipe),
-        parent: contUnitsMgr
+        context: contUnitsMgr
       });
     }
     let url = apiBase;
@@ -114,7 +114,7 @@ export default {
           service: 'recipes:update',
           severity: 'error',
           error: `Error ${resp.status}: ${resp.statusText}`,
-          parent: contUnitsMgr
+          context: contUnitsMgr
         });
       }
     } catch (err) {
@@ -122,7 +122,7 @@ export default {
         service: 'recipes:update',
         severity: 'fatal',
         error: err,
-        parent: contUnitsMgr
+        context: contUnitsMgr
       });
     }
   }

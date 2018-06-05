@@ -1,13 +1,20 @@
+import { findIndex } from 'lodash';
+
 const state = {
   notifications: []
 };
 
 const getters = {
-  notifications: state => state.notifications
+  notifications: state => state.notifications,
+  localNotifs: ({ notifications }) => (context) => {
+    return notifications.filter(
+      notif => notif.context == context
+    );
+  }
 };
 
 const actions = {
-  handleError({ commit }, { service, severity, error, parent }) {
+  handleError({ commit }, { service, severity, error, context, timeout, parent = context }) {
     let errMsg = service + ' failed: ';
     if (error instanceof Response) {
       const err = error.error || JSON.stringify(error);
@@ -15,11 +22,19 @@ const actions = {
     } else {
       errMsg += error.message || error.toString();
     }
+    const cancelAt = timeout && Date.now() + timeout;
     commit('notify', {
-      service: service,
+      service,
       severity: severity || 'error',
-      error: errMsg
+      error: errMsg,
+      context,
+      cancelAt
     });
+    if (cancelAt) {
+      setTimeout(() => {
+        commit('notify', { service, cancelAt });
+      }, timeout)
+    }
 
     if (parent && parent.setMessages) {
       if (error.status !== 403 && error.status !== 404) {
@@ -35,11 +50,11 @@ const actions = {
 const mutations = {
   notify(state, payload) {
     let notifs = [...state.notifications];
-    const idx = notifs.indexOf(payload);
+    const idx = findIndex(notifs, payload);
     if (idx > -1) {
       notifs.splice(idx, 1);
     }
-    notifs.push(payload);
+    payload.error && notifs.push(payload);
     state.notifications = notifs;
   }
 };

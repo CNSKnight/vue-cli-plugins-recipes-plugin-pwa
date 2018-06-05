@@ -33,7 +33,8 @@ export default {
           service: 'addIngredient',
           severity: 'warn',
           error: 'Please first name the Unnamed Ingredients Group.',
-          context: context
+          context: context,
+          timeout: 5000
         });
       }
       ing.group = 'Unnamed';
@@ -58,7 +59,8 @@ export default {
           service: 'addMethod',
           severity: 'warn',
           error: 'Please first name the Unnamed Methods group.',
-          context: context
+          context: context,
+          timeout: 5000
         });
       }
       met.group = 'Unnamed';

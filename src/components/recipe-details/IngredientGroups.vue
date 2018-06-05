@@ -1,6 +1,9 @@
 <template>
-    <div>
+    <div id="ing-groups">
         <div class="row" v-for="(group, idx) in ingredientGroups" :key="idx">
+            <div v-if="group == lastGroup" class="col s12">
+                <notifs-local />
+            </div>
             <fieldset class="col s12">
                 <legend v-text="group !== 'default' ? 'Ingredients Group' : 'Ingredients'" />
                 <template v-if="group !== 'default'">
@@ -29,7 +32,7 @@
                     <template v-if="group == lastGroup">
                         <div class="col s6 center-align">
                             <button class="btn btn-sm grey lighten-5" type="button" @click="onEvent('addItem', 'ingredients')"
-                                title="adds an Ingredient to a group">
+                                title="adds an Ingredient to the default group">
                                 <i class="material-icons left">add</i> Ingredient
                             </button>
                         </div>
@@ -37,7 +40,7 @@
                     <template v-else>
                         <div class="col s12 center-align">
                             <button class="btn btn-sm grey lighten-5" type="button" @click="onEvent('addItem', 'ingredients', undefined, {group: group})"
-                                title="adds an Ingredient to a group">
+                                title="adds an Ingredient to this group">
                                 <i class="material-icons">add</i>
                             </button>
                         </div>
@@ -49,13 +52,15 @@
 </template>
 
 <script>
+import NotificationsLocal from '@/components/notifications/NotificationsLocal';
 import GroupIngredients from './GroupIngredients';
 import { mapGetters } from 'vuex';
 import { mapFields } from 'vuex-map-fields';
 import { isEqual, isObject } from 'lodash';
 export default {
   components: {
-    'group-ingredients': GroupIngredients
+    'group-ingredients': GroupIngredients,
+    'notifs-local': NotificationsLocal
   },
   data() {
     return {
@@ -64,7 +69,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['ingredientGroups', 'ingCountByGroup']),
+    ...mapGetters(['localNotifs', 'ingredientGroups', 'ingCountByGroup']),
     ...mapFields(['recipe.ingredients']),
     lastGroup({ ingredientGroups }) {
       return ingredientGroups[ingredientGroups.length - 1];
@@ -87,9 +92,9 @@ export default {
     // Remember! the parent component must be listening for the 'event' via @event="parentHandler"
     // we also don't otherwise need to define that 'event' on our props
     onEvent(event, prop, attr, val) {
-      const payload = isObject(prop)
-        ? { ...prop, context: this.$el }
-        : { prop, attr, val, context: this.$el };
+      const payload = isObject(prop) ? { ...prop } : { prop, attr, val };
+      // cannot send a $el ref into the store
+      this.$el.id && (payload.context = this.$el.id);
       this.$emit(event, payload);
     }
   },
