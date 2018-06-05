@@ -38,7 +38,22 @@
                     </div>
                 </div>
                 <div class="row" v-if="recipe.description">
-                    <div class="col s12" :html="transformMarkdown(recipe.description)"></div>
+                    <div class="col s12" v-html="transformMarkdown(recipe.description)"></div>
+                </div>
+                <div v-if="recipe.tools && recipe.tools.length" class="row ">
+                    <div class="col s12 ">
+                        <ul class="collection with-header">
+                            <li class="collection-header">
+                                <h5>You May Need
+                                </h5>
+                            </li>
+                            <li v-for="(tool, idx) in recipe.tools" :key="idx" class="collection-item">
+                                <div>{{tool.name}}
+                                    <span class="secondary-content">(Required)</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
                 <div v-if="recipe.ingredients && recipe.ingredients.length" class="row">
                     <div class="col s12 ">
@@ -73,11 +88,17 @@
                     </div>
                 </div>
                 <div v-if="recipe.methods && recipe.methods.length" class="row ">
-                    <div class="col s12 ">
-                        <dl v-for="(method, idx) in recipe.methods" :key="idx">
-                            <dt>Step {{method.step}}:</dt>
-                            <dd :html="transformMarkdown(method.text)"></dd>
-                        </dl>
+                    <div class="col s12">
+                        <h3>Preparation</h3>
+                        <div v-for="(group, idx) in methodGroups" :key="idx" class="row">
+                            <div class="col s12">
+                                <h4 v-if="group != 'default'">{{group}}</h4>
+                                <dl v-for="(met, idx) in recipe.methods" v-if="met.group == group" :key="idx">
+                                    <dt>Step {{met.step}}:</dt>
+                                    <dd v-html="transformMarkdown(met.text)"></dd>
+                                </dl>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div v-if="recipe.variations && recipe.variations.length" class="row ">
@@ -87,13 +108,13 @@
                                 <h5>Variations</h5>
                             </li>
                             <li v-for="(variation, idx) in recipe.variations" :key="idx" class="collection-item"
-                                :html="transformMarkdown(variation.text)">
+                                v-html="transformMarkdown(variation.text)">
                             </li>
                         </ul>
                     </div>
                 </div>
                 <div v-if="recipe.notes" class="row ">
-                    <div class="col s12" :html="transformMarkdown(recipe.notes)"></div>
+                    <div class="col s12" v-html="transformMarkdown(recipe.notes)"></div>
                 </div>
                 <div v-if="recipe.tags && recipe.tags.length" class="row ">
                     <div class="col s12 ">
@@ -122,6 +143,7 @@ export default {
       'recipe',
       'updatedDate',
       'ingredientGroups',
+      'methodGroups',
       'ingCountByGroup'
     ])
   },
