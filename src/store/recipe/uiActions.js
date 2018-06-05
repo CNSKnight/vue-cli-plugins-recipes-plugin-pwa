@@ -65,6 +65,7 @@ export default {
       }
       met.group = 'Unnamed';
     }
+    idx >= -1 && (met.step = state.recipe.methods[idx].step + 1);
     commit('addTo', {
       prop: 'methods',
       item: met,
@@ -76,14 +77,17 @@ export default {
   addItem({ commit, dispatch }, payload) {
     const prop = payload.prop;
     if (recipeTemplate[prop]) {
-      let item = cloneDeep(recipeTemplate[prop][0]);
-
       switch (prop) {
         case 'ingredients':
           return dispatch('addIngredient', payload);
         case 'methods':
           return dispatch('addMethod', payload);
           break;
+        default:
+      }
+
+      let item = cloneDeep(recipeTemplate[prop][0]);
+      switch (prop) {
         case 'tag':
           item.priority = item.length + 1;
           break;
