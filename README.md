@@ -2,7 +2,7 @@
 ## Includes 
 
 ### Stack
-- Vue 2.5 (Babel)
+- Vue 3-beta (Babel)
 - vuex 3
 - vue-router 3
 - axios
