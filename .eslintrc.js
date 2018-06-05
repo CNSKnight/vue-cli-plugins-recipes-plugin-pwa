@@ -6,6 +6,9 @@ module.exports = {
         'plugin:vue/essential',
         '@vue/prettier'
     ],
+    parserOptions: {
+        ecmaVersion: 2017
+    },
     rules: {
         "no-unused-vars": 'warn'
     }
