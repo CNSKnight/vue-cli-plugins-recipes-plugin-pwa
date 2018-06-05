@@ -108,6 +108,8 @@ export default {
     try {
       const resp = await axios.put(url, params);
       if (resp.status === 200) {
+        const recipe = resp.data;
+        recipe.method && delete (recipe.method);
         resp.data && commit('update', resp.data);
       } else {
         dispatch('handleError', {
