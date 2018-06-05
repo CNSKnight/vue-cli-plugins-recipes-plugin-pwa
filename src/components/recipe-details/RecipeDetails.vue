@@ -5,11 +5,13 @@ import { mapGetters, mapActions } from 'vuex';
 import { mapFields, mapMultiRowFields } from 'vuex-map-fields';
 import ActionsBar from '@/components/actions-bar/ActionsBar';
 import IngredientGroups from './IngredientGroups';
+import MethodGroups from './MethodGroups';
 import RecipePreview from '@/components/recipe-preview/RecipePreview';
 import { padStart } from 'lodash';
 export default {
   components: {
     'actions-bar': ActionsBar,
+    'method-groups': MethodGroups,
     'ingredient-groups': IngredientGroups,
     'recipe-preview': RecipePreview
   },
@@ -20,7 +22,7 @@ export default {
     return { preview: false };
   },
   computed: {
-    ...mapGetters(['isModified', 'ingredientsGrouped']),
+    ...mapGetters(['isModified']),
     ...mapFields([
       'recipe.id',
       'recipe.acapID',
@@ -31,7 +33,12 @@ export default {
       'recipe.description',
       'recipe.notes'
     ]),
-    ...mapMultiRowFields(['recipe.method', 'recipe.tags', 'recipe.variations']),
+    ...mapMultiRowFields([
+      'recipe.tools',
+      'recipe.methods',
+      'recipe.tags',
+      'recipe.variations'
+    ]),
     valid() {
       return true;
     }
@@ -55,10 +62,6 @@ export default {
         this.$nextTick(() => window.Materialize.updateTextFields());
     },
     ...mapActions(['save', 'cancel', 'reset', 'addTo']),
-    // get textarea label
-    getTALabel(idx) {
-      return 'Step #'.concat(padStart((idx + 1).toString(), 2, '0'));
-    },
     // get textarea ID
     getTAID(id, idx) {
       let label = id !== undefined ? id : 'newID';

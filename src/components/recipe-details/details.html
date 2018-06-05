@@ -61,31 +61,35 @@
                 </div>
                 <!--rating-comp-->
                 <!--recipe-tips-->
-                <ingredient-groups @addItem="addItem" @deleteItem="deleteItem" />
-                <div class="row mets">
+                <div class="row vars">
                     <fieldset class="col s12">
-                        <legend>Method Steps</legend>
-                        <div class="row" v-for="(method, idx) in method" :key="idx">
-                            <input :name="`method-${idx}-step`" v-model="method.step" hidden>
-                            <div class="input-field col s12 m10">
-                                <textarea :id="getTAID(id, idx)" class="materialize-textarea" name="`method-${idx}-text`" v-model="method.text" placeholder="Step Content"></textarea>
-                                <label :for="getTAID(id, idx)">{{getTALabel(idx)}}</label>
+                        <legend>Tools You May Need</legend>
+                        <div class="row" v-for="(tool, idx) in tools" :key="idx">
+                            <div class="input-field col s12 m6">
+                                <input :id="`tool-${idx}`" name="`tool-${idx}`" v-model="tool.name" placeholder="Name this Tool" type="text">
+                                <label :for="`tool-${idx}`" class="sr-only sr-only-focusable">Tool Name</label>
                             </div>
-                            <div class="input-field col s12 m2 center-align">
-                                <button class="btn-flat btn-sm red-text" type="button" @click="deleteItem('method', idx)">
+                            <div class="input-field col s6 m3 center-align">
+                                <input :id="`tool-${idx}-req`" :name="`tool-${idx}-req`" v-model="tool.required" placeholder="required?" type="checkbox">
+                                <label :for="`tool-${idx}-req`">Required?</label>
+                            </div>
+                            <div class="input-field col s6 m3 center-align">
+                                <button class="btn-flat btn-sm red-text" type="button" @click="deleteItem('tools', idx)">
                                     <i class="material-icons">delete</i>
                                 </button>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col s12 center-align">
-                                <button class="btn btn-sm grey lighten-5" type="button" @click="addItem({prop: 'method'})">
+                                <button class="btn btn-sm grey lighten-5" type="button" @click="addItem({prop: 'tools'})">
                                     <i class="material-icons">add</i>
                                 </button>
                             </div>
                         </div>
                     </fieldset>
                 </div>
+                <ingredient-groups @addItem="addItem" @deleteItem="deleteItem" />
+                <method-groups @addItem="addItem" @deleteItem="deleteItem" />
                 <div class="row vars">
                     <fieldset class="col s12">
                         <legend>Recipe Variations</legend>

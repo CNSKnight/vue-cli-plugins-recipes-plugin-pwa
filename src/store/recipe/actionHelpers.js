@@ -10,7 +10,7 @@ export default {
     // will just set tags: [{}] in collection document
     recipe.tags = this.filterStrAry(recipe.tags);
     recipe.ingredients = this.filterIngredients(recipe.ingredients);
-    recipe.method = this.filterStrAry(recipe.method);
+    recipe.methods = this.filterStrAry(recipe.methods);
     recipe.variations = this.filterStrAry(recipe.variations);
     recipe.notes = recipe.notes && recipe.notes.trim();
     return recipe;
@@ -52,7 +52,7 @@ export default {
     });
     return valids;
   },
-
+  // ???
   groupIngredients(ingredients) {
     return ingredients;
   }

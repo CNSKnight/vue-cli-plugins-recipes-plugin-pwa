@@ -21,7 +21,9 @@
         <div class="col s4 center-align">
             <button :disabled="! valid" class="btn waves-effect waves-light grey lighten-5"
                 type="submit">
-                <i class="material-icons left">save</i> Save
+                <i v-if="isModified" class="modified left"></i>
+                <i v-else class="material-icons left">save</i>
+                Save
             </button>
         </div>
     </div>
@@ -32,7 +34,8 @@ export default {
   props: {
     id: String,
     isModified: Boolean,
-    valid: Boolean
+    valid: Boolean,
+    hasChanges: Function
   }
 };
 </script>

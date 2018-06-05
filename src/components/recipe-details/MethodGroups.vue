@@ -1,8 +1,8 @@
 <template>
     <div>
-        <div class="row" v-for="(group, idx) in ingredientGroups" :key="idx">
+        <div class="row" v-for="(group, idx) in methodGroups" :key="idx">
             <fieldset class="col s12">
-                <legend v-text="group !== 'default' ? 'Ingredients Group' : 'Ingredients'" />
+                <legend v-text="group !== 'default' ? 'Method Group' : 'Method'" />
                 <template v-if="group !== 'default'">
                     <div class="row group">
                         <div class="input-field col s12">
@@ -12,32 +12,32 @@
                         </div>
                     </div>
                 </template>
-                <div v-if="group == 'default' && !ingCountByGroup(group)" class="tip-wrapper centered mb-lg">
-                    <p class="tip">Here you can:<br>- Add a new "named" Ingredients Group<br>-
-                        Add Recipes to this "default" Group</p>
+                <div v-if="group == 'default' && !stepCountByGroup(group)" class="tip-wrapper centered mb-lg">
+                    <p class="tip">Here you can:<br>- Add a new "named" Method Group<br>- Add Steps
+                        to this "default" Group</p>
                 </div>
-                <group-ingredients v-for="(ingredient, idx) in ingredients" :key="idx" v-if="isInGroup(group, ingredient.group)"
-                    :ingredient="ingredient" :idx="idx" :canDrag="ingCountByGroup(group)>1"
-                    @onEvent="onEvent" @updated="$emit('updated')" />
+                <group-method v-for="(step, idx) in methods" :key="idx" v-if="isInGroup(group, step.group)"
+                    :idx="idx" :canDrag="stepCountByGroup(group)>1" @onEvent="onEvent"
+                    @updated="$emit('updated')" />
                 <div class="row">
                     <div v-if="group == lastGroup" class="col s6 center-align">
-                        <button class="btn btn-sm grey lighten-5" type="button" @click="onEvent('addItem', 'ingredients', 'group')"
-                            title="Adds an Ingredients Group for Mult-Part Recipes">
+                        <button class="btn btn-sm grey lighten-5" type="button" @click="onEvent('addItem', 'methods', 'group')"
+                            title="Adds an Methods Group for Mult-Part Recipes">
                             <i class="material-icons left">add</i> Group
                         </button>
                     </div>
                     <template v-if="group == lastGroup">
                         <div class="col s6 center-align">
-                            <button class="btn btn-sm grey lighten-5" type="button" @click="onEvent('addItem', 'ingredients')"
-                                title="adds an Ingredient to a group">
-                                <i class="material-icons left">add</i> Ingredient
+                            <button class="btn btn-sm grey lighten-5" type="button" @click="onEvent('addItem', 'methods')"
+                                title="adds an Method to a group">
+                                <i class="material-icons left">add</i> Method
                             </button>
                         </div>
                     </template>
                     <template v-else>
                         <div class="col s12 center-align">
-                            <button class="btn btn-sm grey lighten-5" type="button" @click="onEvent('addItem', 'ingredients', undefined, {group: group})"
-                                title="adds an Ingredient to a group">
+                            <button class="btn btn-sm grey lighten-5" type="button" @click="onEvent('addItem', 'methods', undefined, {group: group})"
+                                title="adds an Method to a group">
                                 <i class="material-icons">add</i>
                             </button>
                         </div>
@@ -49,29 +49,29 @@
 </template>
 
 <script>
-import GroupIngredients from './GroupIngredients';
+import GroupMethod from './GroupMethod';
 import { mapGetters } from 'vuex';
 import { mapFields } from 'vuex-map-fields';
 import { isEqual, isObject } from 'lodash';
 export default {
   components: {
-    'group-ingredients': GroupIngredients
+    'group-method': GroupMethod
   },
   data() {
     return {
       // the local mirror
-      groupNames: [...this.$store.getters.ingredientGroups]
+      groupNames: [...this.$store.getters.methodGroups]
     };
   },
   computed: {
-    ...mapGetters(['ingredientGroups', 'ingCountByGroup']),
-    ...mapFields(['recipe.ingredients']),
-    lastGroup({ ingredientGroups }) {
-      return ingredientGroups[ingredientGroups.length - 1];
+    ...mapGetters(['methodGroups', 'stepCountByGroup']),
+    ...mapFields(['recipe.methods']),
+    lastGroup({ methodGroups }) {
+      return methodGroups[methodGroups.length - 1];
     }
   },
   created() {
-    this.groupNames = [...this.ingredientGroups];
+    this.groupNames = [...this.methodGroups];
   },
   methods: {
     updateGroupName(idx, val) {
@@ -79,7 +79,7 @@ export default {
         from: this.groupNames[idx],
         to: val || 'Unnamed'
       };
-      this.$store.dispatch('updateIngredientsGroup', payload);
+      this.$store.dispatch('updateMethodsGroup', payload);
     },
     isInGroup(group, test) {
       return test == group || (!test && group == 'default');
@@ -94,8 +94,8 @@ export default {
     }
   },
   watch: {
-    // our locally mutable groupNames should mirror the ingredientGroups reactively
-    ingredientGroups: function(val) {
+    // our locally mutable groupNames should mirror the methodGroups reactively
+    methodGroups: function(val) {
       !isEqual(val, this.groupNames) && (this.groupNames = [...val]);
     }
   }

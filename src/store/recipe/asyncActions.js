@@ -60,7 +60,11 @@ export default {
               });
             }
           }
-          commit('stage', resp.data);
+          const recipe = resp.data;
+          // covers the renamed method > methods
+          recipe.method && !recipe.methods && (recipe.methods = recipe.method) && delete (recipe.method);
+          // covers any newly added properties not present in existing data
+          commit('stage', Object.assign(cloneDeep(recipeTemplate), recipe));
         } else {
           dispatch('handleError', {
             service: 'recipe:load',

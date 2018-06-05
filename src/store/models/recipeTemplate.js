@@ -6,6 +6,12 @@ export default {
   creationDate: undefined,
   originalUrl: '',
   description: '',
+  tools: [
+    {
+      name: '',
+      required: false
+    }
+  ],
   ingredients: [
     {
       group: '',
@@ -16,8 +22,9 @@ export default {
       preparation: ''
     }
   ],
-  method: [
+  methods: [
     {
+      group: '',
       step: 1,
       text: ''
     }

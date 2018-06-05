@@ -5,6 +5,17 @@
 .contained {
     position: relative;
 }
+i.modified:after {
+  content: "M";
+  font-weight: bold;
+  color: rgb(130, 119, 23);
+  border: 1px solid rgb(136, 27, 237);
+  padding: 3px 5px;
+  border-radius: 12px;
+  margin-right: 0.3em;
+  font-style: normal;
+  font-size: 1rem;
+}
 .input-field input + label.sr-only {
     width: 1px;
     height: 1px;
@@ -33,7 +44,6 @@
 .recipes.collection .card {
     border-left: 5px solid transparent;
     /*padding-left: 25px*/
-    ;
     cursor: pointer;
 }
 

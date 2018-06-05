@@ -43,6 +43,28 @@ const getters = {
     ]);
     return counts.true;
   },
+  methodGroups(state) {
+    const groups = reduce(
+      state.recipe.methods,
+      (accum, ing) => {
+        ing.group && !accum.includes(ing.group) && accum.push(ing.group);
+        return accum;
+      },
+      ['default']
+    );
+    if (groups.length > 1 && groups[groups.length - 1] !== 'default') {
+      const def = groups.splice(groups.indexOf('default'), 1);
+      groups.push(def[0]);
+    }
+    return groups;
+  },
+  stepCountByGroup: ({ recipe }) => group => {
+    const counts = countBy(recipe.methods, [
+      'group',
+      group == 'default' ? '' : group
+    ]);
+    return counts.true;
+  },
   isModified(state) {
     return !isEqual(state.recipe, state.staged);
   },

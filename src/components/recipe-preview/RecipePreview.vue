@@ -72,9 +72,9 @@
                         </table>
                     </div>
                 </div>
-                <div v-if="recipe.method && recipe.method.length" class="row ">
+                <div v-if="recipe.methods && recipe.methods.length" class="row ">
                     <div class="col s12 ">
-                        <dl v-for="(method, idx) in recipe.method" :key="idx">
+                        <dl v-for="(method, idx) in recipe.methods" :key="idx">
                             <dt>Step {{method.step}}:</dt>
                             <dd :html="transformMarkdown(method.text)"></dd>
                         </dl>

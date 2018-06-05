@@ -6,7 +6,7 @@
       <span class="secondary-content left">
         <i class="material-icons amber-text text-lighten-2" v-text="recipe.published ? 'visibility' : 'visibility_off'"></i>
       </span>
-      <span v-if="hasChanges(recipe.id)" class="modified">M</span>
+      <i v-if="hasChanges(recipe.id)" class="modified"></i>
       {{recipe.title}}
       <span class="secondary-content">
         <i class="material-icons">send</i>
@@ -30,15 +30,6 @@ export default {
 <style scoped>
 li.active {
   background-color: gainsboro;
-}
-span.modified {
-  font-weight: bold;
-  color: rgb(130, 119, 23);
-  border: 1px solid rgb(136, 27, 237);
-  padding: 1px 5px;
-  border-radius: 12px;
-  margin-right: 0.3em;
-  font-variant: small-caps;
 }
 .secondary-content.left {
   margin-right: 0.5em;

@@ -25,7 +25,7 @@
         <div class="row">
             <div class="input-field col s12 m6">
                 <input :id="`ing-${idx}-name`" :name="`ing-${idx}-name`" v-model="ingredients[idx].name"
-                    placeholder="Name?" type="text">
+                    placeholder="Name this Ingredient" type="text">
                 <label :for="`ing-${idx}-name`" class="sr-only sr-only-focusable">Ingredient</label>
             </div>
             <div class="input-field col s12 m6">
