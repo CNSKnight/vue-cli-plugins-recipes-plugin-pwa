@@ -84,20 +84,20 @@ export default {
     }
   },
   async save({ state, commit, dispatch }) {
-    let recipe = { ...state.recipe };
-    if (!recipe.id) {
+    if (!state.recipe.id) {
       return dispatch('handleError', {
         service: 'save',
         err: 'Recipe has no ID? ' + JSON.stringify(recipe),
         context: contUnitsMgr
       });
     }
+    let recipe = cloneDeep(state.recipe);
     let url = apiBase;
     url += isProd ? '/preAuth/' : '/';
     url += recipe.id;
 
     delete recipe.id;
-    recipe = helpers.filterRecipe(recipe);
+    helpers.filterRecipe(recipe);
     let params = isProd
       ? {
         recipe,

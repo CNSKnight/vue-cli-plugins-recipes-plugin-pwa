@@ -9,9 +9,8 @@ const state = {
 };
 
 const getters = {
-  recipes(state) {
-    return state.recipes;
-  }
+  selectedId: state => state.selected && state.selected.id,
+  recipes: state => state.recipes
 };
 
 const actions = {
