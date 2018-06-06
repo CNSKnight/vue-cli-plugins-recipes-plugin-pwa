@@ -40,27 +40,6 @@ i.modified:after {
     font-size: 1.2em;
 }
 
-.recipes.collection .collection-item,
-.recipes.collection .card {
-    border-left: 5px solid transparent;
-    /*padding-left: 25px*/
-    cursor: pointer;
-}
-
-.recipes.collection .collection-item.active,
-.recipes.collection .card.active {
-    border-left-color: rgb(158, 157, 36);
-}
-
-.recipes.collection .collection-item.active {
-    background: inherit;
-}
-
-.recipes.collection .collection-item.active,
-.recipes.collection .collection-item.active .secondary-content {
-    color: rgb(158, 157, 36);
-}
-
 legend,
 .legend {
     color: rgb(158, 157, 36);

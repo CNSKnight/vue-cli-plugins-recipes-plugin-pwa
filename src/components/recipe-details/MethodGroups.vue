@@ -20,7 +20,7 @@
                         to this "default" Group</p>
                 </div>
                 <group-method v-for="(step, idx) in methods" :key="idx" v-if="isInGroup(group, step.group)"
-                    :idx="idx" :canDrag="stepCountByGroup(group)>1" @onEvent="onEvent"
+                    :idx="idx" :canDrag="!isModified && stepCountByGroup(group)>1" @onEvent="onEvent"
                     @updated="$emit('updated')" />
                 <div class="row">
                     <div v-if="group == lastGroup" class="col s6 center-align">
@@ -56,7 +56,16 @@ import NotificationsLocal from '@/components/notifications/NotificationsLocal';
 import GroupMethod from './GroupMethod';
 import { mapGetters } from 'vuex';
 import { mapFields } from 'vuex-map-fields';
-import { isEqual, isObject } from 'lodash';
+import { debounce, isEqual, isObject } from 'lodash';
+
+const updateGroupName = function(idx, val) {
+  const payload = {
+    from: this.groupNames[idx],
+    to: val || 'Unnamed'
+  };
+  this.$store.dispatch('updateMethodsGroup', payload);
+};
+
 export default {
   components: {
     'notifs-local': NotificationsLocal,
@@ -69,7 +78,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['methodGroups', 'stepCountByGroup']),
+    ...mapGetters(['methodGroups', 'stepCountByGroup', 'isModified']),
     ...mapFields(['recipe.methods']),
     lastGroup({ methodGroups }) {
       return methodGroups[methodGroups.length - 1];
@@ -79,13 +88,7 @@ export default {
     this.groupNames = [...this.methodGroups];
   },
   methods: {
-    updateGroupName(idx, val) {
-      const payload = {
-        from: this.groupNames[idx],
-        to: val || 'Unnamed'
-      };
-      this.$store.dispatch('updateMethodsGroup', payload);
-    },
+    updateGroupName: debounce(updateGroupName, 700),
     isInGroup(group, test) {
       return test == group || (!test && group == 'default');
     },

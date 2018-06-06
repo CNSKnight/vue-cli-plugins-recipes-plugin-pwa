@@ -1,15 +1,17 @@
 <template>
   <div class="met">
-    <input :name="`step-${idx}`" v-model="methods[idx].step" hidden>
-    <div class="input-field col s12 m10">
-      <textarea :id="`step-${idx}-text`" class="materialize-textarea" name="`step-${idx}-text`"
-        v-model="methods[idx].text" placeholder="Step Content" />
-      <label :for="`step-${idx}-text`" v-text="getStepLabel()" />
-    </div>
-    <div class="input-field col s12 m2 center-align">
-      <button class="btn-flat btn-sm red-text" type="button" @click.stop="deleteStep">
-        <i class="material-icons">delete</i>
-      </button>
+    <div class="row">
+      <input :name="`step-${idx}`" v-model="methods[idx].step" hidden>
+      <div class="input-field col s12 m10">
+        <textarea :id="`step-${idx}-text`" class="materialize-textarea" name="`step-${idx}-text`"
+          v-model="methods[idx].text" placeholder="Step Content" />
+        <label :for="`step-${idx}-text`" v-text="getStepLabel()" />
+      </div>
+      <div class="input-field col s12 m2 center-align">
+        <button class="btn-flat btn-sm red-text" type="button" @click.stop="deleteStep">
+          <i class="material-icons">delete</i>
+        </button>
+      </div>
     </div>
     <div v-if="canDrag" class="dragWrapper" title="Drag-to-Reorder (coming soon)">
       <i class=" material-icons ">

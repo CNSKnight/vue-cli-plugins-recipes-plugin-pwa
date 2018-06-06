@@ -1,8 +1,7 @@
 <template>
     <div>
-        <li class="card" :class="{active: recipes.selected && (recipes.selected.id === recipe.id)}"
-            style="overflow: hidden;" v-for="recipe in recipes" :key="recipe.acapID"
-            @click="selectRecipe(recipe)">
+        <li v-for="recipe in recipes" :key="recipe.acapID" @click="selectRecipe(recipe)"
+            class="card" :class="{active: selectedId === recipe.id}" style="overflow: hidden;">
             <div class="card-image waves-effect waves-block waves-light">
                 <img class="activator" src="images/office.jpg">
             </div>
@@ -17,7 +16,7 @@
             </div>
             <div class="card-action">
                 <a href="#">This is a link</a>
-                <a href="#" @click.stop="deleteUA.emit(recipe)">
+                <a href="#" @click.stop="$emit('delete', 'recipe', recipe)">
                     <i class="material-icons">delete_forever</i>
                 </a>
             </div>
@@ -48,7 +47,7 @@ export default {
   props: {
     transformMarkdown: Function
   },
-  computed: { ...mapGetters(['recipes', 'hasChanges']) },
+  computed: { ...mapGetters(['selectedId', 'recipes', 'hasChanges']) },
   // st about modules needing to be namespaced to use mapState?
   // computed: mapState('recipesModule', ['recipes']),
   methods: {

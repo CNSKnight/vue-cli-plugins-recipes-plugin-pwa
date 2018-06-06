@@ -111,21 +111,13 @@ export default {
       opacity: 0;
     }
   }
-
   fieldset.col {
     padding-top: 1em;
   }
-
-  .group + .ing,
-  .ing + .ing {
-    border-top: 3px dashed rgb(224, 224, 224);
-  }
-
-  fieldset > .row {
-    margin-bottom: 0;
-    &:last-child {
-      margin-bottom: 0.5rem;
-    }
+  fieldset > .row,
+  fieldset .met .row,
+  fieldset .ing .row {
+    margin-bottom: 10px;
   }
   .vars textarea {
     padding-bottom: 0;

@@ -25,7 +25,7 @@
         <div class="row">
             <div class="input-field col s12 m6">
                 <input :id="`ing-${idx}-name`" :name="`ing-${idx}-name`" v-model="ingredients[idx].name"
-                    placeholder="Name this Ingredient" type="text">
+                    placeholder="Name this Ingredient" type="text" required>
                 <label :for="`ing-${idx}-name`" class="sr-only sr-only-focusable">Ingredient</label>
             </div>
             <div class="input-field col s12 m6">
@@ -64,6 +64,9 @@ export default {
 <style lang="scss" scoped>
 .ing {
   position: relative;
+  .row {
+    margin-bottom: 5px;
+  }
   .dragWrapper {
     display: none;
     position: absolute;
@@ -85,6 +88,9 @@ export default {
     &:hover {
       cursor: move;
     }
+  }
+  & + .ing {
+    border-top: 3px dashed rgba(158, 157, 36, 0.4);
   }
 }
 </style>

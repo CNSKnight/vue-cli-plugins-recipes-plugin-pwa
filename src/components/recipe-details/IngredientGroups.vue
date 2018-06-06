@@ -20,7 +20,7 @@
                         Add Recipes to this "default" Group</p>
                 </div>
                 <group-ingredients v-for="(ingredient, idx) in ingredients" :key="idx" v-if="isInGroup(group, ingredient.group)"
-                    :ingredient="ingredient" :idx="idx" :canDrag="ingCountByGroup(group)>1"
+                    :ingredient="ingredient" :idx="idx" :canDrag="!isModified && ingCountByGroup(group)>1"
                     @onEvent="onEvent" @updated="$emit('updated')" />
                 <div class="row">
                     <div v-if="group == lastGroup" class="col s6 center-align">
@@ -56,7 +56,16 @@ import NotificationsLocal from '@/components/notifications/NotificationsLocal';
 import GroupIngredients from './GroupIngredients';
 import { mapGetters } from 'vuex';
 import { mapFields } from 'vuex-map-fields';
-import { isEqual, isObject } from 'lodash';
+import { isEqual, isObject, debounce } from 'lodash';
+
+const updateGroupName = function(idx, val) {
+  const payload = {
+    from: this.groupNames[idx],
+    to: val || 'Unnamed'
+  };
+  this.$store.dispatch('updateIngredientsGroup', payload);
+};
+
 export default {
   components: {
     'group-ingredients': GroupIngredients,
@@ -69,7 +78,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['localNotifs', 'ingredientGroups', 'ingCountByGroup']),
+    ...mapGetters([
+      'localNotifs',
+      'ingredientGroups',
+      'ingCountByGroup',
+      'isModified'
+    ]),
     ...mapFields(['recipe.ingredients']),
     lastGroup({ ingredientGroups }) {
       return ingredientGroups[ingredientGroups.length - 1];
@@ -79,13 +93,7 @@ export default {
     this.groupNames = [...this.ingredientGroups];
   },
   methods: {
-    updateGroupName(idx, val) {
-      const payload = {
-        from: this.groupNames[idx],
-        to: val || 'Unnamed'
-      };
-      this.$store.dispatch('updateIngredientsGroup', payload);
-    },
+    updateGroupName: debounce(updateGroupName, 700),
     isInGroup(group, test) {
       return test == group || (!test && group == 'default');
     },

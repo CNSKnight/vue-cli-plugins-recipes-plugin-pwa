@@ -1,8 +1,8 @@
 <template>
   <div>
     <p v-if="!recipes">No recipes provided</p>
-    <li class="collection-item" :class="{active: recipes.selected && (recipes.selected.id === recipe.id)}"
-      v-for="recipe in recipes" :key="recipe.acapID" @click="selectRecipe(recipe)">
+    <li class="collection-item" :class="{active: selectedId === recipe.id}" v-for="recipe in recipes"
+      :key="recipe.acapID" @click="selectRecipe(recipe)">
       <span class="secondary-content left">
         <i class="material-icons amber-text text-lighten-2" v-text="recipe.published ? 'visibility' : 'visibility_off'"></i>
       </span>
@@ -18,7 +18,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 export default {
-  computed: { ...mapGetters(['recipes', 'hasChanges']) },
+  computed: { ...mapGetters(['selectedId', 'recipes', 'hasChanges']) },
   // st about modules needing to be namespaced to use mapState?
   // computed: mapState('recipesModule', ['recipes']),
   methods: {

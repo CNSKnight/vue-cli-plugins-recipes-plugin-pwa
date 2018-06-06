@@ -92,4 +92,26 @@ export default {
   right: 0;
   z-index: 1;
 }
+/* cards, listing rules */
+
+.listing.collection .collection-item,
+.listing.collection .card {
+  border-left: 5px solid transparent;
+  /*padding-left: 25px*/
+  cursor: pointer;
+}
+
+.listing.collection .collection-item.active,
+.listing.collection .card.active {
+  border-left-color: rgb(158, 157, 36);
+}
+
+.listing.collection .collection-item.active {
+  background: inherit;
+}
+
+.listing.collection .collection-item.active,
+.listing.collection .collection-item.active .secondary-content {
+  color: rgb(158, 157, 36);
+}
 </style>
