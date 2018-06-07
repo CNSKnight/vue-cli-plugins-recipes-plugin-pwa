@@ -15,13 +15,13 @@
                         </div>
                     </div>
                 </template>
+                <group-ingredients v-for="(ingredient, idx) in ingredients" :key="idx" v-if="isInGroup(group, ingredient.group)"
+                    :ingredient="ingredient" :idx="idx" :canDrag="!isModified && ingCountByGroup(group)>1"
+                    @onEvent="onEvent" @updated="$emit('updated')" />
                 <div v-if="group == 'default' && !ingCountByGroup(group)" class="tip-wrapper centered mb-lg">
                     <p class="tip">Here you can:<br>- Add a new "named" Ingredients Group<br>-
                         Add Recipes to this "default" Group</p>
                 </div>
-                <group-ingredients v-for="(ingredient, idx) in ingredients" :key="idx" v-if="isInGroup(group, ingredient.group)"
-                    :ingredient="ingredient" :idx="idx" :canDrag="!isModified && ingCountByGroup(group)>1"
-                    @onEvent="onEvent" @updated="$emit('updated')" />
                 <div class="row">
                     <div v-if="group == lastGroup" class="col s6 center-align">
                         <button class="btn btn-sm grey lighten-5" type="button" @click="onEvent('addItem', 'ingredients', 'group')"

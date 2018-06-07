@@ -15,13 +15,13 @@
                         </div>
                     </div>
                 </template>
+                <group-method v-for="(step, idx) in methods" :key="idx" v-if="isInGroup(group, step.group)"
+                    :idx="idx" :canDrag="!isModified && stepCountByGroup(group)>1" @onEvent="onEvent"
+                    @updated="$emit('updated')" />
                 <div v-if="group == 'default' && !stepCountByGroup(group)" class="tip-wrapper centered mb-lg">
                     <p class="tip">Here you can:<br>- Add a new "named" Method Group<br>- Add Steps
                         to this "default" Group</p>
                 </div>
-                <group-method v-for="(step, idx) in methods" :key="idx" v-if="isInGroup(group, step.group)"
-                    :idx="idx" :canDrag="!isModified && stepCountByGroup(group)>1" @onEvent="onEvent"
-                    @updated="$emit('updated')" />
                 <div class="row">
                     <div v-if="group == lastGroup" class="col s6 center-align">
                         <button class="btn btn-sm grey lighten-5" type="button" @click="onEvent('addItem', 'methods', 'group')"
