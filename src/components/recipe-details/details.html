@@ -74,7 +74,7 @@
                                 <label :for="`tool-${idx}-req`">Required?</label>
                             </div>
                             <div class="input-field col s6 m3 center-align">
-                                <button class="btn-flat btn-sm red-text" type="button" @click="deleteItem('tools', idx)">
+                                <button class="btn-flat btn-sm red-text" type="button" @click="deleteItem({prop: 'tools', index: idx})">
                                     <i class="material-icons">delete</i>
                                 </button>
                             </div>
@@ -98,7 +98,7 @@
                                 <textarea class="materialize-textarea" name="`variations-${idx}`" v-model="variation.text" placeholder="Variation Content"></textarea>
                             </div>
                             <div class="input-field col s12 m2 center-align">
-                                <button class="btn-flat btn-sm red-text" type="button" @click="deleteItem('variations', idx)">
+                                <button class="btn-flat btn-sm red-text" type="button" @click="deleteItem({prop: 'variations', index: idx})">
                                     <i class="material-icons">delete</i>
                                 </button>
                             </div>
@@ -120,7 +120,7 @@
                                 <input :name="`tag-${idx}-text`" v-model="tag.text" placeholder="Hash-Tag" type="text">
                             </div>
                             <div class="input-field col s4 center-align">
-                                <button class="btn-flat btn-sm red-text" type="button" @click="deleteItem('tags', idx)">
+                                <button class="btn-flat btn-sm red-text" type="button" @click="deleteItem({prop: 'tags', index: idx})">
                                     <i class="material-icons">delete</i>
                                 </button>
                             </div>
