@@ -13,9 +13,15 @@ const getters = {
   }
 };
 
+const sevMap = {
+  fatal: 'failed',
+  info: '',
+  error: 'reported'
+}
+
 const actions = {
   handleError({ commit }, { service, severity, error, context, timeout, parent = context }) {
-    let errMsg = service + ' failed: ';
+    let errMsg = service + ' ' + (sevMap[severity] || '') + ': ';
     if (error instanceof Response) {
       const err = error.error || JSON.stringify(error);
       errMsg += `${err.status} - ${err.statusText || ''}`;
