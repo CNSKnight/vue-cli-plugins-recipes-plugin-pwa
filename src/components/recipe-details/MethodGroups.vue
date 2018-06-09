@@ -1,5 +1,5 @@
 <template>
-    <div id="method-groups">
+    <div>
         <div class="row" v-for="(group, idx) in methodGroups" :key="idx">
             <div v-if="group == lastGroup" class="col s12">
                 <notifs-local />

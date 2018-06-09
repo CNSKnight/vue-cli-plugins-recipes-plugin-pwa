@@ -1,4 +1,4 @@
-<template src="./details.html"></template>
+<template class="tester" src="./details.html"></template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
@@ -61,33 +61,24 @@ export default {
         window.Materialize.updateTextFields &&
         this.$nextTick(() => window.Materialize.updateTextFields());
     },
-    ...mapActions(['save', 'cancel', 'reset', 'addTo']),
+    ...mapActions({
+      // same as this.$store.dispatch('whatever'[, payload])
+      onSubmit: 'save',
+      onCancel: 'cancel',
+      onReset: 'reset',
+      addItem: 'addItem',
+      deleteItem: 'deleteItem'
+    }),
     // get textarea ID
     getTAID(id, idx) {
       let label = id !== undefined ? id : 'newID';
       let count = idx + 1;
       return label.toString().concat('-rTA-', count.toString());
     },
-    addItem(payload) {
-      this.$store.dispatch('addItem', payload);
-    },
-    deleteItem(payload) {
-      this.$store.dispatch('deleteItem', payload);
-    },
-    onReset() {
-      this.$store.dispatch('reset');
-    },
-    onCancel() {},
-    onSubmit() {
-      this.$store.dispatch('save');
-    },
     openPreview() {
-      const modal = window.$$ && window.$$('.modal-content');
-      if (modal && modal.length) {
-        modal.scrollto({ top: 0 });
-      } else if (window) {
-        window.scrollTo({ top: 0 });
-      }
+      const toScroll =
+        (window && window.$$ && window.$$('.modal-content')) || window;
+      toScroll && toScroll.scrollTo && toScroll.scrollTo({ top: 0 });
       this.preview = true;
     },
     closePreview() {
@@ -98,7 +89,9 @@ export default {
 </script>
 
 <style lang="scss">
-.recipes .container {
+/* all specific to the transitions */
+.recipes .container,
+.modal-content .container {
   width: auto;
 }
 .formview {

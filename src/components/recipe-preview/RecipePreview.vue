@@ -2,8 +2,11 @@
     <section class="preview">
         <header>
             <div>Preview</div>
+            <h6 v-if="isModified" class="alert grey-text text-darken-2">
+                <i class="material-icons grey-text">warning</i>
+                Note: This preview will not reflect any unsaved changes.</h6>
         </header>
-        <div v-if="recipe && recipe.id" class="row recipe-bloc flow-text">
+        <div v-if="recipe && recipe.id" class="row flow-text">
             <div class="col s12">
                 <div class="row">
                     <div class="col s12">
@@ -44,12 +47,11 @@
                     <div class="col s12 ">
                         <ul class="collection with-header">
                             <li class="collection-header">
-                                <h5>You May Need
-                                </h5>
+                                <h5>You May Need</h5>
                             </li>
                             <li v-for="(tool, idx) in recipe.tools" :key="idx" class="collection-item">
-                                <div>{{tool.name}}
-                                    <span class="secondary-content">(Required)</span>
+                                <div v-if="tool.name">{{tool.name}}
+                                    <span v-if="tool.required" class="secondary-content">(Required)</span>
                                 </div>
                             </li>
                         </ul>
@@ -73,7 +75,8 @@
                                     <tr v-if="ingredientGroups.length > 1 && ingCountByGroup(group)">
                                         <th colspan="5">{{group == 'default' ? 'Other' : group}}</th>
                                     </tr>
-                                    <tr v-for="(ing, idx) in recipe.ingredients" v-if="ing.group == group" :key="idx">
+                                    <tr v-for="(ing, idx) in recipe.ingredients" v-if="isInGroup(ing, group) && ing.name"
+                                        :key="idx">
                                         <td>{{ing.qty}}</td>
                                         <td>{{ing.unit}}</td>
                                         <td>{{ing.name}}</td>
@@ -93,7 +96,8 @@
                         <div v-for="(group, idx) in methodGroups" :key="idx" class="row">
                             <div class="col s12">
                                 <h4 v-if="group != 'default'">{{group}}</h4>
-                                <dl v-for="(met, idx) in recipe.methods" v-if="met.group == group" :key="idx">
+                                <dl v-for="(met, idx) in recipe.methods" v-if="isInGroup(met, group) && met.text"
+                                    :key="idx">
                                     <dt>Step {{met.step}}:</dt>
                                     <dd v-html="transformMarkdown(met.text)"></dd>
                                 </dl>
@@ -107,8 +111,8 @@
                             <li class="collection-header">
                                 <h5>Variations</h5>
                             </li>
-                            <li v-for="(variation, idx) in recipe.variations" :key="idx" class="collection-item"
-                                v-html="transformMarkdown(variation.text)">
+                            <li v-for="(variation, idx) in recipe.variations" :key="idx" v-if="variation.text"
+                                class="collection-item" v-html="transformMarkdown(variation.text)">
                             </li>
                         </ul>
                     </div>
@@ -119,7 +123,7 @@
                 <div v-if="recipe.tags && recipe.tags.length" class="row ">
                     <div class="col s12 ">
                         <p>
-                            <span v-for="(tag, idx) in recipe.tags" :key="idx" class="chip light-green lighten-3">#{{tag.text}}</span>
+                            <span v-for="(tag, idx) in recipe.tags" v-if="tag.text" :key="idx" class="chip light-green lighten-3">#{{tag.text}}</span>
                         </p>
                     </div>
                 </div>
@@ -139,52 +143,22 @@ export default {
     transformMarkdown: Function
   },
   computed: {
-    ...mapGetters([
-      'recipe',
-      'updatedDate',
-      'ingredientGroups',
-      'methodGroups',
-      'ingCountByGroup'
-    ])
+    ...mapGetters({
+      isModified: 'isModified',
+      recipe: 'staged',
+      updatedDate: 'updatedDate',
+      ingredientGroups: 'ingredientGroups',
+      methodGroups: 'methodGroups',
+      ingCountByGroup: 'ingCountByGroup'
+    })
   },
   methods: {
-    dateFormated: (date, format) => dateFormat(date, format)
+    dateFormated: (date, format) => dateFormat(date, format),
+    isInGroup(item, group) {
+      return (
+        item.group == group || (item.group === undefined && group == 'default')
+      );
+    }
   }
 };
 </script>
-
-<style scoped>
-.preview {
-  width: 100%;
-  padding-right: 0.8em;
-  background-color: rgba(251, 251, 251, 0.9);
-}
-header {
-  text-align: center;
-  font-size: 2em;
-  color: rgb(158, 157, 36);
-}
-.closer {
-  position: absolute;
-  width: 1.5em;
-  height: 100%;
-  top: 0;
-  right: 0;
-  background-color: rgba(211, 211, 211, 0.7);
-}
-.closer i {
-  position: absolute;
-  top: 50%;
-  color: rgb(158, 157, 36);
-}
-.closer:hover {
-  background-color: rgba(211, 211, 211, 0.9);
-  cursor: pointer;
-}
-table.ing td:nth-child(5) {
-  text-align: center;
-}
-table.ing caption {
-  color: rgb(158, 157, 36);
-}
-</style>

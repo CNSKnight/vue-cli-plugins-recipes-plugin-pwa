@@ -1,5 +1,5 @@
 <template>
-    <div class="detailsPlugin">
+    <section class="detailsPlugin">
         <aside class="row">
             <div class="col s12">
                 <app-notifications/>
@@ -8,7 +8,7 @@
         <main>
             <recipe-details-plugin/>
         </main>
-    </div>
+    </section>
 </template>
 
 <script>
