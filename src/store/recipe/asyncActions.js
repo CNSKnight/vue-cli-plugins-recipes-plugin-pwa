@@ -22,91 +22,79 @@ const acap = (isProd && parent.acap) || {
 };
 const contUnitsMgr = acap.ADMIN_TAPPADS && acap.ADMIN_TAPPADS.contUnitsMgr;
 
-export default {
-  // used outside of listing context to load a single
-  async loadRecipe({ state, getters, commit, dispatch }, recipe) {
-    let acapID = recipe && recipe.acapID;
-    if (acapID === undefined) {
-      // pull from the contUnitsMgr
-      const info = contUnitsMgr && contUnitsMgr.getInfo();
-      acapID = info && info.ad_unit_id;
-      if (acapID) {
-        const recipe = cloneDeep(recipeTemplate);
-        recipe.acapID = info.ad_unit_id;
-        recipe.title = info.ad_unit_name;
-        commit('stage', recipe);
-      }
-    }
-
-    // we MUST have an acapID
-    // we MAY not yet have an id:ObjectID
-    if (acapID) {
-      // set the stage w/the requested acapID
-      // try modifieds then api, where we may or
-      // may not get back an existing
-      try {
-        const resp = await axios({
-          url: apiBase + '/findOne?filter={"where":{"acapID":' + acapID + '}}'
-        });
-        if (resp.status === 200 && resp.data && resp.data.id) {
-          const cached = getters.getModified(resp.id);
-          if (cached) {
-            if (resp.data.updatedDate <= cached.updatedDate) {
-              return commit('stage', cached);
-            } else {
-              dispatch('setModified', {
-                key: state.recipeModule.recipe.id,
-                val: undefined
-              });
-            }
-          }
-          const recipe = resp.data;
-          // covers the renamed method > methods
-          recipe.method && !recipe.methods && (recipe.methods = recipe.method) && delete (recipe.method);
-          // covers any newly added properties not present in existing data
-          commit('stage', Object.assign(cloneDeep(recipeTemplate), recipe));
+const fetchRecipe = async ({ commit, dispatch, getters, state }, recipe) => {
+  // set the stage w/the requested acapID
+  // try modifieds then api, where we may or
+  // may not get back an existing
+  await axios({
+    url: apiBase + '/findOne?filter={"where":{"acapID":' + recipe.acapID + '}}'
+  }).then(resp => {
+    if (resp.status === 200 && resp.data && resp.data.id) {
+      const cached = getters.getModified(resp.id);
+      if (cached) {
+        if (resp.data.updatedDate <= cached.updatedDate) {
+          return commit('stage', cached);
         } else {
-          dispatch('handleError', {
-            service: 'recipe:load',
-            severity: 'error',
-            error: `Error ${resp.status}: ${resp.statusText}`,
-            context: contUnitsMgr
+          dispatch('setModified', {
+            key: state.recipeModule.recipe.id,
+            val: undefined
           });
         }
-      } catch (err) {
+      }
+      const recipe = resp.data;
+      // covers the renamed method > methods
+      recipe.method && !recipe.methods && (recipe.methods = recipe.method) && delete (recipe.method);
+      // covers any newly added properties not present in existing data
+      commit('stage', Object.assign(cloneDeep(recipeTemplate), recipe));
+    }
+  }).catch(err => {
+    if (err.response) {
+      if (err.response.status === 404) {
         dispatch('handleError', {
-          service: 'loadRecipe',
-          severity: 'fatal',
-          error: err,
+          service: 'recipe:load',
+          severity: 'info',
+          error: `Congratulations! You're now ready to begin building your new recipe details.<br>
+            Note that we will hang on to your details data on this device/computer between SAVE's,
+            but it's still a good idea to SAVE from time to time.<br>
+            RESET will take you back to the last SAVE.<br>
+            PREVIEW will show how your SAVEd details will display when Published.`,
+          context: contUnitsMgr
+        });
+        commit('stage', Object.assign(cloneDeep(recipeTemplate), recipe));
+      } else {
+        dispatch('handleError', {
+          service: 'recipe:load',
+          severity: 'error',
+          error: `Error ${err.response.status}: ${err.response.statusText}`,
           context: contUnitsMgr
         });
       }
-    }
-  },
-  async save({ state, commit, dispatch }) {
-    if (!state.recipe.id) {
-      return dispatch('handleError', {
-        service: 'save',
-        err: 'Recipe has no ID? ' + JSON.stringify(recipe),
+    } else {
+      // this will eg if the endpoint fails
+      dispatch('handleError', {
+        service: 'loadRecipe',
+        severity: 'fatal',
+        error: err,
         context: contUnitsMgr
       });
     }
-    let recipe = cloneDeep(state.recipe);
-    let url = apiBase;
-    url += isProd ? '/preAuth/' : '/';
-    url += recipe.id;
+  })
+}
 
-    delete recipe.id;
-    helpers.filterRecipe(recipe);
-    let params = isProd
-      ? {
-        recipe,
-        actionStatus: 'cont-units:recipes:update'
-      }
-      : recipe;
+const putRecipe = async ({ commit, dispatch }, recipe) => {
+  let url = apiBase;
+  url += isProd ? '/preAuth/' : '/';
+  url += recipe.id;
 
-    try {
-      const resp = await axios.put(url, params);
+  delete recipe.id;
+  let params = isProd
+    ? {
+      recipe,
+      actionStatus: 'cont-units:recipes:update'
+    }
+    : recipe;
+  await axios.put(url, params)
+    .then(resp => {
       if (resp.status === 200) {
         const recipe = resp.data;
         recipe.method && delete (recipe.method);
@@ -119,13 +107,66 @@ export default {
           context: contUnitsMgr
         });
       }
-    } catch (err) {
-      dispatch('handleError', {
-        service: 'recipes:update',
-        severity: 'fatal',
-        error: err,
+    })
+    .catch(err => {
+      if (err.response) {
+        dispatch('handleError', {
+          service: 'recipe:load',
+          severity: 'error',
+          error: `Error ${error.response.status}: ${err.response.statusText}`,
+          context: contUnitsMgr
+        });
+      } else {
+        dispatch('handleError', {
+          service: 'recipes:update',
+          severity: 'fatal',
+          error: err,
+          context: contUnitsMgr
+        });
+      }
+    })
+}
+
+export default {
+  // used outside of listing context to load a single
+  loadRecipe(context, rInfo) {
+    const { commit, dispatch } = context;
+    let acapID = rInfo && rInfo.acapID;
+    if (acapID === undefined) {
+      // pull from the contUnitsMgr
+      rInfo = contUnitsMgr && contUnitsMgr.getInfo();
+      acapID = rInfo && rInfo.ad_unit_id;
+    }
+
+    // we MUST have an acapID
+    // we MAY not yet have an id:ObjectID
+    if (acapID === undefined) {
+      return dispatch('handleError', {
+        service: 'loadRecipe',
+        severity: 'warn',
+        error: 'Weird! I didn\'t get an acapID?',
         context: contUnitsMgr
       });
     }
+
+    const recipe = cloneDeep(recipeTemplate);
+    recipe.acapID = acapID;
+    recipe.title = rInfo.title || rInfo.ad_unit_name;
+    commit('stage', recipe);
+    fetchRecipe(context, recipe);
+  },
+
+  save(context) {
+    const { state, dispatch } = context;
+    if (!state.recipe.acapID) {
+      return dispatch('handleError', {
+        service: 'save',
+        error: 'Recipe has no ID? ' + JSON.stringify(recipe),
+        context: contUnitsMgr
+      });
+    }
+    let recipe = cloneDeep(state.recipe);
+    helpers.filterRecipe(recipe);
+    putRecipe(context, recipe);
   }
 };
