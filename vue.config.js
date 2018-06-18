@@ -1,7 +1,8 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
+const path = require('path');
 module.exports = {
-    baseUrl: '/RecipeDetails/',
+    baseUrl: process.env.NODE_ENV == 'production' ? '/RecipeDetails/' : '/',
     configureWebpack: {
         entry: {
             detailsPlugin: ['./src/details-plugin.js'],
@@ -13,13 +14,14 @@ module.exports = {
                 inject: 'body',
                 filename: 'index-plugin.html',
                 excludeChunks: ['app']
-            }),
-            new webpack.optimize.CommonsChunkPlugin({
-                name: 'common'
             })
         ],
         output: {
             chunkFilename: '[name].bundle.js',
+        },
+        resolve: {
+            alias: {
+            }
         }
     }
 }
