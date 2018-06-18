@@ -19,7 +19,7 @@ export default {
   },
 
   // for collections
-  addIngredient({ state, commit, dispatch }, { attr, val, context }) {
+  addIngredient({ state, commit, dispatch }, { attr, val, actionContext }) {
     let ing = cloneDeep(recipeTemplate.ingredients[0]);
     let idx;
     if (isObject(val)) {
@@ -33,7 +33,7 @@ export default {
           service: 'addIngredient',
           severity: 'warn',
           error: 'Please first name the Unnamed Ingredients Group.',
-          context: context,
+          actionContext,
           timeout: 5000
         });
       }
@@ -45,7 +45,7 @@ export default {
       index: idx >= -1 ? idx + 1 : undefined
     });
   },
-  addMethod({ state, commit, dispatch }, { attr, val, context }) {
+  addMethod({ state, commit, dispatch }, { attr, val, actionContext }) {
     let met = cloneDeep(recipeTemplate.methods[0]);
     let idx;
     if (isObject(val)) {
@@ -59,7 +59,7 @@ export default {
           service: 'addMethod',
           severity: 'warn',
           error: 'Please first name the Unnamed Methods group.',
-          context: context,
+          actionContext,
           timeout: 5000
         });
       }

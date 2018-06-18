@@ -8,6 +8,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
   data() {
     return {
@@ -15,12 +16,14 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(['notifsByActionContext']),
     localNotifs() {
-      return this.$store.state.appModule.notifications.filter(
-        notif => notif.context == this.$parent.$el.id
-      );
+      return this.$parent.$el
+        ? this.notifsByActionContext(this.$parent.$el.id)
+        : [];
     }
-  }
+  },
+  methods: {}
 };
 </script>
 

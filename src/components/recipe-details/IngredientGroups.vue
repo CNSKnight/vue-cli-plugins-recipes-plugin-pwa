@@ -78,12 +78,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters([
-      'localNotifs',
-      'ingredientGroups',
-      'ingCountByGroup',
-      'isModified'
-    ]),
+    ...mapGetters(['ingredientGroups', 'ingCountByGroup', 'isModified']),
     ...mapFields(['recipe.ingredients']),
     lastGroup({ ingredientGroups }) {
       return ingredientGroups[ingredientGroups.length - 1];
@@ -102,7 +97,7 @@ export default {
     onEvent(event, prop, attr, val) {
       const payload = isObject(prop) ? { ...prop } : { prop, attr, val };
       // cannot send a $el ref into the store
-      this.$el.id && (payload.context = this.$el.id);
+      this.$el.id && (payload.actionContext = this.$el.id);
       this.$emit(event, payload);
     }
   },

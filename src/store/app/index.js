@@ -6,9 +6,9 @@ const state = {
 
 const getters = {
   notifications: state => state.notifications,
-  localNotifs: ({ notifications }) => (context) => {
+  notifsByActionContext: ({ notifications }) => actionContext => {
     return notifications.filter(
-      notif => notif.context == context
+      notif => notif.actionContext == actionContext
     );
   }
 };
@@ -22,7 +22,7 @@ const sevMap = {
 const actions = {
   handleError(
     { commit },
-    { service, severity, error, context, timeout, parent = context }
+    { service, severity, error, actionContext, timeout }
   ) {
     let errMsg = service + ' ' + (sevMap[severity] || '') + ': ';
     if (error instanceof Response) {
@@ -36,7 +36,7 @@ const actions = {
       service,
       severity: severity || 'error',
       error: errMsg,
-      context,
+      actionContext,
       cancelAt
     });
     if (cancelAt) {
@@ -45,6 +45,8 @@ const actions = {
       }, timeout);
     }
 
+    /*
+    * @todo move this into a watcher
     if (parent && parent.setMessages) {
       if (error.status !== 403 && error.status !== 404) {
         const infoIcon = `<i class="material-icons">info</i>`;
@@ -53,6 +55,7 @@ const actions = {
         parent.setMessages(`<div class="acap_${severity}">${notif}</div>`);
       }
     }
+    */
   }
 };
 

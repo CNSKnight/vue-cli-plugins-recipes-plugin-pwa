@@ -38,25 +38,22 @@ const fetchRecipe = async ({ commit, dispatch, getters, state }, recipe) => {
             Note that we will hang on to your details data on this device/computer between SAVE's,
             but it's still a good idea to SAVE from time to time.<br>
             RESET will take you back to the last SAVE.<br>
-            PREVIEW will show how your SAVEd details will display when Published.`,
-          context: contUnitsMgr
+            PREVIEW will show how your SAVEd details will display when Published.`
         });
         commit('stage', Object.assign(cloneDeep(recipeTemplate), recipe));
       } else {
         dispatch('handleError', {
-          service: 'recipe:load',
+          service: 'fetch:recipe',
           severity: 'error',
-          error: `Error ${err.response.status}: ${err.response.statusText}`,
-          context: contUnitsMgr
+          error: `Error ${err.response.status}: ${err.response.statusText}`
         });
       }
     } else {
       // this will eg if the endpoint fails
       dispatch('handleError', {
-        service: 'loadRecipe',
+        service: 'fetch:recipe',
         severity: 'fatal',
-        error: err,
-        context: contUnitsMgr
+        error: err
       });
     }
   });
@@ -98,17 +95,15 @@ const putRecipe = async ({ commit, dispatch }, recipe) => {
     .catch(err => {
       if (err.response) {
         dispatch('handleError', {
-          service: 'recipe:load',
+          service: 'put:recipe',
           severity: 'error',
-          error: `Error ${error.response.status}: ${err.response.statusText}`,
-          context: contUnitsMgr
+          error: `Error ${error.response.status}: ${err.response.statusText}`
         });
       } else {
         dispatch('handleError', {
-          service: 'recipes:update',
+          service: 'put:recipe',
           severity: 'fatal',
-          error: err,
-          context: contUnitsMgr
+          error: err
         });
       }
     });
@@ -118,10 +113,9 @@ const putRecipe = async ({ commit, dispatch }, recipe) => {
     resp.data && commit('update', resp.data);
   } else {
     dispatch('handleError', {
-      service: 'recipes:update',
+      service: 'put:recipe',
       severity: 'error',
-      error: `Error ${resp.status}: ${resp.statusText}`,
-      context: contUnitsMgr
+      error: `Error ${resp.status}: ${resp.statusText}`
     });
   }
 }
@@ -143,8 +137,7 @@ export default {
       return dispatch('handleError', {
         service: 'loadRecipe',
         severity: 'warn',
-        error: 'Weird! I didn\'t get an acapID?',
-        context: contUnitsMgr
+        error: 'Weird! I didn\'t get an acapID?'
       });
     }
 
@@ -160,8 +153,7 @@ export default {
     if (!state.recipe.acapID) {
       return dispatch('handleError', {
         service: 'save',
-        error: 'Recipe has no ID? ' + JSON.stringify(recipe),
-        context: contUnitsMgr
+        error: 'Recipe has no ID? ' + JSON.stringify(recipe)
       });
     }
     let recipe = cloneDeep(state.recipe);

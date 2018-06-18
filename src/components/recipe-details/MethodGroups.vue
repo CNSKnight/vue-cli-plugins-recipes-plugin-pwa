@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="met-groups">
         <div class="row" v-for="(group, idx) in methodGroups" :key="idx">
             <div v-if="group == lastGroup" class="col s12">
                 <notifs-local />
@@ -96,7 +96,7 @@ export default {
     // we also don't otherwise need to define that 'event' on our props
     onEvent(event, prop, attr, val) {
       const payload = isObject(prop) ? { ...prop } : { prop, attr, val };
-      this.$el.id && (payload.context = this.$el.id);
+      this.$el.id && (payload.actionContext = this.$el.id);
       this.$emit(event, payload);
     }
   },
