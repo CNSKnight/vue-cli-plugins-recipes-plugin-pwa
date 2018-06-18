@@ -20,7 +20,10 @@ const sevMap = {
 }
 
 const actions = {
-  handleError({ commit }, { service, severity, error, context, timeout, parent = context }) {
+  handleError(
+    { commit },
+    { service, severity, error, context, timeout, parent = context }
+  ) {
     let errMsg = service + ' ' + (sevMap[severity] || '') + ': ';
     if (error instanceof Response) {
       const err = error.error || JSON.stringify(error);
@@ -39,7 +42,7 @@ const actions = {
     if (cancelAt) {
       setTimeout(() => {
         commit('notify', { service, cancelAt });
-      }, timeout)
+      }, timeout);
     }
 
     if (parent && parent.setMessages) {
@@ -47,7 +50,7 @@ const actions = {
         const infoIcon = `<i class="material-icons">info</i>`;
         const msgIcon = `<span title="${service}">${infoIcon}</span>`;
         const notif = `${msgIcon} ${errMsg}`;
-        parent.setMessages(`<div class="acap_warning">${notif}</div>`);
+        parent.setMessages(`<div class="acap_${severity}">${notif}</div>`);
       }
     }
   }
