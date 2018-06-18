@@ -1,5 +1,9 @@
-import { chain, forOwn, isEmpty, isObject, map, negate, trim } from 'lodash';
+import recipeTemplate from '../models/recipeTemplate';
+import { assign, compose, filter, forOwn, isEmpty, map, reject, trim } from 'lodash/fp';
+import { isObject, isString, transform } from 'lodash';
 
+const ingredient = recipeTemplate.ingredients[0];
+const method = recipeTemplate.methods[0];
 export default {
   /*
   * @todo remove empty or blacklisted tags or blacklisted chars
@@ -11,7 +15,8 @@ export default {
     recipe.tools = this.filterStrAry(recipe.tools, 'name');
     recipe.tags = this.filterStrAry(recipe.tags);
     recipe.ingredients = this.filterIngredients(recipe.ingredients);
-    recipe.methods = this.filterStrAry(recipe.methods);
+    delete recipe.method;
+    recipe.methods = this.filterMethods(recipe.methods);
     recipe.variations = this.filterStrAry(recipe.variations);
     recipe.creator = trim(recipe.creator);
     recipe.originalUrl = trim(recipe.originalUrl);
@@ -20,19 +25,35 @@ export default {
     recipe.notes = trim(recipe.notes);
   },
 
+  trimObjStrings: (obj, val, key) => {
+    if (!key) return obj;
+    obj[key] = isString(val) ? trim(val) : val;
+    return obj;
+  },
+
   filterIngredients(ingredients) {
     if (!ingredients || !ingredients.length) {
       return [];
     }
 
-    const valids = chain(ingredients)
-      .reject(ing => isEmpty(ing))
-      .map(ing => {
-        forOwn(ing, (val, idx, ing) => ing[idx] = trim(val));
-        return ing;
-      })
-      .filter(ing => ing.name.length)
-      .value();
+    const valids = compose(
+      filter(ing => ing.name.length),
+      map(ing => transform(ing, this.trimObjStrings, { ...ingredient })),
+      reject(isEmpty)
+    )(ingredients);
+    return valids;
+  },
+
+  filterMethods(methods) {
+    if (!methods || !methods.length) {
+      return [];
+    }
+
+    const valids = compose(
+      filter(met => met.text.length),
+      map(ing => transform(ing, this.trimObjStrings, { ...method })),
+      reject(isEmpty)
+    )(methods);
     return valids;
   },
 
@@ -41,20 +62,20 @@ export default {
       return [];
     }
 
-    const valids = chain(ary)
-      .reject(item => isEmpty(item))
-      .map(item => {
+    const valids = compose(
+      filter(item => isObject(item)
+        ? (item[check] && item[check].length)
+        : item.length),
+      map(item => {
         if (isObject(item)) {
           item[check] = trim(item[check]);
         } else {
           item = trim(item);
         }
         return item;
-      })
-      .filter(item => isObject(item)
-        ? (item[check] && item[check].length)
-        : item.length)
-      .value();
+      }),
+      reject(isEmpty)
+    )(ary);
     return valids;
   }
 };
