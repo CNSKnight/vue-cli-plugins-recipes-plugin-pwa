@@ -26,27 +26,8 @@ const fetchRecipe = async ({ commit, dispatch, getters, state }, recipe) => {
   // set the stage w/the requested acapID
   // try modifieds then api, where we may or
   // may not get back an existing
-  await axios({
+  const resp = await axios({
     url: apiBase + '/findOne?filter={"where":{"acapID":' + recipe.acapID + '}}'
-  }).then(resp => {
-    if (resp.status === 200 && resp.data && resp.data.id) {
-      const cached = getters.getModified(resp.id);
-      if (cached) {
-        if (resp.data.updatedDate <= cached.updatedDate) {
-          return commit('stage', cached);
-        } else {
-          dispatch('setModified', {
-            key: state.recipeModule.recipe.id,
-            val: undefined
-          });
-        }
-      }
-      const recipe = resp.data;
-      // covers the renamed method > methods
-      recipe.method && !recipe.methods && (recipe.methods = recipe.method) && delete (recipe.method);
-      // covers any newly added properties not present in existing data
-      commit('stage', Object.assign(cloneDeep(recipeTemplate), recipe));
-    }
   }).catch(err => {
     if (err.response) {
       if (err.response.status === 404) {
@@ -78,7 +59,27 @@ const fetchRecipe = async ({ commit, dispatch, getters, state }, recipe) => {
         context: contUnitsMgr
       });
     }
-  })
+  });
+  if (!resp || resp.status !== 200 || !resp.data || !resp.data.id) {
+    return;
+  }
+  const cached = getters.getModified(resp.id);
+  if (cached) {
+    if (resp.data.updatedDate <= cached.updatedDate) {
+      return commit('stage', cached);
+    } else {
+      // dump our local in-progress cache
+      dispatch('setModified', {
+        key: state.recipeModule.recipe.id,
+        val: undefined
+      });
+    }
+  }
+  recipe = resp.data;
+  // covers the renamed method > methods
+  recipe.method && !recipe.methods && (recipe.methods = recipe.method) && delete (recipe.method);
+  // covers any newly added properties not present in existing data
+  commit('stage', Object.assign(cloneDeep(recipeTemplate), recipe));
 }
 
 const putRecipe = async ({ commit, dispatch }, recipe) => {
@@ -93,21 +94,7 @@ const putRecipe = async ({ commit, dispatch }, recipe) => {
       actionStatus: 'cont-units:recipes:update'
     }
     : recipe;
-  await axios.put(url, params)
-    .then(resp => {
-      if (resp.status === 200) {
-        const recipe = resp.data;
-        recipe.method && delete (recipe.method);
-        resp.data && commit('update', resp.data);
-      } else {
-        dispatch('handleError', {
-          service: 'recipes:update',
-          severity: 'error',
-          error: `Error ${resp.status}: ${resp.statusText}`,
-          context: contUnitsMgr
-        });
-      }
-    })
+  const resp = await axios.put(url, params)
     .catch(err => {
       if (err.response) {
         dispatch('handleError', {
@@ -124,7 +111,19 @@ const putRecipe = async ({ commit, dispatch }, recipe) => {
           context: contUnitsMgr
         });
       }
-    })
+    });
+  if (!resp || resp.status === 200) {
+    recipe = resp.data;
+    recipe.method && delete (recipe.method);
+    resp.data && commit('update', resp.data);
+  } else {
+    dispatch('handleError', {
+      service: 'recipes:update',
+      severity: 'error',
+      error: `Error ${resp.status}: ${resp.statusText}`,
+      context: contUnitsMgr
+    });
+  }
 }
 
 export default {
