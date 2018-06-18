@@ -20,7 +20,7 @@
                     @onEvent="onEvent" @updated="$emit('updated')" />
                 <div v-if="group == 'default' && !ingCountByGroup(group)" class="tip-wrapper centered mb-lg">
                     <p class="tip">Here you can:<br>- Add a new "named" Ingredients Group<br>-
-                        Add Recipes to this "default" Group</p>
+                        Add ingredients to this "default" Group</p>
                 </div>
                 <div class="row">
                     <div v-if="group == lastGroup" class="col s6 center-align">
