@@ -3,8 +3,7 @@
 // PascalCased version of their file name.
 
 import Vue from 'vue';
-import upperFirst from 'lodash/upperFirst';
-import camelCase from 'lodash/camelCase';
+import { upperFirst, camelCase } from 'lodash';
 
 // https://webpack.js.org/guides/dependency-management/#require-context
 const requireComponent = require.context(
