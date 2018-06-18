@@ -12,7 +12,11 @@ const dpVm = new Vue({
   store,
   render: h => h(DetailsPluginApp)
 });
-if (window.acap && window.acap.ADMIN_TAPPADS && window.acap.ADMIN_TAPPADS.contUnitsMgr) {
+if (
+  window.acap &&
+  window.acap.ADMIN_TAPPADS &&
+  window.acap.ADMIN_TAPPADS.contUnitsMgr
+) {
   window.acap.ADMIN_TAPPADS.contUnitsMgr.dpVm = dpVm;
 } else {
   dpVm.$mount('#detailsPlugin');
