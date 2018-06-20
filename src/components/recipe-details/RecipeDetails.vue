@@ -7,7 +7,6 @@ import ActionsBar from '@/components/actions-bar/ActionsBar';
 import IngredientGroups from './IngredientGroups';
 import MethodGroups from './MethodGroups';
 import RecipePreview from '@/components/recipe-preview/RecipePreview';
-import { padStart } from 'lodash';
 export default {
   components: {
     'actions-bar': ActionsBar,

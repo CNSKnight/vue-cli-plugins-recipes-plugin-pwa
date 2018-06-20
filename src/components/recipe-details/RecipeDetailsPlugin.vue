@@ -3,9 +3,10 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import RecipeDetails from '@/components/recipe-details/RecipeDetails';
 import * as MarkdownIt from 'markdown-it';
+
 const md = MarkdownIt({
   html: true,
   linkify: false,
@@ -22,6 +23,7 @@ export default {
   },
   // computed: {...mapGetters(['recipes'])},
   computed: {
+    ...mapState(['notifications']),
     hasRecipe() {
       return this.$store.getters.recipeId;
     }

@@ -1,9 +1,6 @@
 <template>
     <div id="met-groups">
         <div class="row" v-for="(group, idx) in methodGroups" :key="idx">
-            <div v-if="group == lastGroup" class="col s12">
-                <notifs-local />
-            </div>
             <fieldset class="col s12">
                 <legend v-text="group !== 'default' ? 'Method Group' : 'Method'" />
                 <template v-if="group !== 'default'">
@@ -18,11 +15,14 @@
                 <group-method v-for="(step, idx) in methods" :key="idx" v-if="isInGroup(group, step.group)"
                     :idx="idx" :canDrag="!isModified && stepCountByGroup(group)>1" @onEvent="onEvent"
                     @updated="$emit('updated')" />
-                <div v-if="group == 'default' && !stepCountByGroup(group)" class="tip-wrapper centered mb-lg">
-                    <p class="tip">Here you can:<br>- Add a new "named" Method Group<br>- Add Steps
-                        to this "default" Group</p>
+                <div v-if="group == 'default' && !stepCountByGroup(group)" class="tip-wrapper centered mb-md">
+                    <p class="tip">Here you can: <br>&bull; Add a new "named" Method Group <br>&bull;
+                        Add steps to this "default" Group</p>
                 </div>
                 <div class="row">
+                    <div v-if="group == lastGroup" class="col s12">
+                        <notifs-local />
+                    </div>
                     <div v-if="group == lastGroup" class="col s6 center-align">
                         <button class="btn btn-sm grey lighten-5" type="button" @click="onEvent('addItem', 'methods', 'group')"
                             title="Adds an Methods Group for Mult-Part Recipes">
@@ -33,7 +33,7 @@
                         <div class="col s6 center-align">
                             <button class="btn btn-sm grey lighten-5" type="button" @click="onEvent('addItem', 'methods')"
                                 title="adds an Method to a group">
-                                <i class="material-icons left">add</i> Method
+                                <i class="material-icons left">add</i> Step
                             </button>
                         </div>
                     </template>

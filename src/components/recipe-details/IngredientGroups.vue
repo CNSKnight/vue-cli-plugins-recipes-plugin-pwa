@@ -1,9 +1,6 @@
 <template>
     <div id="ing-groups">
         <div class="row" v-for="(group, idx) in ingredientGroups" :key="idx">
-            <div v-if="group == lastGroup" class="col s12">
-                <notifs-local />
-            </div>
             <fieldset class="col s12">
                 <legend v-text="group !== 'default' ? 'Ingredients Group' : 'Ingredients'" />
                 <template v-if="group !== 'default'">
@@ -18,11 +15,14 @@
                 <group-ingredients v-for="(ingredient, idx) in ingredients" :key="idx" v-if="isInGroup(group, ingredient.group)"
                     :ingredient="ingredient" :idx="idx" :canDrag="!isModified && ingCountByGroup(group)>1"
                     @onEvent="onEvent" @updated="$emit('updated')" />
-                <div v-if="group == 'default' && !ingCountByGroup(group)" class="tip-wrapper centered mb-lg">
-                    <p class="tip">Here you can:<br>- Add a new "named" Ingredients Group<br>-
-                        Add ingredients to this "default" Group</p>
+                <div v-if="group == 'default' && !ingCountByGroup(group)" class="tip-wrapper centered mb-md">
+                    <p class="tip">Here you can:<br>&bull; Add a new "named" Ingredients Group
+                        <br>&bull; Add ingredients to this "default" Group</p>
                 </div>
                 <div class="row">
+                    <div v-if="group == lastGroup" class="col s12">
+                        <notifs-local />
+                    </div>
                     <div v-if="group == lastGroup" class="col s6 center-align">
                         <button class="btn btn-sm grey lighten-5" type="button" @click="onEvent('addItem', 'ingredients', 'group')"
                             title="Adds an Ingredients Group for Mult-Part Recipes">
