@@ -1,5 +1,5 @@
 <template>
-    <section class="detailsPlugin">
+    <section class="details detailsPlugin">
         <aside class="row">
             <div class="col s12">
                 <app-notifications/>
@@ -23,4 +23,5 @@ export default {
 };
 </script>
 
+<style src="@/assets/app.scss"/>
 <style src="@/assets/details-plugin.scss"/>

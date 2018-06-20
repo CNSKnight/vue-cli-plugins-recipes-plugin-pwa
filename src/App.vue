@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="details">
     <header>
       <nav class="lime darken-2 mb-lg">
         <div class="nav-wrapper">
@@ -40,5 +40,5 @@ export default {
 };
 </script>
 
-<style src="@/assets/app.css"/>
+<style src="@/assets/app.scss"/>
 <style src="@/assets/details-plugin.scss"/>
