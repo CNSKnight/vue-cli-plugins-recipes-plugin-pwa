@@ -1,5 +1,5 @@
 import recipeTemplate from '../models/recipeTemplate';
-import { assign, compose, filter, forOwn, isEmpty, map, reject, trim } from 'lodash/fp';
+import { compose, filter, isEmpty, map, reject, trim } from 'lodash/fp';
 import { isObject, isString, transform } from 'lodash';
 
 const ingredient = recipeTemplate.ingredients[0];
@@ -63,9 +63,10 @@ export default {
     }
 
     const valids = compose(
-      filter(item => isObject(item)
-        ? (item[check] && item[check].length)
-        : item.length),
+      filter(
+        item =>
+          isObject(item) ? item[check] && item[check].length : item.length
+      ),
       map(item => {
         if (isObject(item)) {
           item[check] = trim(item[check]);

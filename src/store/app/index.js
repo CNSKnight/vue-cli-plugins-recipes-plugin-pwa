@@ -7,9 +7,7 @@ const state = {
 const getters = {
   notifications: state => state.notifications,
   notifsByActionContext: ({ notifications }) => actionContext => {
-    return notifications.filter(
-      notif => notif.actionContext == actionContext
-    );
+    return notifications.filter(notif => notif.actionContext == actionContext);
   }
 };
 
@@ -17,7 +15,7 @@ const sevMap = {
   fatal: 'failed',
   info: '',
   error: 'reported'
-}
+};
 
 const actions = {
   handleError(
@@ -44,18 +42,6 @@ const actions = {
         commit('notify', { service, cancelAt });
       }, timeout);
     }
-
-    /*
-    * @todo move this into a watcher
-    if (parent && parent.setMessages) {
-      if (error.status !== 403 && error.status !== 404) {
-        const infoIcon = `<i class="material-icons">info</i>`;
-        const msgIcon = `<span title="${service}">${infoIcon}</span>`;
-        const notif = `${msgIcon} ${errMsg}`;
-        parent.setMessages(`<div class="acap_${severity}">${notif}</div>`);
-      }
-    }
-    */
   }
 };
 

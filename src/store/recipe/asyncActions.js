@@ -15,6 +15,7 @@ const acap = (isProd && parent.acap) || {
         };
       },
       setMessages(msg) {
+        // eslint-disable-next-line no-console
         console.log(msg);
       }
     }
@@ -33,7 +34,7 @@ const fetchRecipe = async ({ commit, dispatch, getters, state }, recipe) => {
       if (err.response.status === 404) {
         dispatch('handleError', {
           service: 'recipe:load',
-          severity: 'info',
+          severity: 'success',
           error: `Congratulations! You're now ready to begin building your new recipe details.<br>
             Note that we will hang on to your details data on this device/computer between SAVE's,
             but it's still a good idea to SAVE from time to time.<br>
@@ -74,10 +75,13 @@ const fetchRecipe = async ({ commit, dispatch, getters, state }, recipe) => {
   }
   recipe = resp.data;
   // covers the renamed method > methods
-  recipe.method && !recipe.methods && (recipe.methods = recipe.method) && delete (recipe.method);
+  recipe.method &&
+    !recipe.methods &&
+    (recipe.methods = recipe.method) &&
+    delete recipe.method;
   // covers any newly added properties not present in existing data
   commit('stage', Object.assign(cloneDeep(recipeTemplate), recipe));
-}
+};
 
 const putRecipe = async ({ commit, dispatch }, recipe) => {
   let url = apiBase;
@@ -87,29 +91,28 @@ const putRecipe = async ({ commit, dispatch }, recipe) => {
   delete recipe.id;
   let params = isProd
     ? {
-      recipe,
-      actionStatus: 'cont-units:recipes:update'
-    }
-    : recipe;
-  const resp = await axios.put(url, params)
-    .catch(err => {
-      if (err.response) {
-        dispatch('handleError', {
-          service: 'put:recipe',
-          severity: 'error',
-          error: `Error ${error.response.status}: ${err.response.statusText}`
-        });
-      } else {
-        dispatch('handleError', {
-          service: 'put:recipe',
-          severity: 'fatal',
-          error: err
-        });
+        recipe,
+        actionStatus: 'cont-units:recipes:update'
       }
-    });
+    : recipe;
+  const resp = await axios.put(url, params).catch(err => {
+    if (err.response) {
+      dispatch('handleError', {
+        service: 'put:recipe',
+        severity: 'error',
+        error: `Error ${err.response.status}: ${err.response.statusText}`
+      });
+    } else {
+      dispatch('handleError', {
+        service: 'put:recipe',
+        severity: 'fatal',
+        error: err
+      });
+    }
+  });
   if (!resp || resp.status === 200) {
     recipe = resp.data;
-    recipe.method && delete (recipe.method);
+    recipe.method && delete recipe.method;
     resp.data && commit('update', resp.data);
   } else {
     dispatch('handleError', {
@@ -118,7 +121,7 @@ const putRecipe = async ({ commit, dispatch }, recipe) => {
       error: `Error ${resp.status}: ${resp.statusText}`
     });
   }
-}
+};
 
 export default {
   // used outside of listing context to load a single
@@ -136,8 +139,8 @@ export default {
     if (acapID === undefined) {
       return dispatch('handleError', {
         service: 'loadRecipe',
-        severity: 'warn',
-        error: 'Weird! I didn\'t get an acapID?'
+        severity: 'warning',
+        error: "Weird! I didn't get an acapID?"
       });
     }
 

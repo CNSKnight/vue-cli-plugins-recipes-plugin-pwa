@@ -31,7 +31,7 @@ export default {
       if (find(state.recipe.ingredients, ['group', 'Unnamed'])) {
         return dispatch('handleError', {
           service: 'addIngredient',
-          severity: 'warn',
+          severity: 'warning',
           error: 'Please first name the Unnamed Ingredients Group.',
           actionContext,
           timeout: 5000
@@ -57,7 +57,7 @@ export default {
       if (find(state.recipe.methods, ['group', 'Unnamed'])) {
         return dispatch('handleError', {
           service: 'addMethod',
-          severity: 'warn',
+          severity: 'warning',
           error: 'Please first name the Unnamed Methods group.',
           actionContext,
           timeout: 5000
@@ -82,7 +82,6 @@ export default {
           return dispatch('addIngredient', payload);
         case 'methods':
           return dispatch('addMethod', payload);
-          break;
         default:
       }
 

@@ -12,19 +12,19 @@ Vue.use(Vuex);
 const debug = process.env.NODE_ENV !== 'production';
 
 const modules = {
-    appModule,
-    recipeModule
+  appModule,
+  recipeModule
 };
 let plugins = debug ? [createLogger()] : [];
 forOwn(modules, module => {
-    if (module.plugins) {
-        plugins = plugins.concat(module.plugins);
-        delete module.plugins;
-    }
+  if (module.plugins) {
+    plugins = plugins.concat(module.plugins);
+    delete module.plugins;
+  }
 });
 
 export default new Vuex.Store({
-    modules: modules,
-    strict: debug,
-    plugins: plugins
+  modules: modules,
+  strict: debug,
+  plugins: plugins
 });
