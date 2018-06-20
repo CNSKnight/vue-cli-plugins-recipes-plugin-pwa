@@ -4,8 +4,15 @@ module.exports = {
     root: true,
     extends: [
         'plugin:vue/essential',
-        '@vue/prettier'
+        "plugin:prettier/recommended",
+        'eslint:recommended',
+        //        '@vue/prettier'
     ],
+    env: {
+        browser: true,
+        es6: true,
+        node: true
+    },
     parserOptions: {
         ecmaVersion: 2017
     },
