@@ -57,7 +57,7 @@
                         </ul>
                     </div>
                 </div>
-                <div v-if="recipe.ingredients && recipe.ingredients.length" class="row">
+                <div v-if="ingredientGroups.length" class="row">
                     <div class="col s12 ">
                         <table class="ing striped">
                             <caption>{{recipe.title}} Ingredients</caption>
@@ -90,7 +90,7 @@
                         </table>
                     </div>
                 </div>
-                <div v-if="recipe.methods && recipe.methods.length" class="row ">
+                <div v-if="methodGroups.length" class="row ">
                     <div class="col s12">
                         <h3>Preparation</h3>
                         <div v-for="(group, idx) in methodGroups" :key="idx" class="row">
@@ -118,7 +118,10 @@
                     </div>
                 </div>
                 <div v-if="recipe.notes" class="row ">
-                    <div class="col s12" v-html="transformMarkdown(recipe.notes)"></div>
+                    <div class="col s12">
+                        <h3>Notes:</h3>
+                        <div class="notes" v-html="transformMarkdown(recipe.notes)" />
+                    </div>
                 </div>
                 <div v-if="recipe.tags && recipe.tags.length" class="row ">
                     <div class="col s12 ">
@@ -138,6 +141,7 @@
 <script>
 import dateFormat from 'dateformat';
 import { mapGetters } from 'vuex';
+import { isEmpty } from 'lodash';
 export default {
   props: {
     transformMarkdown: Function
@@ -155,9 +159,7 @@ export default {
   methods: {
     dateFormated: (date, format) => dateFormat(date, format),
     isInGroup(item, group) {
-      return (
-        item.group == group || (item.group === undefined && group == 'default')
-      );
+      return item.group == group || (isEmpty(item.group) && group == 'default');
     }
   }
 };
