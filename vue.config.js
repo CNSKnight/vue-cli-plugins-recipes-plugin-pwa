@@ -1,6 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
-  baseUrl: process.env.NODE_ENV == 'production' ? '/RecipeDetails/' : '/',
+  publicPath: process.env.NODE_ENV == 'production' ? '/RecipeDetails/' : '/',
   configureWebpack: {
     entry: {
       detailsPlugin: ['./src/details-plugin.js']
@@ -16,9 +16,6 @@ module.exports = {
     ],
     output: {
       chunkFilename: '[name].bundle.js'
-    },
-    resolve: {
-      alias: {}
     }
   }
 };

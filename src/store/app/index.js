@@ -22,10 +22,10 @@ const actions = {
     { commit },
     { service, severity, error, actionContext, timeout }
   ) {
-    let errMsg = service + ' ' + (sevMap[severity] || '') + ': ';
+    let errMsg = `${service} ${sevMap[severity] || ''}: `;
     if (error instanceof Response) {
       const err = error.error || JSON.stringify(error);
-      errMsg += `${err.status} - ${err.statusText || ''}`;
+      errMsg += err.status += (err.statusText && ` - ${err.statusText}`) || '';
     } else {
       errMsg += error.message || error.toString();
     }
