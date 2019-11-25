@@ -13,7 +13,7 @@ import { mapGetters } from 'vuex';
 export default {
   data() {
     return {
-      infoIcon: '<i class="material-icons">info</i>'
+      infoIcon: '<i class="material-icons left">info</i>'
     };
   },
   computed: mapGetters(['notifications'])

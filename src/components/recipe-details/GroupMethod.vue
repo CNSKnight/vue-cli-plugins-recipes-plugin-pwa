@@ -3,8 +3,9 @@
     <div class="row">
       <input :name="`step-${idx}`" v-model="methods[idx].step" hidden>
       <div class="input-field col s12 m10">
-        <textarea :id="`step-${idx}-text`" class="materialize-textarea" name="`step-${idx}-text`"
-          v-model="methods[idx].text" placeholder="Step Content" />
+        <textarea :id="`step-${idx}-text`" class="materialize-textarea"
+          name="`step-${idx}-text`" v-model="methods[idx].text"
+          placeholder="Step Content" />
         <label :for="`step-${idx}-text`" v-text="getStepLabel()" />
       </div>
       <div class="input-field col s12 m2 center-align">

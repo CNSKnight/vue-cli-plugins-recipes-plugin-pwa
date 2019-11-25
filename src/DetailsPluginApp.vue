@@ -1,14 +1,14 @@
 <template>
-    <section class="details detailsPlugin">
-        <aside class="row">
-            <div class="col s12">
-                <app-notifications/>
-            </div>
-        </aside>
-        <main>
-            <recipe-details-plugin/>
-        </main>
-    </section>
+  <section class="details detailsPlugin">
+    <aside class="row">
+      <div class="col s12">
+        <app-notifications />
+      </div>
+    </aside>
+    <main>
+      <recipe-details-plugin />
+    </main>
+  </section>
 </template>
 
 <script>
@@ -23,5 +23,5 @@ export default {
 };
 </script>
 
-<style src="@/assets/app.scss"/>
-<style src="@/assets/details-plugin.scss"/>
+<style lang="scss" src="@/assets/app.scss" />
+<style lang="scss" src="@/assets/details-plugin.scss" />

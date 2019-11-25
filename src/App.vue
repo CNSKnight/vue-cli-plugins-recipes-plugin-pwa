@@ -20,12 +20,12 @@
     <aside>
       <div class="row">
         <div class="col s12">
-          <app-notifications/>
+          <app-notifications />
         </div>
       </div>
     </aside>
     <main>
-      <router-view/>
+      <router-view />
     </main>
   </div>
 </template>
@@ -40,5 +40,5 @@ export default {
 };
 </script>
 
-<style src="@/assets/app.scss"/>
-<style src="@/assets/details-plugin.scss"/>
+<style lang="scss" src="@/assets/app.scss" />
+<style lang="scss" src="@/assets/details-plugin.scss" />

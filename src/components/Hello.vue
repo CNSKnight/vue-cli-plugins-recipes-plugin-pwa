@@ -1,6 +1,6 @@
 <template>
   <div class="container hello">
-    <img src="../assets/logo.png" alt="Vue.js PWA">
+    <img src="@/assets/logo.png" alt="Vue.js PWA">
     <h1>{{ msg }}</h1>
     <h2>Essential Links</h2>
     <ul>
@@ -11,13 +11,15 @@
         <a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a>
       </li>
       <li>
-        <a href="http://chat.vuejs.org/" target="_blank" rel="noopener">Vue Community Chat</a>
+        <a href="http://chat.vuejs.org/" target="_blank" rel="noopener">Vue
+          Community Chat</a>
       </li>
       <li>
         <a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a>
       </li>
       <li>
-        <a href="http://vuejs-templates.github.io/webpack/" target="_blank" rel="noopener">Docs for This Template</a>
+        <a href="http://vuejs-templates.github.io/webpack/" target="_blank"
+          rel="noopener">Docs for This Template</a>
       </li>
     </ul>
     <h2>Ecosystem</h2>

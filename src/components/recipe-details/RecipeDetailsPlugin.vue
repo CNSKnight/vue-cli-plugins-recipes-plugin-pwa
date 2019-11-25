@@ -1,5 +1,6 @@
 <template>
-  <recipe-details v-if="hasRecipe" v-bind="{transformMarkdown}"></recipe-details>
+  <recipe-details v-if="hasRecipe" v-bind="{transformMarkdown}">
+  </recipe-details>
 </template>
 
 <script>

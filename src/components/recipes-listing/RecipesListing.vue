@@ -1,13 +1,21 @@
 <template>
   <div>
     <p v-if="!recipes">No recipes provided</p>
-    <li class="collection-item" :class="{active: selectedId === recipe.id}" v-for="recipe in recipes"
-      :key="recipe.acapID" @click="selectRecipe(recipe)">
+    <li
+      class="collection-item"
+      :class="{ active: selectedId === recipe.id }"
+      v-for="recipe in recipes"
+      :key="recipe.acapID"
+      @click="selectRecipe(recipe)"
+    >
       <span class="secondary-content left">
-        <i class="material-icons amber-text text-lighten-2" v-text="recipe.published ? 'visibility' : 'visibility_off'"></i>
+        <i
+          class="material-icons amber-text text-lighten-2"
+          v-text="recipe.published ? 'visibility' : 'visibility_off'"
+        ></i>
       </span>
       <i v-if="hasChanges(recipe.id)" class="modified"></i>
-      {{recipe.title}}
+      {{ recipe.title }}
       <span class="secondary-content">
         <i class="material-icons">send</i>
       </span>

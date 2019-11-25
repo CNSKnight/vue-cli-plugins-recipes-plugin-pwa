@@ -7,24 +7,28 @@
       <template v-else>
         <ul class="listing collection with-header">
           <li class="collection-header">
-            <h4 class="action-bar">Recipes
+            <h4 class="action-bar">
+              Recipes
               <button class="btn btn-flat right" @click="toggle('showCards')">
-                <i v-text="showCards ? 'view_list' : 'view_agenda'" class="material-icons medium orange-text text-lighten-2"></i>
+                <i v-text="showCards ? 'view_list' : 'view_agenda'"
+                  class="material-icons medium orange-text text-lighten-2"></i>
               </button>
             </h4>
           </li>
-          <recipes-listing v-if="! showCards">
-            <div idkyet>{{'Recipes Loading'}}...</div>
+          <recipes-listing v-if="!showCards">
+            <div idkyet>{{ 'Recipes Loading' }}...</div>
           </recipes-listing>
-          <recipes-cards v-if="showCards" v-bind="{transformMarkdown}">
+          <recipes-cards v-if="showCards" v-bind="{ transformMarkdown }">
           </recipes-cards>
         </ul>
-        <blockquote v-if="isPreAuth">@note Posts and Puts won't work with preAuth from a non-same-origin.</blockquote>
+        <blockquote v-if="isPreAuth">
+          @note Posts and Puts won't work with preAuth from a non-same-origin.
+        </blockquote>
         <div class="backwall"></div>
       </template>
     </div>
     <div class="col s12 m7">
-      <recipe-details v-bind="{transformMarkdown}"></recipe-details>
+      <recipe-details v-bind="{ transformMarkdown }"></recipe-details>
     </div>
   </div>
 </template>

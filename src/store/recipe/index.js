@@ -4,7 +4,7 @@ import uiActions from './uiActions';
 import asyncActions from './asyncActions';
 import recipeTemplate from '../models/recipeTemplate';
 import { getField, updateField } from 'vuex-map-fields';
-import { reduce, isEqual, isFinite, cloneDeep, countBy } from 'lodash';
+import { reduce, isEqual, isFinite, cloneDeep, countBy, groupBy } from 'lodash';
 import VuexPersistence from 'vuex-persist';
 import Vue from 'vue';
 
@@ -55,6 +55,7 @@ const getters = {
     }
     return groups;
   },
+  groupedMethods: ({ recipe: { methods } }) => groupBy(methods, method => method.group || 'default'),
   stepCountByGroup: ({ recipe }) => group => {
     const counts = countBy(recipe.methods, [
       'group',

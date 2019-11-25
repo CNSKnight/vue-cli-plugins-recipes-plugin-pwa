@@ -1,9 +1,11 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
-  publicPath: process.env.NODE_ENV == 'production' ? '/RecipeDetails/' : '/',
+  // publicPath: process.env.NODE_ENV == 'production' ? '/RecipeDetails/' : '/',
+  publicPath: '/RecipeDetails/',
+  outputDir: '/var/www/TAPPADS/vegrds-7109/public_html/acap-dev/plugins/RecipeDetails/dist1/',
   configureWebpack: {
     entry: {
-      detailsPlugin: ['./src/details-plugin.js']
+      detailsPluginAppLib: ['./src/details-plugin.js']
     },
     plugins: [
       new HtmlWebpackPlugin({
@@ -17,5 +19,6 @@ module.exports = {
     output: {
       chunkFilename: '[name].bundle.js'
     }
-  }
+  },
+  productionSourceMap: true
 };

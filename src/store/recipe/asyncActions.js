@@ -5,7 +5,7 @@ import { cloneDeep, isUndefined } from 'lodash';
 
 const isProd = process.env.NODE_ENV === 'production';
 const apiBase = process.env.VUE_APP_RECIPES_APIBASE;
-const preAuthUrl = apiBase + isProd ? '/preAuth/' : '/';
+const preAuthUrl = apiBase + (isProd && '/preAuth') + '/';
 const acap = (isProd && parent.acap) || {
   ADMIN_TAPPADS: {
     contUnitsMgr: {
@@ -94,35 +94,30 @@ const postRecipe = async ({ commit, dispatch }, recipe) => {
   delete recipe.id;
   const params = isProd
     ? {
-        recipe,
-        actionStatus: 'cont-units:recipes:add'
-      }
+      recipe,
+      actionStatus: 'cont-units:recipes:add'
+    }
     : recipe;
 
   const resp = await axios.post(preAuthUrl, params, recipe).catch(err => {
-    if (err.response) {
-      dispatch('handleError', {
-        service: 'post:recipe',
-        severity: 'error',
-        error: `Error ${err.response.status}: ${err.response.statusText}`
-      });
-    } else {
-      dispatch('handleError', {
-        service: 'post:recipe',
-        severity: 'fatal',
-        error: err
-      });
-    }
+    dispatch('handleError', {
+      service: 'post:recipe',
+      severity: (err.response && 'error') || 'fatal',
+      error:
+        (err.response &&
+          `Error ${err.response.status}: ${err.response.statusText}`) ||
+        err
+    });
   });
-  if (!resp || resp.status === 200) {
-    recipe = resp.data;
-    recipe.method && delete recipe.method;
+  if (resp && resp.status === 200) {
+    resp.data && resp.data.method && delete resp.data.method;
     resp.data && commit('update', resp.data);
   } else {
     dispatch('handleError', {
-      service: 'post:recipe',
+      service: 'put:recipe',
       severity: 'error',
-      error: `Error ${resp.status}: ${resp.statusText}`
+      error:
+        (resp && `Error ${resp.status}: ${resp.statusText}`) || 'No Response'
     });
   }
 };
@@ -132,34 +127,29 @@ const putRecipe = async ({ commit, dispatch }, recipe) => {
   delete recipe.id;
   const params = isProd
     ? {
-        recipe,
-        actionStatus: 'cont-units:recipes:update'
-      }
+      recipe,
+      actionStatus: 'cont-units:recipes:update'
+    }
     : recipe;
   const resp = await axios.put(url, params).catch(err => {
-    if (err.response) {
-      dispatch('handleError', {
-        service: 'put:recipe',
-        severity: 'error',
-        error: `Error ${err.response.status}: ${err.response.statusText}`
-      });
-    } else {
-      dispatch('handleError', {
-        service: 'put:recipe',
-        severity: 'fatal',
-        error: err
-      });
-    }
+    dispatch('handleError', {
+      service: 'put:recipe',
+      severity: (err.response && 'error') || 'fatal',
+      error:
+        (err.response &&
+          `Error ${err.response.status}: ${err.response.statusText}`) ||
+        err
+    });
   });
-  if (!resp || resp.status === 200) {
-    recipe = resp.data;
-    recipe.method && delete recipe.method;
+  if (resp && resp.status === 200) {
+    resp.data && resp.data.method && delete resp.data.method;
     resp.data && commit('update', resp.data);
   } else {
     dispatch('handleError', {
       service: 'put:recipe',
       severity: 'error',
-      error: `Error ${resp.status}: ${resp.statusText}`
+      error:
+        (resp && `Error ${resp.status}: ${resp.statusText}`) || 'No Response'
     });
   }
 };
@@ -194,7 +184,6 @@ export default {
 
   save(context) {
     const { state, dispatch } = context;
-    console.log(state.recipe);
     if (!state.recipe.acapID) {
       return dispatch('handleError', {
         service: 'save',
