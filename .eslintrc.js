@@ -13,7 +13,8 @@ module.exports = {
         'prettier',
         'prettier/vue'
     ],
-    plugins: [
+    plugins: [,
+        "loash-fp",
         "vue"
     ],
     parserOptions: {
