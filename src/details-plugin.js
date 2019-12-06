@@ -7,17 +7,18 @@ import DetailsPluginApp from './DetailsPluginApp';
 
 Vue.config.productionTip = false;
 
-const dpVm = new Vue({
+// details plugin Vue module
+export const dpVm = new Vue({
   store,
-  render: h => h(DetailsPluginApp)
+  render: h => h(DetailsPluginApp),
 });
-if (
-  window.acap &&
-  window.acap.ADMIN_TAPPADS &&
-  window.acap.ADMIN_TAPPADS.contUnitsMgr
-) {
-  // @see ../ADMIN_CLIENT/ADMIN_TAPPADS/templates/contunits/js/ta-content-units-manager-details.source.js
-  window.acap.ADMIN_TAPPADS.contUnitsMgr.dpVm = dpVm;
-} else {
-  dpVm.$mount('#detailsPlugin');
-}
+// if (
+//   window.acap &&
+//   window.acap.ADMIN_TAPPADS &&
+//   window.acap.ADMIN_TAPPADS.contUnitsMgr
+// ) {
+//   // @see ../ADMIN_CLIENT/ADMIN_TAPPADS/templates/contunits/js/ta-content-units-manager-details.source.js
+//   window.acap.ADMIN_TAPPADS.contUnitsMgr.dpVm = dpVm;
+// } else {
+//   dpVm.$mount("#detailsPlugin");
+// }
