@@ -25,3 +25,6 @@ yarn-error.log*
 .vscode
 
 # Dev placeholders
+eslint-print-config.json
+pipeline.js
+webpack-config-inspect.cfg
