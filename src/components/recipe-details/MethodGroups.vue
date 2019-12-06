@@ -1,55 +1,78 @@
 <template>
   <div id="met-groups">
-    <div class="row" v-for="(group, idx) in methodGroups" :key="idx">
+    <div class="row" v-for="(methods, group) in groupedMethods" :key="group">
       <fieldset class="col s12">
         <legend v-text="group !== 'default' ? 'Method Group' : 'Method'" />
         <template v-if="group !== 'default'">
           <div class="row group">
             <div class="input-field col s12">
-              <input :id="'group-'+idx"
+              <input
+                :id="'group-' + group"
                 :value="group == 'Unnamed' ? '' : group"
-                @input="updateGroupName(idx, $event.target.value)" :idx="idx"
-                type="text" placeholder="Unnamed Group">
-              <label :for="'group-'+idx"
-                class="sr-only sr-only-focusable">Group Name</label>
+                @input="updateGroupName(group, $event.target.value)"
+                :idx="group"
+                type="text"
+                placeholder="Unnamed Group"
+              />
+              <label :for="'group-' + idx" class="sr-only sr-only-focusable"
+                >Group Name</label
+              >
             </div>
           </div>
         </template>
-        <group-method v-for="(step, idx) in methods" :key="idx"
-          v-if="isInGroup(group, step.group)" :idx="idx"
-          :canDrag="!isModified && stepCountByGroup(group)>1"
-          @onEvent="onEvent" @updated="$emit('updated')" />
-        <div v-if="group == 'default' && !stepCountByGroup(group)"
-          class="tip-wrapper centered mb-md">
-          <p class="tip">Here you can: <br>&bull; Add a new "named" Method
-            Group <br>&bull;
-            Add steps to this "default" Group</p>
+        <group-method
+          v-for="(step, idx) in methods"
+          :key="idx"
+          :idx="idx"
+          :canDrag="!isModified && stepCountByGroup(group) > 1"
+          @onEvent="onEvent"
+          @updated="$emit('updated')"
+        />
+        <div
+          v-if="group == 'default' && !stepCountByGroup(group)"
+          class="tip-wrapper centered mb-md"
+        >
+          <p class="tip">
+            Here you can: <br />&bull; Add a new "named" Method Group
+            <br />&bull; Add steps to this "default" Group
+          </p>
         </div>
         <div class="row">
           <div v-if="group == lastGroup" class="col s12">
             <notifs-local />
           </div>
           <div v-if="group == lastGroup" class="col s6 center-align">
-            <button class="btn btn-sm grey lighten-5" type="button"
+            <button
+              class="btn btn-sm grey lighten-5"
+              type="button"
               @click="onEvent('addItem', 'methods', 'group')"
-              title="Adds an Methods Group for Mult-Part Recipes">
+              title="Adds an Methods Group for Mult-Part Recipes"
+            >
               <i class="material-icons left">add</i> Group
             </button>
           </div>
           <template v-if="group == lastGroup">
             <div class="col s6 center-align">
-              <button class="btn btn-sm grey lighten-5" type="button"
+              <button
+                class="btn btn-sm grey lighten-5"
+                type="button"
                 @click="onEvent('addItem', 'methods')"
-                title="adds an Method to a group">
+                title="adds an Method to a group"
+              >
                 <i class="material-icons left">add</i> Step
               </button>
             </div>
           </template>
           <template v-else>
             <div class="col s12 center-align">
-              <button class="btn btn-sm grey lighten-5" type="button"
-                @click="onEvent('addItem', 'methods', undefined, {group: group})"
-                title="adds an Method to a group">
+              <button
+                class="btn btn-sm grey lighten-5"
+                type="button"
+                @click="
+                  onEvent('addItem', 'methods', undefined, { group: group })
+                "
+                title="adds an Method to a group"
+              >
                 <i class="material-icons">add</i>
               </button>
             </div>
@@ -65,11 +88,11 @@ import NotificationsLocal from '@/components/notifications/NotificationsLocal';
 import GroupMethod from './GroupMethod';
 import { mapGetters } from 'vuex';
 import { mapFields } from 'vuex-map-fields';
-import { debounce, isEqual, isObject } from 'lodash';
+import { debounce, isEqual, isObject, keys } from 'lodash';
 
-const updateGroupName = function(idx, val) {
+const updateGroupName = function(groupName, val) {
   const payload = {
-    from: this.groupNames[idx],
+    from: this.groupNames[groupName],
     to: val || 'Unnamed'
   };
   this.$store.dispatch('updateMethodsGroup', payload);
@@ -87,11 +110,14 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['methodGroups', 'stepCountByGroup', 'isModified']),
+    ...mapGetters([
+      'stepCountByGroup',
+      'isModified',
+      'groupedMethods',
+      'methodGroups'
+    ]),
     ...mapFields(['recipe.methods']),
-    lastGroup({ methodGroups }) {
-      return methodGroups[methodGroups.length - 1];
-    }
+    lastGroup: ({ methodGroups }) => [...methodGroups].pop()
   },
   created() {
     this.groupNames = [...this.methodGroups];

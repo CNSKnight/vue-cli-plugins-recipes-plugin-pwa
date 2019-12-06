@@ -3,7 +3,6 @@
     <li
       v-for="recipe in recipes"
       :key="recipe.acapID"
-      @click="selectRecipe(recipe)"
       class="card"
       :class="{ active: selectedId === recipe.id }"
       style="overflow: hidden;"
@@ -19,7 +18,9 @@
               v-text="recipe.published ? 'visibility' : 'visibility_off'"
             ></i>
           </span>
-          {{ recipe.title }}
+          <span class="title" @click="selectRecipe(recipe)">{{
+            recipe.title
+          }}</span>
           <i class="material-icons right">more_vert</i>
         </span>
       </div>
@@ -34,7 +35,7 @@
         style="display: none; transform: translateY(0px);"
       >
         <span class="card-title grey-text text-darken-4"
-          >{{ recipe.title }}
+          ><span @click="selectRecipe(recipe)">{{ recipe.title }}</span>
           <i class="material-icons right">close</i>
         </span>
         <!--div>
@@ -54,18 +55,25 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions } from "vuex";
 export default {
   props: {
     transformMarkdown: Function
   },
-  computed: { ...mapGetters(['selectedId', 'recipes', 'hasChanges']) },
+  computed: { ...mapGetters(["selectedId", "recipes", "hasChanges"]) },
   // st about modules needing to be namespaced to use mapState?
   // computed: mapState('recipesModule', ['recipes']),
   methods: {
-    ...mapActions(['selectRecipe'])
+    ...mapActions(["selectRecipe"])
   }
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.secondary-content.left {
+  margin-right: 0.5em;
+}
+.card.active .title {
+  color: rgb(136, 27, 237);
+}
+</style>
