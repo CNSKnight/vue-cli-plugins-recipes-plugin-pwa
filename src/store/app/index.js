@@ -1,27 +1,24 @@
-import { findIndex } from 'lodash';
+import {findIndex} from 'lodash';
 
 const state = {
-  notifications: []
+  notifications: [],
 };
 
 const getters = {
   notifications: state => state.notifications,
-  notifsByActionContext: ({ notifications }) => actionContext => {
+  notifsByActionContext: ({notifications}) => actionContext => {
     return notifications.filter(notif => notif.actionContext == actionContext);
-  }
+  },
 };
 
 const sevMap = {
   fatal: 'failed',
   info: '',
-  error: 'reported'
+  error: 'reported',
 };
 
 const actions = {
-  handleError(
-    { commit },
-    { service, severity, error, actionContext, timeout }
-  ) {
+  handleError({commit}, {service, severity, error, actionContext, timeout}) {
     let errMsg = `${service} ${sevMap[severity] || ''}: `;
     if (error instanceof Response) {
       const err = error.error || JSON.stringify(error);
@@ -35,14 +32,14 @@ const actions = {
       severity: severity || 'error',
       error: errMsg,
       actionContext,
-      cancelAt
+      cancelAt,
     });
     if (cancelAt) {
       setTimeout(() => {
-        commit('notify', { service, cancelAt });
+        commit('notify', {service, cancelAt});
       }, timeout);
     }
-  }
+  },
 };
 
 const mutations = {
@@ -54,7 +51,7 @@ const mutations = {
     }
     payload.error && notifs.push(payload);
     state.notifications = notifs;
-  }
+  },
 };
 
 // appModule
@@ -62,5 +59,5 @@ export default {
   state,
   getters,
   actions,
-  mutations
+  mutations,
 };

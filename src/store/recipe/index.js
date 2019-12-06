@@ -4,7 +4,7 @@ import uiActions from './uiActions';
 import asyncActions from './asyncActions';
 import recipeTemplate from '../models/recipeTemplate';
 import { getField, updateField } from 'vuex-map-fields';
-import { reduce, isEqual, isFinite, cloneDeep, countBy, groupBy } from 'lodash';
+import { compose, isEqual, isFinite, cloneDeep, countBy, get, getOr, filter, groupBy, keys } from 'lodash/fp';
 import VuexPersistence from 'vuex-persist';
 import Vue from 'vue';
 
@@ -18,60 +18,60 @@ const getters = {
   recipe: state => state.recipe,
   staged: state => state.staged,
   recipeId: state => state.recipe.acapID,
-  ingredientGroups(state) {
-    const groups = reduce(
-      state.recipe.ingredients,
-      (accum, ing) => {
-        ing.group && !accum.includes(ing.group) && accum.push(ing.group);
-        return accum;
-      },
-      ['default']
-    );
-    if (groups.length > 1 && groups[groups.length - 1] !== 'default') {
-      const def = groups.splice(groups.indexOf('default'), 1);
-      groups.push(def[0]);
-    }
-    return groups;
-  },
-  ingCountByGroup: ({ recipe }) => group => {
-    const counts = countBy(recipe.ingredients, [
-      'group',
-      group == 'default' ? '' : group
-    ]);
-    return counts.true;
-  },
-  methodGroups(state) {
-    const groups = reduce(
-      state.recipe.methods,
-      (accum, ing) => {
-        ing.group && !accum.includes(ing.group) && accum.push(ing.group);
-        return accum;
-      },
-      ['default']
-    );
-    if (groups.length > 1 && groups[groups.length - 1] !== 'default') {
-      const def = groups.splice(groups.indexOf('default'), 1);
-      groups.push(def[0]);
-    }
-    return groups;
-  },
-  groupedMethods: ({ recipe: { methods } }) => groupBy(methods, method => method.group || 'default'),
-  stepCountByGroup: ({ recipe }) => group => {
-    const counts = countBy(recipe.methods, [
-      'group',
-      group == 'default' ? '' : group
-    ]);
-    return counts.true;
-  },
-  isModified(state) {
-    return !isEqual(state.recipe, state.staged);
-  },
-  hasChanges: state => id => {
-    return state.modifieds[id] !== undefined;
-  },
-  getModified: state => id => {
-    return state.modifieds[id];
-  },
+  //   {
+  //   const groups = reduce(
+  //     state.recipe.ingredients,
+  //     (accum, ing) => {
+  //       ing.group && !accum.includes(ing.group) && accum.push(ing.group);
+  //       return accum;
+  //     },
+  //     ['default']
+  //   );
+  //   if (groups.length && groups[groups.length - 1] !== 'default') {
+  //     const def = groups.splice(groups.indexOf('default'), 1);
+  //     groups.push(def[0]);
+  //   }
+  //   return groups;
+  // },
+  groupedIngredients: ({ recipe: { ingredients = [] } }) => compose(
+    groupBy(ing => ing.group || 'default'),
+    filter(ing => ing.name.length)
+  )(ingredients),
+  ingredientGroups: ({ groupedIngredients }) => keys(groupedIngredients),
+  ingCountByGroup: ({ recipe: { ingredients = [] } }) => group => countBy([
+    'group',
+    group == 'default' ? '' : group
+  ], ingredients)[group],
+  // methodGroups(state) {
+  //   const groups = reduce(
+  //     state.recipe.methods,
+  //     (accum, ing) => {
+  //       ing.group && !accum.includes(ing.group) && accum.push(ing.group);
+  //       return accum;
+  //     },
+  //     ['default']
+  //   );
+  //   if (groups.length > 1 && groups[groups.length - 1] !== 'default') {
+  //     const def = groups.splice(groups.indexOf('default'), 1);
+  //     groups.push(def[0]);
+  //   }
+  //   return groups;
+  // },
+  groupedMethods: ({ recipe: { methods = [] } }) => compose(
+    groupBy(met => met.group || 'default'),
+    filter(met => met.text.length),
+  )(methods),
+  methodGroups: ({ groupedMethods }) => keys(groupedMethods),
+  // function that returns a function that takes a group (name) and returns it's method count
+  stepCountByGroup: ({ recipe: { methods = [] } }) => group => countBy([
+    'group',
+    group == 'default' ? '' : group
+  ], methods),
+  filteredVariations: ({ recipe: { variations = [] } }) => compose(filter(variation => variation.text))(variations),
+  filteredTags: ({ recipe: { tags = [] } }) => compose(filter(tag => tag.text))(tags),
+  isModified: (state) => !isEqual(state.recipe, state.staged),
+  hasChanges: state => id => state.modifieds[id] !== undefined,
+  getModified: state => id => state.modifieds[id],
   // return the updated if beyond 3 days of published/creation dates
   updatedDate(state) {
     let recipe = state.recipe;

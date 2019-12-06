@@ -1,36 +1,36 @@
 import axios from 'axios';
-import { findIndex } from 'lodash';
+import {findIndex} from 'lodash';
 
 const apiBase = process.env.VUE_APP_RECIPES_APIBASE;
 
 const state = {
   selected: undefined,
-  recipes: []
+  recipes: [],
 };
 
 const getters = {
   selectedId: state => state.selected && state.selected.id,
-  recipes: state => state.recipes
+  recipes: state => state.recipes,
 };
 
 const actions = {
   // used only w/in listing context to load all
-  async loadRecipes({ commit }) {
+  async loadRecipes({commit}) {
     try {
       const resp = await axios({
-        url: apiBase
+        url: apiBase,
         // transformResponse: []
       });
       if (resp && resp.status === 200) {
-        commit('setCollection', { recipes: resp.data });
+        commit('setCollection', {recipes: resp.data});
       }
     } catch (err) {
       return err;
     }
   },
-  selectRecipe({ commit }, recipe) {
-    commit('setSelected', { ...recipe });
-  }
+  selectRecipe({commit}, recipe) {
+    commit('setSelected', {...recipe});
+  },
 };
 
 const mutations = {
@@ -49,10 +49,10 @@ const mutations = {
         return recipe.id === payload.id;
       });
       if (idx >= 0) {
-        state.recipes.splice(idx, 1, { ...payload });
+        state.recipes.splice(idx, 1, {...payload});
       }
     }
-  }
+  },
 };
 
 // recipesModule
@@ -60,5 +60,5 @@ export default {
   state,
   getters,
   actions,
-  mutations
+  mutations,
 };
