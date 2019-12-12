@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 const recipeSchema = new mongoose.Schema({
   id: ObjectId,
   acapID: Number,
@@ -13,20 +13,20 @@ const recipeSchema = new mongoose.Schema({
       name: String,
       optional: {
         type: Boolean,
-        default: false
+        default: false,
       },
-      preparation: String
-    }
+      preparation: String,
+    },
   ],
   method: [
     {
       step: Number,
-      text: String
-    }
+      text: String,
+    },
   ],
   published: {
     type: Boolean,
-    default: false
+    default: false,
   },
   publishedDate: Date,
   updatedDate: Date,
@@ -35,17 +35,17 @@ const recipeSchema = new mongoose.Schema({
   tags: [
     {
       priority: Number,
-      text: String
-    }
+      text: String,
+    },
   ],
   title: String,
   variations: [
     {
-      text: String
-    }
+      text: String,
+    },
   ],
-  notes: String
+  notes: String,
 });
 
 // recipeModel
-export default mongoose.model("RecipeModel", recipeSchema);
+export default mongoose.model('RecipeModel', recipeSchema);

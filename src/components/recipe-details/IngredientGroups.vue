@@ -1,13 +1,18 @@
 <template>
-  <div id="ing-groups">
+  <div class="ingGroups">
+    {{ groupedIngredients }}
     <div
-      class="row"
       v-for="(ingredients, group) in groupedIngredients"
       :key="group"
+      class="row"
     >
       <fieldset class="col s12">
         <legend
-          v-text="group !== 'default' ? 'Ingredients Group' : 'Ingredients'"
+          v-text="
+            group !== 'default'
+              ? 'Ingredients Group'
+              : 'Ingredients (Default Group)'
+          "
         />
         <template v-if="group !== 'default'">
           <div class="row group">
@@ -15,10 +20,10 @@
               <input
                 :id="'group-' + group"
                 :value="group == 'Unnamed' ? '' : group"
-                @input="updateGroupName(group, $event.target.value)"
                 :idx="group"
                 type="text"
                 placeholder="Unnamed Group"
+                @input="updateGroupName(group, $event.target.value)"
               />
               <label :for="'group-' + group" class="sr-only sr-only-focusable"
                 >Group Name</label
@@ -27,11 +32,10 @@
           </div>
         </template>
         <group-ingredients
-          v-for="(ingredient, idx) in ingredients"
-          :key="idx"
-          :ingredient="ingredient"
-          :idx="idx"
-          :canDrag="!isModified && ingCountByGroup(group) > 1"
+          v-for="modelIdx in ingredients"
+          :key="modelIdx"
+          :model-idx="modelIdx"
+          :can-drag="!isModified && ingCountByGroup(group) > 1"
           @onEvent="onEvent"
           @updated="$emit('updated')"
         />
@@ -44,16 +48,18 @@
             <br />&bull; Add ingredients to this "default" Group
           </p>
         </div>
-        <div class="row">
-          <div v-if="group == lastGroup" class="col s12">
-            <notifs-local />
+        <div v-if="group == lastGroup" class="row">
+          <div class="col s12 notifs">
+            <notifs-local :action-context="actionContext" />
           </div>
+        </div>
+        <div class="row">
           <div v-if="group == lastGroup" class="col s6 center-align">
             <button
               class="btn btn-sm grey lighten-5"
               type="button"
-              @click="onEvent('addItem', 'ingredients', 'group')"
               title="Adds an Ingredients Group for Mult-Part Recipes"
+              @click="onEvent('addItem', 'ingredients', 'group')"
             >
               <i class="material-icons left">add</i> Group
             </button>
@@ -63,8 +69,8 @@
               <button
                 class="btn btn-sm grey lighten-5"
                 type="button"
-                @click="onEvent('addItem', 'ingredients')"
                 title="adds an Ingredient to the default group"
+                @click="onEvent('addItem', 'ingredients')"
               >
                 <i class="material-icons left">add</i> Ingredient
               </button>
@@ -75,10 +81,10 @@
               <button
                 class="btn btn-sm grey lighten-5"
                 type="button"
+                title="adds an Ingredient to this group"
                 @click="
                   onEvent('addItem', 'ingredients', undefined, { group: group })
                 "
-                title="adds an Ingredient to this group"
               >
                 <i class="material-icons">add</i>
               </button>
@@ -91,40 +97,46 @@
 </template>
 
 <script>
-import NotificationsLocal from "@/components/notifications/NotificationsLocal";
-import GroupIngredients from "./GroupIngredients";
-import { mapGetters } from "vuex";
-import { mapFields } from "vuex-map-fields";
-import { isEqual, isObject, debounce, keys } from "lodash";
+import NotificationsLocal from '@/components/notifications/NotificationsLocal';
+import GroupIngredients from './GroupIngredients';
+import { mapGetters } from 'vuex';
+// import { mapFields } from 'vuex-map-fields';
+import { isEqual, isObject, debounce, keys } from 'lodash';
 
-const updateGroupName = function(groupName, val) {
-  const payload = {
-    from: this.groupNames[groupName],
-    to: val || "Unnamed"
-  };
-  this.$store.dispatch("updateIngredientsGroup", payload);
+const updateGroupName = function(group, val) {
+  this.$store.dispatch('updateIngredientsGroup', {
+    from: group,
+    to: val || 'Unnamed'
+  });
 };
 
 export default {
   components: {
-    "group-ingredients": GroupIngredients,
-    "notifs-local": NotificationsLocal
+    'group-ingredients': GroupIngredients,
+    'notifs-local': NotificationsLocal
   },
   data() {
     return {
       // the local mirror
-      groupNames: [...this.$store.getters.ingredientGroups]
+      groupNames: [...this.$store.getters.ingredientGroups],
+      actionContext: 'ing-groups'
     };
   },
   computed: {
     ...mapGetters([
-      "ingCountByGroup",
-      "isModified",
-      "groupedIngredients",
-      "ingredientGroups"
+      'ingCountByGroup',
+      'isModified',
+      'groupedIngredients',
+      'ingredientGroups'
     ]),
-    ...mapFields(["recipe.ingredients"]),
+    // ...mapFields(['recipe.ingredients']),
     lastGroup: ({ ingredientGroups }) => [...ingredientGroups].pop()
+  },
+  watch: {
+    // our locally mutable groupNames should mirror the ingredientGroups reactively
+    ingredientGoups: function(val) {
+      !isEqual(val, this.groupNames) && (this.groupNames = [...val]);
+    }
   },
   created() {
     this.groupNames = keys(this.groupedIngredients);
@@ -132,21 +144,15 @@ export default {
   methods: {
     updateGroupName: debounce(updateGroupName, 700),
     isInGroup(group, test) {
-      return test == group || (!test && group == "default");
+      return test == group || (!test && group == 'default');
     },
     // Remember! the parent component must be listening for the 'event' via @event="parentHandler"
     // we also don't otherwise need to define that 'event' on our props
     onEvent(event, prop, attr, val) {
       const payload = isObject(prop) ? { ...prop } : { prop, attr, val };
       // cannot send a $el ref into the store
-      this.$el.id && (payload.actionContext = this.$el.id);
+      payload.actionContext = this.actionContext;
       this.$emit(event, payload);
-    }
-  },
-  watch: {
-    // our locally mutable groupNames should mirror the ingredientGroups reactively
-    ingredientGoups: function(val) {
-      !isEqual(val, this.groupNames) && (this.groupNames = [...val]);
     }
   }
 };

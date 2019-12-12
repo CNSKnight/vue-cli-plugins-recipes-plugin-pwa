@@ -39,14 +39,17 @@
             </div>
             <div v-if="recipe.originalUrl">
               <label>(Originally)</label>
-              <a :href="recipe.originalUrl" target="_vegRDS_OUT">Published
-                Here</a>
+              <a :href="recipe.originalUrl" target="_vegRDS_OUT"
+                >Published Here</a
+              >
             </div>
           </div>
         </div>
-        <div class="row" v-if="recipe.description">
-          <div class="col s12" v-html="transformMarkdown(recipe.description)">
-          </div>
+        <div v-if="recipe.description" class="row">
+          <div
+            class="col s12"
+            v-html="transformMarkdown(recipe.description)"
+          ></div>
         </div>
         <div v-if="recipe.tools && recipe.tools.length" class="row ">
           <div class="col s12 ">
@@ -54,12 +57,16 @@
               <li class="collection-header">
                 <h5>You May Need</h5>
               </li>
-              <li v-for="(tool, idx) in recipe.tools" :key="idx"
-                class="collection-item">
+              <li
+                v-for="(tool, idx) in recipe.tools"
+                :key="idx"
+                class="collection-item"
+              >
                 <div v-if="tool.name">
                   {{ tool.name }}
-                  <span v-if="tool.required"
-                    class="secondary-content">(Required)</span>
+                  <span v-if="tool.required" class="secondary-content"
+                    >(Required)</span
+                  >
                 </div>
               </li>
             </ul>
@@ -84,21 +91,25 @@
                 </tr>
               </thead>
               <template>
-                <tbody v-for="(group, idx) in ingredientGroups" :key="idx">
+                <tbody v-for="(group, idxG) in ingredientGroups" :key="idxG">
                   <tr
-                    v-if="ingredientGroups.length > 1 && ingCountByGroup(group)">
+                    v-if="ingredientGroups.length > 1 && ingCountByGroup(group)"
+                  >
                     <th colspan="5">
                       {{ group == 'default' ? 'Other' : group }}
                     </th>
                   </tr>
-                  <tr v-for="(ing, idx) in group.ingredients" :key="idx">
+                  <tr v-for="(ing, idxI) in group.ingredients" :key="idxI">
                     <td>{{ ing.qty }}</td>
                     <td>{{ ing.unit }}</td>
                     <td>{{ ing.name }}</td>
                     <td>{{ ing.preparation }}</td>
                     <td>
-                      <i v-if="ing.optional"
-                        class="material-icons light-green-text ">check</i>
+                      <i
+                        v-if="ing.optional"
+                        class="material-icons light-green-text "
+                        >check</i
+                      >
                     </td>
                   </tr>
                 </tbody>
@@ -109,8 +120,11 @@
         <div v-if="groupedMethods.length" class="row ">
           <div class="col s12">
             <h3>Preparation</h3>
-            <div v-for="(methods, group) in groupedMethods" :key="group"
-              class="row">
+            <div
+              v-for="(methods, group) in groupedMethods"
+              :key="group"
+              class="row"
+            >
               <div class="col s12">
                 <h4 v-if="group != 'default'">{{ group }}</h4>
                 <dl v-for="(met, idx) in methods" :key="idx">
@@ -127,9 +141,12 @@
               <li class="collection-header">
                 <h5>Variations</h5>
               </li>
-              <li v-for="(variation, idx) in filteredVariations" :key="idx"
+              <li
+                v-for="(variation, idx) in filteredVariations"
+                :key="idx"
                 class="collection-item"
-                v-html="transformMarkdown(variation.text)"></li>
+                v-html="transformMarkdown(variation.text)"
+              ></li>
             </ul>
           </div>
         </div>
@@ -142,8 +159,12 @@
         <div v-if="filteredTags.length" class="row ">
           <div class="col s12 ">
             <p>
-              <span v-for="(tag, idx) in filteredTags" :key="idx"
-                class="chip light-green lighten-3">#{{ tag.text }}</span>
+              <span
+                v-for="(tag, idx) in filteredTags"
+                :key="idx"
+                class="chip light-green lighten-3"
+                >#{{ tag.text }}</span
+              >
             </p>
           </div>
         </div>
@@ -161,7 +182,10 @@ import { mapGetters } from 'vuex';
 import { isEmpty } from 'lodash';
 export default {
   props: {
-    transformMarkdown: Function
+    transformMarkdown: {
+      type: Function,
+      required: true
+    }
   },
   computed: {
     ...mapGetters([

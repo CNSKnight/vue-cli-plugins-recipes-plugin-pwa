@@ -1,5 +1,5 @@
 <template>
-  <recipe-details v-if="hasRecipe" v-bind="{transformMarkdown}">
+  <recipe-details v-if="hasRecipe" v-bind="{ transformMarkdown }">
   </recipe-details>
 </template>
 
@@ -29,6 +29,9 @@ export default {
       return this.$store.getters.recipeId;
     }
   },
+  created() {
+    this.$store.dispatch('loadRecipe');
+  },
   methods: {
     toggle(what) {
       this.hasOwnProperty(what) && (this[what] = !this[what]);
@@ -37,9 +40,6 @@ export default {
     transformMarkdown(markdown) {
       return markdown && md.render(markdown);
     }
-  },
-  created() {
-    this.$store.dispatch('loadRecipe');
   }
 };
 </script>

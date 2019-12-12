@@ -1,8 +1,8 @@
 <template class="tester" src="./details.html"></template>
 
 <script>
-import {mapGetters, mapActions} from 'vuex';
-import {mapFields, mapMultiRowFields} from 'vuex-map-fields';
+import { mapGetters, mapActions } from 'vuex';
+import { mapFields, mapMultiRowFields } from 'vuex-map-fields';
 import ActionsBar from '@/components/actions-bar/ActionsBar';
 import IngredientGroups from './IngredientGroups';
 import MethodGroups from './MethodGroups';
@@ -12,13 +12,16 @@ export default {
     'method-groups': MethodGroups,
     'ingredient-groups': IngredientGroups,
     'recipe-preview': () =>
-      import(/* webpackChunkName: "RecipePreview" */ '@/components/recipe-preview/RecipePreview'),
+      import(/* webpackChunkName: "recipe-preview" */ '@/components/recipe-preview/RecipePreview')
   },
   props: {
-    transformMarkdown: Function,
+    transformMarkdown: {
+      type: Function,
+      required: true
+    }
   },
   data() {
-    return {preview: false};
+    return { preview: false };
   },
   computed: {
     ...mapGetters(['isModified']),
@@ -30,12 +33,17 @@ export default {
       'recipe.creator',
       'recipe.originalUrl',
       'recipe.description',
-      'recipe.notes',
+      'recipe.notes'
     ]),
-    ...mapMultiRowFields(['recipe.tools', 'recipe.methods', 'recipe.tags', 'recipe.variations']),
+    ...mapMultiRowFields([
+      'recipe.tools',
+      'recipe.methods',
+      'recipe.tags',
+      'recipe.variations'
+    ]),
     valid() {
       return true;
-    },
+    }
   },
   created() {
     this.preview = false;
@@ -61,7 +69,7 @@ export default {
       onCancel: 'cancel',
       onReset: 'reset',
       addItem: 'addItem',
-      deleteItem: 'deleteItem',
+      deleteItem: 'deleteItem'
     }),
     // get textarea ID
     getTAID(id, idx) {
@@ -70,14 +78,15 @@ export default {
       return label.toString().concat('-rTA-', count.toString());
     },
     openPreview() {
-      const toScroll = (window && window.$$ && window.$$('.modal-content')) || window;
-      toScroll && toScroll.scrollTo && toScroll.scrollTo({top: 0});
+      const toScroll =
+        (window && window.$$ && window.$$('.modal-content')) || window;
+      toScroll && toScroll.scrollTo && toScroll.scrollTo({ top: 0 });
       this.preview = true;
     },
     closePreview() {
       this.preview = false;
-    },
-  },
+    }
+  }
 };
 </script>
 

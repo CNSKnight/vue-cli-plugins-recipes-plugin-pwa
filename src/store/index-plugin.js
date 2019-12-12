@@ -4,7 +4,7 @@ import createLogger from 'vuex/dist/logger';
 // import Mongoose from 'mongoose'
 import appModule from './app/';
 import recipeModule from './recipe/';
-import {forOwn} from 'lodash';
+import { forOwn } from 'lodash';
 
 Vue.use(Vuex);
 // Mongoose.Promise = global.Promise
@@ -13,7 +13,7 @@ const debug = process.env.NODE_ENV !== 'production';
 
 const modules = {
   appModule,
-  recipeModule,
+  recipeModule
 };
 let plugins = debug ? [createLogger()] : [];
 forOwn(modules, module => {
@@ -26,5 +26,5 @@ forOwn(modules, module => {
 export default new Vuex.Store({
   modules: modules,
   strict: debug,
-  plugins: plugins,
+  plugins: plugins
 });

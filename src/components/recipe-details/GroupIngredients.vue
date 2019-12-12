@@ -2,48 +2,81 @@
   <div class="ing">
     <div class="row">
       <div class="input-field col s6 m3">
-        <input :id="`ing-${idx}-qty`" :name="`ing-${idx}-qty`"
-          v-model="ingredients[idx].qty" placeholder="qty?" type="text">
-        <label :for="`ing-${idx}-qty`"
-          class="sr-only sr-only-focusable">Quantity</label>
+        <input
+          :id="`ing-${modelIdx}-qty`"
+          v-model="ingredients[modelIdx].qty"
+          :name="`ing-${modelIdx}-qty`"
+          placeholder="qty?"
+          type="text"
+        />
+        <label :for="`ing-${modelIdx}-qty`" class="sr-only sr-only-focusable"
+          >Quantity</label
+        >
       </div>
       <div class="input-field col s6 m3">
-        <input :id="`ing-${idx}-unit`" :name="`ing-${idx}-unit`"
-          v-model="ingredients[idx].unit" placeholder="Units?" type="text">
-        <label :for="`ing-${idx}-unit`"
-          class="sr-only sr-only-focusable">Units</label>
+        <input
+          :id="`ing-${modelIdx}-unit`"
+          v-model="ingredients[modelIdx].unit"
+          :name="`ing-${modelIdx}-unit`"
+          placeholder="Units?"
+          type="text"
+        />
+        <label :for="`ing-${modelIdx}-unit`" class="sr-only sr-only-focusable"
+          >Units</label
+        >
       </div>
       <div class="input-field col s6 m3 center-align">
-        <input :id="`ing-${idx}-opt`" :name="`ing-${idx}-opt`"
-          v-model="ingredients[idx].optional" placeholder="optional?"
-          type="checkbox">
-        <label :for="`ing-${idx}-opt`">Optional?</label>
+        <input
+          :id="`ing-${modelIdx}-opt`"
+          v-model="ingredients[modelIdx].optional"
+          :name="`ing-${modelIdx}-opt`"
+          placeholder="optional?"
+          type="checkbox"
+        />
+        <label :for="`ing-${modelIdx}-opt`">Optional?</label>
       </div>
       <div class="input-field col s6 m3 center-align">
-        <button class="btn-flat btn-sm red-text" type="button"
-          @click.stop="deleteIng">
+        <button
+          class="btn-flat btn-sm red-text"
+          type="button"
+          @click.stop="deleteIng"
+        >
           <i class="material-icons">delete</i>
         </button>
       </div>
     </div>
     <div class="row">
       <div class="input-field col s12 m6">
-        <input :id="`ing-${idx}-name`" :name="`ing-${idx}-name`"
-          v-model="ingredients[idx].name" placeholder="Name this Ingredient"
-          type="text" required>
-        <label :for="`ing-${idx}-name`"
-          class="sr-only sr-only-focusable">Ingredient</label>
+        <input
+          :id="`ing-${modelIdx}-name`"
+          v-model="ingredients[modelIdx].name"
+          :name="`ing-${modelIdx}-name`"
+          placeholder="Name this Ingredient"
+          type="text"
+          required
+        />
+        <label :for="`ing-${modelIdx}-name`" class="sr-only sr-only-focusable"
+          >Ingredient</label
+        >
       </div>
       <div class="input-field col s12 m6">
-        <input :id="`ing-${idx}-prep`" :name="`ing-${idx}-prep`"
-          v-model="ingredients[idx].preparation" placeholder="Preparation?"
-          type="text">
-        <label :for="`ing-${idx}-prep`"
-          class="sr-only sr-only-focusable">Preparation</label>
+        <input
+          :id="`ing-${modelIdx}-prep`"
+          v-model="ingredients[modelIdx].preparation"
+          :name="`ing-${modelIdx}-prep`"
+          placeholder="Preparation?"
+          type="text"
+        />
+        <label :for="`ing-${modelIdx}-prep`" class="sr-only sr-only-focusable"
+          >Preparation</label
+        >
       </div>
     </div>
-    <div v-if="canDrag" class="dragWrapper"
-      title="Drag-to-Reorder (coming soon)">
+    <div
+      v-if="canDrag"
+      class="dragWrapper"
+      title="Drag-to-Reorder (coming soon)"
+    >
       <i class=" material-icons ">
         drag_indicator
       </i>
@@ -53,7 +86,11 @@
 <script>
 import { mapMultiRowFields } from 'vuex-map-fields';
 export default {
-  props: ['ingredient', 'idx', 'canDrag'],
+  props: {
+    // ingredients: { type: Array, required: true },
+    modelIdx: { type: Number, required: true },
+    canDrag: Boolean
+  },
   computed: {
     ...mapMultiRowFields(['recipe.ingredients'])
   },
@@ -64,7 +101,7 @@ export default {
     deleteIng() {
       this.$emit('onEvent', 'deleteItem', {
         prop: 'ingredients',
-        index: this.idx
+        index: this.modelIdx
       });
     }
   }

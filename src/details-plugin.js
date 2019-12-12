@@ -10,7 +10,7 @@ Vue.config.productionTip = false;
 // details plugin Vue module
 export const dpVm = new Vue({
   store,
-  render: h => h(DetailsPluginApp),
+  render: h => h(DetailsPluginApp)
 });
 // if (
 //   window.acap &&

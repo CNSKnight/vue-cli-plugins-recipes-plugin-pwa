@@ -15,11 +15,11 @@
 import Notifications from '@/components/notifications/Notifications';
 import RecipeDetailsPlugin from '@/components/recipe-details/RecipeDetailsPlugin';
 export default {
-  name: 'details-plugin',
+  name: 'DetailsPlugin',
   components: {
     'app-notifications': Notifications,
-    'recipe-details-plugin': RecipeDetailsPlugin,
-  },
+    'recipe-details-plugin': RecipeDetailsPlugin
+  }
 };
 </script>
 

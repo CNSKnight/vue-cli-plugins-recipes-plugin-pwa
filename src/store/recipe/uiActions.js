@@ -1,5 +1,72 @@
 import recipeTemplate from '../models/recipeTemplate';
-import { assign, cloneDeep, find, findLastIndex, isObject, map } from 'lodash';
+import {
+  assign,
+  cloneDeep,
+  find,
+  findIndex,
+  findLastIndex,
+  isObject,
+  map,
+  upperFirst
+} from 'lodash';
+
+// for collections
+const addToStack = (
+  prop,
+  { state, commit, dispatch },
+  { attr, val, actionContext }
+) => {
+  const item = cloneDeep(recipeTemplate[prop][0]);
+  const stack = state.recipe[prop];
+  let index;
+  if (isObject(val)) {
+    assign(item, val);
+    if (item.group) {
+      // append to end of existing group
+      index = findLastIndex(stack, ['group', item.group]);
+      if (index == -1) {
+        // or prepend to any existing ''/'default' group
+        index = findIndex(stack, ['group', '']);
+        if (index == -1) {
+          index = undefined;
+        }
+      } else {
+        index++;
+      }
+    }
+  } else if (attr === 'group') {
+    if (find(stack, ['group', 'Unnamed'])) {
+      const Prop = upperFirst(prop);
+      return dispatch('handleError', {
+        service: `add${Prop}`,
+        severity: 'warning',
+        error: `Please first name the Unnamed ${Prop} Group.`,
+        actionContext,
+        timeout: 5000
+      });
+    }
+    item.group = 'Unnamed';
+    // prepend to an existing ''/default group
+    index = findIndex(stack, item => item.group == '');
+    if (index == -1) {
+      index = undefined;
+    }
+  }
+  commit('addTo', {
+    prop,
+    item,
+    index
+  });
+};
+const updateGroup = (prop, { state, commit }, { from, to }) => {
+  if (!state.recipe[prop].length) return;
+  const stack = map(state.recipe[prop], prop => {
+    const item = cloneDeep(prop);
+    item.group == from && (item.group = to);
+    return item;
+  });
+  commit('updateField', { path: `recipe.${prop}`, value: stack });
+};
 export default {
   selectRecipe({ dispatch }, recipe) {
     dispatch('loadRecipe', recipe);
@@ -18,61 +85,12 @@ export default {
     commit('reset');
   },
 
-  // for collections
-  addIngredient({ state, commit, dispatch }, { attr, val, actionContext }) {
-    let ing = cloneDeep(recipeTemplate.ingredients[0]);
-    let idx;
-    if (isObject(val)) {
-      assign(ing, val);
-      if (ing.group) {
-        idx = findLastIndex(state.recipe.ingredients, ['group', ing.group]);
-      }
-    } else if (attr === 'group') {
-      if (find(state.recipe.ingredients, ['group', 'Unnamed'])) {
-        return dispatch('handleError', {
-          service: 'addIngredient',
-          severity: 'warning',
-          error: 'Please first name the Unnamed Ingredients Group.',
-          actionContext,
-          timeout: 5000
-        });
-      }
-      ing.group = 'Unnamed';
-    }
-    commit('addTo', {
-      prop: 'ingredients',
-      item: ing,
-      index: idx >= -1 ? idx + 1 : undefined
-    });
+  addIngredient(context, payload) {
+    addToStack('ingredients', context, payload);
   },
-  addMethod({ state, commit, dispatch }, { attr, val, actionContext }) {
-    let met = cloneDeep(recipeTemplate.methods[0]);
-    let idx;
-    if (isObject(val)) {
-      assign(met, val);
-      if (met.group) {
-        idx = findLastIndex(state.recipe.methods, ['group', met.group]);
-      }
-    } else if (attr === 'group') {
-      if (find(state.recipe.methods, ['group', 'Unnamed'])) {
-        return dispatch('handleError', {
-          service: 'addMethod',
-          severity: 'warning',
-          error: 'Please first name the Unnamed Methods group.',
-          actionContext,
-          timeout: 5000
-        });
-      }
-      met.group = 'Unnamed';
-    }
-    idx >= -1 && (met.step = state.recipe.methods[idx].step + 1);
-    commit('addTo', {
-      prop: 'methods',
-      item: met,
-      index: idx >= -1 ? idx + 1 : undefined
-    });
+  addMethod(context, payload) {
+    addToStack('methods', context, payload);
   },
-
   // anything beyond a rote clone of the prop requested, use another action
   addItem({ commit, dispatch }, payload) {
     const prop = payload.prop;
@@ -115,25 +133,13 @@ export default {
       commit('replaceProperty', { prop: prop, val: val });
     }
   },
+  updateIngredientsGroup(context, payload) {
+    updateGroup('ingredients', context, payload);
+  },
+  updateMethodsGroup(context, payload) {
+    updateGroup('methods', context, payload);
+  },
 
-  updateIngredientsGroup({ state, commit }, { from, to }) {
-    if (!state.recipe.ingredients.length) return;
-    const ingredients = map(state.recipe.ingredients, ingredient => {
-      const ing = cloneDeep(ingredient);
-      ing.group == from && (ing.group = to);
-      return ing;
-    });
-    commit('updateField', { path: 'recipe.ingredients', value: ingredients });
-  },
-  updateMethodsGroup({ state, commit }, { from, to }) {
-    if (!state.recipe.methods.length) return;
-    const methods = map(state.recipe.methods, method => {
-      const met = cloneDeep(method);
-      met.group == from && (met.group = to);
-      return met;
-    });
-    commit('updateField', { path: 'recipe.methods', value: methods });
-  },
   // @todo order({ state, commit }, { prop, index }) {},
 
   onChangeRate(value) {

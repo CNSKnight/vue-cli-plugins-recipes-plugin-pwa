@@ -6,8 +6,8 @@ const ingredient = recipeTemplate.ingredients[0];
 const method = recipeTemplate.methods[0];
 export default {
   /*
-  * @todo remove empty or blacklisted tags or blacklisted chars
-  */
+   * @todo remove empty or blacklisted tags or blacklisted chars
+   */
   filterRecipe(recipe) {
     // final filters return empty []'s rather than null|undefined,
     // in order to re-init property in document. ie not passing eg tags: [],
@@ -63,9 +63,8 @@ export default {
     }
 
     const valids = compose(
-      filter(
-        item =>
-          isObject(item) ? item[check] && item[check].length : item.length
+      filter(item =>
+        isObject(item) ? item[check] && item[check].length : item.length
       ),
       map(item => {
         if (isObject(item)) {

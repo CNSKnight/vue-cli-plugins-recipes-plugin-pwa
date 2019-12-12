@@ -2,10 +2,10 @@
   <div>
     <p v-if="!recipes">No recipes provided</p>
     <li
-      class="collection-item"
-      :class="{ active: selectedId === recipe.id }"
       v-for="recipe in recipes"
       :key="recipe.acapID"
+      class="collection-item"
+      :class="{ active: selectedId === recipe.id }"
     >
       <span class="secondary-content left actionable">
         <i
@@ -23,13 +23,13 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions } from 'vuex';
 export default {
-  computed: { ...mapGetters(["selectedId", "recipes", "hasChanges"]) },
+  computed: { ...mapGetters(['selectedId', 'recipes', 'hasChanges']) },
   // st about modules needing to be namespaced to use mapState?
   // computed: mapState('recipesModule', ['recipes']),
   methods: {
-    ...mapActions(["selectRecipe"])
+    ...mapActions(['selectRecipe'])
   }
 };
 </script>

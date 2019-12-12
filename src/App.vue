@@ -33,7 +33,7 @@
 <script>
 import Notifications from '@/components/notifications/Notifications';
 export default {
-  name: 'app',
+  name: 'App',
   components: {
     'app-notifications': Notifications
   }

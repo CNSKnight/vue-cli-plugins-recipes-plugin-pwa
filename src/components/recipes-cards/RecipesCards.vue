@@ -43,7 +43,7 @@
             {{recipe.rating}}
         </div-->
         <p>
-          <span class="chip" v-for="(tag, idx) in recipe.tags" :key="idx"
+          <span v-for="(tag, idx) in recipe.tags" :key="idx" class="chip"
             >#{{ tag.text }}</span
           >
         </p>
@@ -55,16 +55,19 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions } from 'vuex';
 export default {
   props: {
-    transformMarkdown: Function
+    transformMarkdown: {
+      type: Function,
+      required: true
+    }
   },
-  computed: { ...mapGetters(["selectedId", "recipes", "hasChanges"]) },
+  computed: { ...mapGetters(['selectedId', 'recipes', 'hasChanges']) },
   // st about modules needing to be namespaced to use mapState?
   // computed: mapState('recipesModule', ['recipes']),
   methods: {
-    ...mapActions(["selectRecipe"])
+    ...mapActions(['selectRecipe'])
   }
 };
 </script>

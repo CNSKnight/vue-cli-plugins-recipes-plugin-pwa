@@ -1,6 +1,6 @@
 <template>
-  <div id="met-groups">
-    <div class="row" v-for="(methods, group) in groupedMethods" :key="group">
+  <div class="metGroups">
+    <div v-for="(steps, group) in groupedMethods" :key="group" class="row">
       <fieldset class="col s12">
         <legend v-text="group !== 'default' ? 'Method Group' : 'Method'" />
         <template v-if="group !== 'default'">
@@ -9,22 +9,22 @@
               <input
                 :id="'group-' + group"
                 :value="group == 'Unnamed' ? '' : group"
-                @input="updateGroupName(group, $event.target.value)"
                 :idx="group"
                 type="text"
                 placeholder="Unnamed Group"
+                @input="updateGroupName(group, $event.target.value)"
               />
-              <label :for="'group-' + idx" class="sr-only sr-only-focusable"
+              <label :for="'group-' + group" class="sr-only sr-only-focusable"
                 >Group Name</label
               >
             </div>
           </div>
         </template>
         <group-method
-          v-for="(step, idx) in methods"
-          :key="idx"
-          :idx="idx"
-          :canDrag="!isModified && stepCountByGroup(group) > 1"
+          v-for="modelIdx in steps"
+          :key="modelIdx"
+          :model-idx="modelIdx"
+          :can-drag="!isModified && stepCountByGroup(group) > 1"
           @onEvent="onEvent"
           @updated="$emit('updated')"
         />
@@ -37,16 +37,18 @@
             <br />&bull; Add steps to this "default" Group
           </p>
         </div>
-        <div class="row">
-          <div v-if="group == lastGroup" class="col s12">
-            <notifs-local />
+        <div v-if="group == lastGroup" class="row">
+          <div class="col s12 notifs">
+            <notifs-local :action-context="actionContext" />
           </div>
+        </div>
+        <div class="row">
           <div v-if="group == lastGroup" class="col s6 center-align">
             <button
               class="btn btn-sm grey lighten-5"
               type="button"
-              @click="onEvent('addItem', 'methods', 'group')"
               title="Adds an Methods Group for Mult-Part Recipes"
+              @click="onEvent('addItem', 'methods', 'group')"
             >
               <i class="material-icons left">add</i> Group
             </button>
@@ -56,8 +58,8 @@
               <button
                 class="btn btn-sm grey lighten-5"
                 type="button"
-                @click="onEvent('addItem', 'methods')"
                 title="adds an Method to a group"
+                @click="onEvent('addItem', 'methods')"
               >
                 <i class="material-icons left">add</i> Step
               </button>
@@ -68,10 +70,10 @@
               <button
                 class="btn btn-sm grey lighten-5"
                 type="button"
+                title="adds an Method to a group"
                 @click="
                   onEvent('addItem', 'methods', undefined, { group: group })
                 "
-                title="adds an Method to a group"
               >
                 <i class="material-icons">add</i>
               </button>
@@ -90,12 +92,11 @@ import { mapGetters } from 'vuex';
 import { mapFields } from 'vuex-map-fields';
 import { debounce, isEqual, isObject, keys } from 'lodash';
 
-const updateGroupName = function(groupName, val) {
-  const payload = {
-    from: this.groupNames[groupName],
+const updateGroupName = function(group, val) {
+  this.$store.dispatch('updateMethodsGroup', {
+    from: group,
     to: val || 'Unnamed'
-  };
-  this.$store.dispatch('updateMethodsGroup', payload);
+  });
 };
 
 export default {
@@ -106,7 +107,8 @@ export default {
   data() {
     return {
       // the local mirror
-      groupNames: [...this.$store.getters.methodGroups]
+      groupNames: [...this.$store.getters.methodGroups],
+      actionContext: 'met-groups'
     };
   },
   computed: {
@@ -119,8 +121,14 @@ export default {
     ...mapFields(['recipe.methods']),
     lastGroup: ({ methodGroups }) => [...methodGroups].pop()
   },
+  watch: {
+    // our locally mutable groupNames should mirror the methodGroups reactively
+    methodGroups: function(val) {
+      !isEqual(val, this.groupNames) && (this.groupNames = [...val]);
+    }
+  },
   created() {
-    this.groupNames = [...this.methodGroups];
+    this.groupNames = keys(this.groupedMethods);
   },
   methods: {
     updateGroupName: debounce(updateGroupName, 700),
@@ -131,14 +139,8 @@ export default {
     // we also don't otherwise need to define that 'event' on our props
     onEvent(event, prop, attr, val) {
       const payload = isObject(prop) ? { ...prop } : { prop, attr, val };
-      this.$el.id && (payload.actionContext = this.$el.id);
+      payload.actionContext = this.actionContext;
       this.$emit(event, payload);
-    }
-  },
-  watch: {
-    // our locally mutable groupNames should mirror the methodGroups reactively
-    methodGroups: function(val) {
-      !isEqual(val, this.groupNames) && (this.groupNames = [...val]);
     }
   }
 };

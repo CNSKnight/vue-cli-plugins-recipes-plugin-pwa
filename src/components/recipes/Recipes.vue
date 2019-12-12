@@ -10,8 +10,10 @@
             <h4 class="action-bar">
               Recipes
               <button class="btn btn-flat right" @click="toggle('showCards')">
-                <i v-text="showCards ? 'view_list' : 'view_agenda'"
-                  class="material-icons medium orange-text text-lighten-2"></i>
+                <i
+                  class="material-icons medium orange-text text-lighten-2"
+                  v-text="showCards ? 'view_list' : 'view_agenda'"
+                ></i>
               </button>
             </h4>
           </li>
@@ -61,6 +63,9 @@ export default {
       return this.$store.getters.recipes.length;
     }
   },
+  created() {
+    this.$store.dispatch('loadRecipes');
+  },
   methods: {
     toggle(what) {
       this.hasOwnProperty(what) && (this[what] = !this[what]);
@@ -69,9 +74,6 @@ export default {
     transformMarkdown(markdown) {
       return markdown && md.render(markdown);
     }
-  },
-  created() {
-    this.$store.dispatch('loadRecipes');
   }
 };
 </script>
