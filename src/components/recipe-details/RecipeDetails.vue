@@ -6,13 +6,15 @@ import { mapFields, mapMultiRowFields } from 'vuex-map-fields';
 import ActionsBar from '@/components/actions-bar/ActionsBar';
 import IngredientGroups from './IngredientGroups';
 import MethodGroups from './MethodGroups';
+import NotificationsLocal from '@/components/notifications/NotificationsLocal';
 export default {
   components: {
     'actions-bar': ActionsBar,
     'method-groups': MethodGroups,
     'ingredient-groups': IngredientGroups,
     'recipe-preview': () =>
-      import(/* webpackChunkName: "recipe-preview" */ '@/components/recipe-preview/RecipePreview')
+      import(/* webpackChunkName: "recipe-preview" */ '@/components/recipe-preview/RecipePreview'),
+    'notifs-local': NotificationsLocal
   },
   props: {
     transformMarkdown: {
@@ -21,7 +23,7 @@ export default {
     }
   },
   data() {
-    return { preview: false };
+    return { preview: false, actionContext: 'details' };
   },
   computed: {
     ...mapGetters(['isModified']),
