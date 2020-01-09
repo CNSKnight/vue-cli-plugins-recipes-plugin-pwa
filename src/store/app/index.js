@@ -21,12 +21,13 @@ const actions = {
     { commit },
     { service, severity, error, actionContext, timeout }
   ) {
-    let errMsg = `${service} ${sevMap[severity] || ''}: `;
+    let errMsg;
+    service = `${service} ${sevMap[severity] || ''}: `;
     if (error instanceof Response) {
       const err = error.error || JSON.stringify(error);
-      errMsg += err.status += (err.statusText && ` - ${err.statusText}`) || '';
+      errMsg = err.status += (err.statusText && ` - ${err.statusText}`) || '';
     } else {
-      errMsg += error.message || error.toString();
+      errMsg = error.message || error.toString();
     }
     const cancelAt = timeout && Date.now() + timeout;
     commit('notify', {
@@ -41,6 +42,15 @@ const actions = {
         commit('notify', { service, cancelAt });
       }, timeout);
     }
+  },
+  clearContext({ state, commit }, { actionContext }) {
+    const idx = findIndex(state.notifications, [
+      'actionContext',
+      actionContext
+    ]);
+    if (idx != -1) {
+      commit('ejectIndex', idx);
+    }
   }
 };
 
@@ -52,6 +62,11 @@ const mutations = {
       notifs.splice(idx, 1);
     }
     payload.error && notifs.push(payload);
+    state.notifications = notifs;
+  },
+  ejectIndex(state, idx) {
+    let notifs = [...state.notifications];
+    notifs.splice(idx, 1);
     state.notifications = notifs;
   }
 };
