@@ -1,9 +1,10 @@
 import recipeTemplate from '../models/recipeTemplate';
 import { compose, filter, isEmpty, map, reject, trim } from 'lodash/fp';
-import { isObject, isString, transform } from 'lodash';
+import { isObject, isString, toLower, transform, uniq } from 'lodash';
 
 const ingredient = recipeTemplate.ingredients[0];
 const method = recipeTemplate.methods[0];
+
 export default {
   /*
    * @todo remove empty or blacklisted tags or blacklisted chars
@@ -51,7 +52,7 @@ export default {
 
     const valids = compose(
       filter(met => met.text.length),
-      map(ing => transform(ing, this.trimObjStrings, { ...method })),
+      map(met => transform(met, this.trimObjStrings, { ...method })),
       reject(isEmpty)
     )(methods);
     return valids;
@@ -77,5 +78,49 @@ export default {
       reject(isEmpty)
     )(ary);
     return valids;
+  },
+
+  checkDups(ary, prop) {
+    if (!ary || ary.length < 2) {
+      return 0;
+    }
+    const vals = ary.map(item => {
+      return toLower(item[prop]);
+    });
+    const uniqs = uniq(vals);
+    return vals.length - uniqs.length;
+  },
+
+  finalValidations(recipe, dispatch, actionContext) {
+    actionContext && dispatch('clearContext', { actionContext });
+    const errorTmpl = {
+      service: 'finalValidations',
+      severity: 'warn',
+      error: null,
+      actionContext
+    };
+    let valid = true;
+    let count;
+    if ((count = filter(['group', 'Unnamed'], recipe.ingredients).length)) {
+      valid = false;
+      errorTmpl.error = `You have ${count} <em>Unnamed</em> Ingredient Groups.`;
+      dispatch('handleError', errorTmpl);
+    }
+    if ((count = filter(['group', 'Unnamed'], recipe.methods).length)) {
+      valid = false;
+      errorTmpl.error = `You have ${count} <em>Unnamed</em> Method Groups.`;
+      dispatch('handleError', errorTmpl);
+    }
+    if ((count = this.checkDups(recipe.tools, 'text'))) {
+      valid = false;
+      errorTmpl.error = `You have ${count} <em>Duplicate</em> Tools.`;
+      dispatch('handleError', errorTmpl);
+    }
+    if ((count = this.checkDups(recipe.tags, 'text'))) {
+      valid = false;
+      errorTmpl.error = `You have ${count} <em>Duplicate</em> Tags.`;
+      dispatch('handleError', errorTmpl);
+    }
+    return valid;
   }
 };
