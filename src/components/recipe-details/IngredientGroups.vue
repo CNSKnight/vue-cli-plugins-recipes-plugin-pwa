@@ -1,8 +1,7 @@
 <template>
   <div class="ingGroups">
-    {{ groupedIngredients }}
     <div
-      v-for="(ingredients, group) in groupedIngredients"
+      v-for="(ingIndexes, group, idx) in groupedIngredients"
       :key="group"
       class="row"
     >
@@ -15,15 +14,28 @@
           "
         />
         <template v-if="group !== 'default'">
+          <div class="row">
+            <div class="col s12 notifs">
+              <notifs-local :action-context="actionContext + 'Grp' + idx" />
+            </div>
+          </div>
           <div class="row group">
+            <!-- v-model="ingredients[ingIndexes[0]].group || 'Unnamed'", -->
             <div class="input-field col s12">
               <input
-                :id="'group-' + group"
-                :value="group == 'Unnamed' ? '' : group"
-                :idx="group"
+                :id="'group-' + idx"
+                :ref="'group-' + idx"
                 type="text"
+                :idx="group"
+                :value="group == 'Unnamed' ? '' : group"
                 placeholder="Unnamed Group"
-                @input="updateGroupName(group, $event.target.value)"
+                @change="
+                  updateGroupName(
+                    actionContext + 'Grp' + idx,
+                    [...ingIndexes],
+                    $event.target.value
+                  )
+                "
               />
               <label :for="'group-' + group" class="sr-only sr-only-focusable"
                 >Group Name</label
@@ -32,7 +44,7 @@
           </div>
         </template>
         <group-ingredients
-          v-for="modelIdx in ingredients"
+          v-for="modelIdx in ingIndexes"
           :key="modelIdx"
           :model-idx="modelIdx"
           :can-drag="!isModified && ingCountByGroup(group) > 1"
@@ -50,7 +62,7 @@
         </div>
         <div v-if="group == lastGroup" class="row">
           <div class="col s12 notifs">
-            <notifs-local :action-context="actionContext" />
+            <notifs-local :action-context="actionContext + '-grp-def'" />
           </div>
         </div>
         <div class="row">
@@ -59,7 +71,13 @@
               class="btn btn-sm grey lighten-5"
               type="button"
               title="Adds an Ingredients Group for Mult-Part Recipes"
-              @click="onEvent('addItem', 'ingredients', 'group')"
+              @click="
+                onEvent('addItem', {
+                  prop: 'ingredients',
+                  attr: 'group',
+                  actionContext: actionContext + '-grp-def'
+                })
+              "
             >
               <i class="material-icons left">add</i> Group
             </button>
@@ -82,9 +100,7 @@
                 class="btn btn-sm grey lighten-5"
                 type="button"
                 title="adds an Ingredient to this group"
-                @click="
-                  onEvent('addItem', 'ingredients', undefined, { group: group })
-                "
+                @click="onEvent('addItem', 'ingredients', undefined, { group })"
               >
                 <i class="material-icons">add</i>
               </button>
@@ -103,11 +119,17 @@ import { mapGetters } from 'vuex';
 // import { mapFields } from 'vuex-map-fields';
 import { isEqual, isObject, debounce, keys } from 'lodash';
 
-const updateGroupName = function(group, val) {
+const updateGroupNamePrev = function(group, target) {
   this.$store.dispatch('updateIngredientsGroup', {
     from: group,
-    to: val || 'Unnamed'
+    to: target.value || 'Unnamed',
+    focus: target
   });
+  const id = target.id;
+  id &&
+    this.$nextTick(function() {
+      this.$refs[target.id][0].focus();
+    });
 };
 
 export default {
@@ -140,19 +162,28 @@ export default {
   },
   created() {
     this.groupNames = keys(this.groupedIngredients);
+    // similar to the way data should be a function that returns an object, each instance
+    // needs its own debounce function if they are supposed to act independently.
+    this.updateGroupNamePrev = debounce(updateGroupNamePrev, 700);
   },
   methods: {
-    updateGroupName: debounce(updateGroupName, 700),
     isInGroup(group, test) {
       return test == group || (!test && group == 'default');
     },
     // Remember! the parent component must be listening for the 'event' via @event="parentHandler"
     // we also don't otherwise need to define that 'event' on our props
-    onEvent(event, prop, attr, val) {
-      const payload = isObject(prop) ? { ...prop } : { prop, attr, val };
-      // cannot send a $el ref into the store
-      payload.actionContext = this.actionContext;
+    onEvent(event, prop, attr, val, actionContext) {
+      const payload = isObject(prop)
+        ? { ...prop }
+        : { prop, attr, val, actionContext };
       this.$emit(event, payload);
+    },
+    updateGroupName(actionContext, ingIndexes, val) {
+      return this.$store.dispatch('updateIngredientsGroup', {
+        ingIndexes,
+        toGroup: val || 'Unnamed',
+        actionContext
+      });
     }
   }
 };
