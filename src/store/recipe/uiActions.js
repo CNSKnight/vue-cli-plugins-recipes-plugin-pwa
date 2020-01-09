@@ -2,6 +2,7 @@ import recipeTemplate from '../models/recipeTemplate';
 import {
   assign,
   cloneDeep,
+  filter,
   find,
   findIndex,
   findLastIndex,
@@ -39,7 +40,7 @@ const addToStack = (
       const Prop = upperFirst(prop);
       return dispatch('handleError', {
         service: `add${Prop}`,
-        severity: 'warning',
+        severity: 'warn',
         error: `Please first name the Unnamed ${Prop} Group.`,
         actionContext,
         timeout: 5000
@@ -58,14 +59,30 @@ const addToStack = (
     index
   });
 };
-const updateGroup = (prop, { state, commit }, { from, to }) => {
-  if (!state.recipe[prop].length) return;
-  const stack = map(state.recipe[prop], prop => {
-    const item = cloneDeep(prop);
-    item.group == from && (item.group = to);
-    return item;
+const updateGroup = (
+  prop,
+  { state, commit, dispatch },
+  { grpMbrIndexes, toGroup, actionContext }
+) => {
+  const items = state.recipe[prop];
+  if (!items.length) return;
+  const Prop = upperFirst(prop);
+  dispatch('clearContext', { actionContext });
+  if (filter(items, item => item.group == toGroup).length) {
+    return dispatch('handleError', {
+      service: `update${Prop}Group`,
+      severity: 'error',
+      error: `Please ensure ${Prop} Group names are unique.
+      [<span class="materialize-red-text">${toGroup}</span>]`,
+      actionContext
+    });
+  }
+  const stack = map(state.recipe[prop], (item, idx) => {
+    const cloned = cloneDeep(item);
+    grpMbrIndexes.includes(idx) && (cloned.group = toGroup);
+    return cloned;
   });
-  commit('updateField', { path: `recipe.${prop}`, value: stack });
+  commit('replaceProperty', { prop, val: stack });
 };
 export default {
   selectRecipe({ dispatch }, recipe) {
@@ -133,11 +150,21 @@ export default {
       commit('replaceProperty', { prop: prop, val: val });
     }
   },
-  updateIngredientsGroup(context, payload) {
-    updateGroup('ingredients', context, payload);
+  updateIngredientsGroup(
+    context,
+    { ingIndexes: grpMbrIndexes, toGroup, actionContext }
+  ) {
+    updateGroup('ingredients', context, {
+      grpMbrIndexes,
+      toGroup,
+      actionContext
+    });
   },
-  updateMethodsGroup(context, payload) {
-    updateGroup('methods', context, payload);
+  updateMethodsGroup(
+    context,
+    { stepIndexes: grpMbrIndexes, toGroup, actionContext }
+  ) {
+    updateGroup('methods', context, { grpMbrIndexes, toGroup, actionContext });
   },
 
   // @todo order({ state, commit }, { prop, index }) {},
