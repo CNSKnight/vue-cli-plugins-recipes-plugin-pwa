@@ -13,6 +13,24 @@
           <p>{{ value }}</p>
         </div>
       </li>
+      <li v-for="{ val, idx } in values" :key="idx">
+        <div class="collapsible-header">
+          General Tips
+        </div>
+        <div class="collapsible-body">
+          <ul>
+            <li>
+              <a href="https://www.thekitchn.com/how-to-write-a-recipe-58522"
+                >How to write a recipe.</a
+              >
+            </li>
+            <li>
+              See the Common Mesures, Units, and Abbreviations above, or feel
+              free to write out eg tablespoons, fluid ounces, litre, etc.
+            </li>
+          </ul>
+        </div>
+      </li>
     </ul>
   </div>
 </template>
