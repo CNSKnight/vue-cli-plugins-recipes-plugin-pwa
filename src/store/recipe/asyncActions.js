@@ -3,27 +3,25 @@ import recipeTemplate from '../models/recipeTemplate';
 import helpers from './actionHelpers';
 import { cloneDeep, isEmpty, isUndefined } from 'lodash';
 
-const isProd = process.env.NODE_ENV === 'production';
 const apiBase = process.env.VUE_APP_RECIPES_APIBASE;
 const preAuthUrl = apiBase + '/preAuth/';
-// const preAuthUrl = apiBase + ((isProd && '/preAuth') || '') + '/';
-const acap = (isProd && parent.acap) || {
-  ADMIN_TAPPADS: {
-    contUnitsMgr: {
-      getInfo() {
-        return {
-          ad_unit_id: 27,
-          ad_unit_name: '_Nu_Testr_'
-        };
-      },
-      setMessages(msg) {
-        // eslint-disable-next-line no-console
-        console.log(msg);
-      }
-    }
-  }
-};
-const contUnitsMgr = acap.ADMIN_TAPPADS && acap.ADMIN_TAPPADS.contUnitsMgr;
+// const acap = {
+//   ADMIN_TAPPADS: {
+//     contUnitsMgr: {
+//       getInfo() {
+//         return {
+//           ad_unit_id: 27,
+//           ad_unit_name: '_Nu_Testr_'
+//         };
+//       },
+//       setMessages(msg) {
+//         // eslint-disable-next-line no-console
+//         console.log(msg);
+//       }
+//     }
+//   }
+// };
+const contUnitsMgr = parent.acap?.ADMIN_TAPPADS?.contUnitsMgr;
 
 const fetchRecipe = async ({ commit, dispatch, getters, state }, recipe) => {
   // set the stage w/the requested acapID
@@ -93,22 +91,22 @@ const postRecipe = async ({ commit, dispatch }, recipe) => {
   // recipe.title = info.ad_unit_name;
   // above should have been assigned in loadRecipe
   delete recipe.id;
-  const params = isProd
-    ? {
-        recipe,
-        actionStatus: 'cont-units:recipes:add'
-      }
-    : recipe;
-  const resp = await axios.post(preAuthUrl, params, recipe).catch(err => {
-    dispatch('handleError', {
-      service: 'post:recipe',
-      severity: (err.response && 'error') || 'fatal',
-      error:
-        (err.response &&
-          `Error ${err.response.status}: ${err.response.statusText}`) ||
-        err
+  const actionStatus = 'cont-units:recipes:add';
+  const resp = await axios
+    .post(preAuthUrl, {
+      recipe,
+      actionStatus
+    })
+    .catch(err => {
+      dispatch('handleError', {
+        service: 'post:recipe',
+        severity: (err.response && 'error') || 'fatal',
+        error:
+          (err.response &&
+            `Error ${err.response.status}: ${err.response.statusText}`) ||
+          err
+      });
     });
-  });
   if (resp && resp.status === 200) {
     resp.data && resp.data.method && delete resp.data.method;
     resp.data && commit('update', resp.data);
@@ -123,25 +121,24 @@ const postRecipe = async ({ commit, dispatch }, recipe) => {
 };
 
 const putRecipe = async ({ commit, dispatch }, recipe) => {
-  debugger;
   const url = preAuthUrl + recipe.id || '';
   delete recipe.id;
-  const params = isProd
-    ? {
-        recipe,
-        actionStatus: 'cont-units:recipes:update'
-      }
-    : recipe;
-  const resp = await axios.put(url, params).catch(err => {
-    dispatch('handleError', {
-      service: 'put:recipe',
-      severity: (err.response && 'error') || 'fatal',
-      error:
-        (err.response &&
-          `Error ${err.response.status}: ${err.response.statusText}`) ||
-        err
+  const actionStatus = 'cont-units:recipes:update';
+  const resp = await axios
+    .put(url, {
+      recipe,
+      actionStatus
+    })
+    .catch(err => {
+      dispatch('handleError', {
+        service: 'put:recipe',
+        severity: (err.response && 'error') || 'fatal',
+        error:
+          (err.response &&
+            `Error ${err.response.status}: ${err.response.statusText}`) ||
+          err
+      });
     });
-  });
   if (resp && resp.status === 200) {
     resp.data && resp.data.method && delete resp.data.method;
     resp.data && commit('update', resp.data);
@@ -171,7 +168,7 @@ export default {
     if (acapID == undefined) {
       return dispatch('handleError', {
         service: 'loadRecipe',
-        severity: 'warning',
+        severity: 'warn',
         error: "Weird! I didn't get an acapID?"
       });
     }
@@ -183,7 +180,7 @@ export default {
     fetchRecipe(context, recipe);
   },
 
-  save(context) {
+  save(context, actionContext) {
     const { state, dispatch } = context;
     if (!state.recipe.acapID) {
       return dispatch('handleError', {
@@ -193,7 +190,9 @@ export default {
     }
     const recipe = cloneDeep(state.recipe);
     helpers.filterRecipe(recipe);
-    (isUndefined(recipe.id) && postRecipe(context, recipe)) ||
-      putRecipe(context, recipe);
+    if (helpers.finalValidations(recipe, dispatch, actionContext)) {
+      (isUndefined(recipe.id) && postRecipe(context, recipe)) ||
+        putRecipe(context, recipe);
+    }
   }
 };
