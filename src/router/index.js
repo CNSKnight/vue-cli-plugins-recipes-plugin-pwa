@@ -13,22 +13,22 @@ export default new Router({
     {
       path: '/',
       name: 'home',
-      component: Home,
+      component: Home
     },
     {
       path: '/about',
       name: 'about',
-      component: About,
+      component: About
     },
     {
       path: '/recipes',
       name: 'Recipes',
-      component: Recipes,
+      component: Recipes
     },
     {
       path: '/recipe-details',
       name: 'Details',
-      component: RecipeDetailsPlugin,
-    },
-  ],
+      component: RecipeDetailsPlugin
+    }
+  ]
 });
