@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --modern --report-json",
+    "build": "vue-cli-service build --modern",
+    "build-dev": "vue-cli-service build --modern --mode development --report-json",
     "lint": "vue-cli-service lint",
     "build-plugin-lib": "vue-cli-service build --target lib --modern --name detailsPlugin ./src/details-plugin.js",
     "build-plugin-lib-dev": "vue-cli-service build --mode development",
