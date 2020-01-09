@@ -3,9 +3,8 @@ const { BundleStatsWebpackPlugin } = require('bundle-stats');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin;
 
-/**
- * DISCLAIMER: Using this plugin without enabling the proper feature sets may cause lodash functions to behave in unexpected ways.
- */
+// DISCLAIMER: Using this plugin without enabling the proper feature sets may
+//             cause lodash functions to behave in unexpected ways.
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const lmrpOpts = {
   caching: true,
@@ -32,7 +31,7 @@ const pages = {
     title: 'App Index Page',
     // chunks to include on this page, by default includes
     // extracted common chunks and vendor chunks.
-    chunks: ['index', 'chunk-big-vendor']
+    chunks: ['index', 'chunk-big-vendors']
   },
   detailsPlugin: {
     // entry for the page
@@ -46,18 +45,20 @@ const pages = {
     title: 'Details Plugin Index Page',
     // chunks to include on this page, by default includes
     // extracted common chunks and vendor chunks.
-    chunks: ['index-plugin', 'chunk-big-vendor']
+    chunks: ['index-plugin', 'chunk-big-vendors']
   }
 };
+
+// @todo 01/20 the `npm run server` yields nothing w/this config file in place?
 module.exports = {
   publicPath: '/RecipeDetails/',
   // publicPath: process.env.NODE_ENV == 'production' ? '/RecipeDetails/' : '/',
-  outputDir:
-    process.env.NODE_ENV == 'production'
-      ? '/var/www/TAPPADS/vegrds-7109/public_html/acap-dev/plugins/RecipeDetails/dist1/'
-      : 'dist/',
-  // indexPath: 'templates/',
-  // pages,
+  // outputDir:
+  //   '/var/www/TAPPADS/vegrds-7109/public_html/acap-dev/plugins/RecipeDetails/dist1/',
+  // process.env.NODE_ENV == 'production'
+  //   ? '/var/www/TAPPADS/vegrds-7109/public_html/acap-dev/plugins/RecipeDetails/dist1/'
+  //   : 'dist/',
+  pages,
 
   configureWebpack: {
     plugins: [
