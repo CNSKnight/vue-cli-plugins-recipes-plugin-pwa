@@ -5,7 +5,7 @@
       <p>Please return to the listing or cards and click to choose an item.</p>
     </div>
     <div v-if="acapID" materialize>
-      <form id="rdForm" @submit.prevent="onSubmit">
+      <form id="rdForm" @submit.prevent="onSubmit(actionContext+'-actions-bar')">
         <actions-bar
           :canCancel="false"
           :canReset="isModified"
@@ -165,6 +165,11 @@
               </div>
             </div>
           </fieldset>
+        </div>
+        <div class="row">
+          <div class="col s12 notifs">
+            <notifs-local :action-context="actionContext+'-actions-bar'" />
+          </div>
         </div>
         <actions-bar
           v-bind="{canCancel: false, canReset: isModified, canPreview: id !== undefined, canSave: true, isModified, valid}"
