@@ -3,10 +3,7 @@
     <p
       v-for="(notif, idx) in notifications"
       :key="idx"
-      :class="[
-        notif.severity || 'info',
-        'acap_' + (notif.severity ? notif.severity : 'info')
-      ]"
+      :class="[notif.severity || 'info', 'acap_' + (notif.severity || 'info')]"
       :title="notif.service"
       v-html="infoIcon + ' ' + notif.error"
     >
