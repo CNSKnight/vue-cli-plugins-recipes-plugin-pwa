@@ -9,8 +9,8 @@ export default {
   tools: [
     {
       name: '',
-      required: false,
-    },
+      required: false
+    }
   ],
   ingredients: [
     {
@@ -19,15 +19,15 @@ export default {
       unit: '',
       name: '',
       optional: false,
-      preparation: '',
-    },
+      preparation: ''
+    }
   ],
   methods: [
     {
       group: '',
       step: 1,
-      text: '',
-    },
+      text: ''
+    }
   ],
   published: false,
   publishedDate: undefined,
@@ -37,14 +37,14 @@ export default {
   tags: [
     {
       priority: 0,
-      text: '',
-    },
+      text: ''
+    }
   ],
   title: '',
   variations: [
     {
-      text: '',
-    },
+      text: ''
+    }
   ],
-  notes: '',
+  notes: ''
 };
