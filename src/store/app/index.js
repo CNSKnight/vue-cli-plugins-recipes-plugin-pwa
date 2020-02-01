@@ -1,4 +1,4 @@
-import { findIndex } from 'lodash';
+import { findIndex } from 'lodash/fp';
 
 const state = {
   notifications: []
@@ -43,11 +43,14 @@ const actions = {
       }, timeout);
     }
   },
-  clearContext({ state, commit }, { actionContext }) {
-    const idx = findIndex(state.notifications, [
-      'actionContext',
-      actionContext
-    ]);
+
+  clearNotifs({ commit }) {
+    commit('clearState');
+  },
+
+  // pass in eg {actionContext: 'sample-context'} or {service: 'abc:xyz'}
+  clearNotif({ state, commit }, matches) {
+    const idx = findIndex(matches)(state.notifications);
     if (idx != -1) {
       commit('ejectIndex', idx);
     }
@@ -57,7 +60,7 @@ const actions = {
 const mutations = {
   notify(state, payload) {
     let notifs = [...state.notifications];
-    const idx = findIndex(notifs, payload);
+    const idx = findIndex(payload)(notifs);
     if (idx > -1) {
       notifs.splice(idx, 1);
     }
@@ -68,6 +71,9 @@ const mutations = {
     let notifs = [...state.notifications];
     notifs.splice(idx, 1);
     state.notifications = notifs;
+  },
+  clearState(state) {
+    state.notifications = [];
   }
 };
 
