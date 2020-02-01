@@ -1,5 +1,5 @@
 .mb-sm {
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
 }
 
 .mb-md {
@@ -16,29 +16,27 @@
 
 .details .notifs {
   p {
-    line-height: 2rem;
+    line-height: 1.9;
     margin: 0 0 1rem;
 
-    i {
-      float: left;
-      margin-right: .3em;
-      line-height: inherit;
-    }
+    > i {
+      margin-right: 0.3em;
 
-    &.info i {
-      color: #bdbdbd;
-    }
+      &.info {
+        color: #bdbdbd;
+      }
 
-    &.warn i {
-      color: #ffab00;
-    }
+      &.warn {
+        color: #ffab00;
+      }
 
-    &.error i {
-      color: #e57373;
-    }
+      &.error {
+        color: #e57373;
+      }
 
-    &.fatal i {
-      color: #b71c1c;
+      &.fatal {
+        color: #b71c1c;
+      }
     }
   }
 }
