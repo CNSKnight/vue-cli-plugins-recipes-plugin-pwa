@@ -5,7 +5,7 @@ import createLogger from 'vuex/dist/logger';
 import appModule from './app/';
 import recipeModule from './recipe/';
 import recipesModule from './recipes/';
-import { forOwn } from 'lodash';
+import { forOwn } from 'lodash/fp';
 
 Vue.use(Vuex);
 // Mongoose.Promise = global.Promise
@@ -18,15 +18,15 @@ const modules = {
   recipesModule
 };
 let plugins = debug ? [createLogger()] : [];
-forOwn(modules, module => {
+forOwn(module => {
   if (module.plugins) {
     plugins = plugins.concat(module.plugins);
     delete module.plugins;
   }
-});
-
+})(modules);
+console.log('plugins: ', plugins, ' :done');
 export default new Vuex.Store({
-  modules: modules,
+  modules,
   strict: debug,
-  plugins: plugins
+  plugins
 });
