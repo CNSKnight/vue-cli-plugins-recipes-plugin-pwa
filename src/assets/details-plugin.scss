@@ -166,4 +166,7 @@
     color: rgb(158, 157, 36);
   }
 
+  table.ing.striped tbody+tbody {
+    border-top: 1px solid rgb(208,208,208);
+  }
 }
