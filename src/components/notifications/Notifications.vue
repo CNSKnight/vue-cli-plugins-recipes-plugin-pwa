@@ -1,13 +1,8 @@
 <template>
   <div class="notifs">
-    <p
-      v-for="(notif, idx) in notifications"
-      :key="idx"
-      :class="[notif.severity || 'info', 'acap_' + (notif.severity || 'info')]"
-      :title="notif.service"
-      v-html="infoIcon + ' ' + notif.error"
-    >
-      {{ notif }}
+    <p v-for="(notif, idx) in notifications" :key="idx">
+      <BaseInfoIcon :severity="notif.severity" :title="notif.service" />
+      {{ notif.error }}
     </p>
   </div>
 </template>
