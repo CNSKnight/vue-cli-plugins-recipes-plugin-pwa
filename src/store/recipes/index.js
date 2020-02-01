@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { findIndex } from 'lodash';
+import { findIndex } from 'lodash/fp';
 
 const apiBase = process.env.VUE_APP_RECIPES_APIBASE;
 
@@ -15,7 +15,7 @@ const getters = {
 
 const actions = {
   // used only w/in listing context to load all
-  async loadRecipes({ commit }) {
+  async loadRecipes({ commit, dispatch }) {
     try {
       const resp = await axios({
         url: apiBase
@@ -23,6 +23,11 @@ const actions = {
       });
       if (resp && resp.status === 200) {
         commit('setCollection', { recipes: resp.data });
+        dispatch('handleError', {
+          service: 'recipes:load',
+          severity: 'success',
+          error: `Loaded ${resp.data.length} recipes.`
+        });
       }
     } catch (err) {
       return err;
@@ -45,9 +50,9 @@ const mutations = {
   },
   updateListingItem(state, payload) {
     if (payload.id) {
-      const idx = findIndex(state.recipes, recipe => {
+      const idx = findIndex(recipe => {
         return recipe.id === payload.id;
-      });
+      })(state.recipes);
       if (idx >= 0) {
         state.recipes.splice(idx, 1, { ...payload });
       }
