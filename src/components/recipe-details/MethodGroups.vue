@@ -8,7 +8,10 @@
       <fieldset class="col s12">
         <legend
           v-text="
-            group !== 'default' ? 'Method Group' : 'Method (Default Group)'
+            group !== 'default'
+              ? (group && `${group} (group) Method`) ||
+                `Unnamed Method Group ${idx}`
+              : 'Method (Default Group)'
           "
         />
         <template v-if="group !== 'default'">
@@ -113,7 +116,7 @@ import NotificationsLocal from '@/components/notifications/NotificationsLocal';
 import GroupMethod from './GroupMethod';
 import { mapGetters } from 'vuex';
 // import { mapFields } from 'vuex-map-fields';
-import { isEqual, isObject, keys } from 'lodash';
+import { isEqual, isObject, keys } from 'lodash/fp';
 
 export default {
   components: {

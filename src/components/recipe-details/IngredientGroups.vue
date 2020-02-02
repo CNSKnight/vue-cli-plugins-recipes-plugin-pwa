@@ -9,7 +9,8 @@
         <legend
           v-text="
             group !== 'default'
-              ? 'Ingredients Group'
+              ? (group && `${group} (group) Ingredients`) ||
+                `Unnamed Ingredients Group ${idx}`
               : 'Ingredients (Default Group)'
           "
         />

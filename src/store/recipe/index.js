@@ -4,21 +4,38 @@ import uiActions from './uiActions';
 import asyncActions from './asyncActions';
 import recipeTemplate from '../models/recipeTemplate';
 import { getField, updateField } from 'vuex-map-fields';
-import { compose, isEqual, isFinite, cloneDeep, filter, keys } from 'lodash/fp';
+import {
+  cloneDeep,
+  // compose,
+  filter,
+  isEqual,
+  isFinite,
+  keys,
+  set
+} from 'lodash/fp';
 import VuexPersistence from 'vuex-persist';
 import Vue from 'vue';
 
 const state = {
+  // staged is sync of db service and never mutated here
   staged: cloneDeep(recipeTemplate),
+  // recipe starts as db service sync and mutates via ui actions while syncing to local storage
   recipe: cloneDeep(recipeTemplate),
-  modifieds: {}
+  // the syncModifiedsPlugin maintains non-db service-synced mutations until the next service sync cycle
+  modifieds: {},
+  detailsFormValid: true,
+  preview: 'closed'
 };
+
+/**
+ * takes a collection (ingredients|methods) with a group property.
+ * assumes pre-sorted (as should already be stored in recipe)
+ */
 const groupedKeys = collection => {
   const grouped = {};
   collection.forEach((item, modelIdx) => {
-    const target = (grouped[item.group || 'default'] =
-      grouped[item.group || 'default'] || []);
-    target.push(modelIdx);
+    const group = item.group || 'default';
+    (grouped[group] = grouped[group] || []).push(modelIdx);
   });
   // should always be last in .keys()
   grouped.default = grouped.default || [];
@@ -26,9 +43,16 @@ const groupedKeys = collection => {
 };
 
 const getters = {
-  recipe: state => state.recipe,
-  staged: state => state.staged,
-  recipeId: state => state.recipe.acapID,
+  // straight single-field getters
+  recipe: ({ recipe }) => recipe,
+  staged: ({ staged }) => staged,
+  recipeId: ({ recipe: { acapID } }) => acapID,
+  detailsFormValid: ({ detailsFormValid }) => detailsFormValid,
+  // custom map-fields getters
+  getIngredientsField: state => getField(state.recipe.ingredients),
+  getMethodsField: state => getField(state.recipe.methods),
+
+  // custom grouping and filter getters
   groupedIngredients: ({ recipe: { ingredients = [] } }) =>
     groupedKeys(ingredients),
   ingredientGroups: (...[, { groupedIngredients: grouped }]) => keys(grouped),
@@ -36,16 +60,18 @@ const getters = {
     grouped[group] && grouped[group].length,
   groupedMethods: ({ recipe: { methods = [] } }) => groupedKeys(methods),
   methodGroups: (...[, { groupedMethods: grouped }]) => keys(grouped),
-  // function that returns a function that takes a group (name) and returns it's method count
+  // takes a group (name) and returns the methods steps count for that group
   stepCountByGroup: (...[, { groupedMethods: grouped }]) => group =>
     grouped[group] && grouped[group].length,
   filteredVariations: ({ recipe: { variations = [] } }) =>
-    compose(filter(variation => variation.text))(variations),
-  filteredTags: ({ recipe: { tags = [] } }) =>
-    compose(filter(tag => tag.text))(tags),
+    filter(variation => variation.text)(variations),
+  filteredTags: ({ recipe: { tags = [] } }) => filter(tag => tag.text)(tags),
+  // statistical getters
   isModified: state => !isEqual(state.recipe, state.staged),
   hasChanges: state => id => state.modifieds[id] !== undefined,
   getModified: state => id => state.modifieds[id],
+
+  // Logistical getters
   // return the updated if beyond 3 days of published/creation dates
   updatedDate(state) {
     let recipe = state.recipe;
@@ -60,10 +86,14 @@ const getters = {
       return ud;
     }
   },
-  getField
+  getField,
+  preview: ({ preview }) => preview
 };
 
-const actions = { ...asyncActions, ...uiActions };
+const actions = {
+  ...asyncActions,
+  ...uiActions
+};
 
 // In Vuex, mutations are synchronous transactions
 const mutations = {
@@ -80,6 +110,10 @@ const mutations = {
     state.recipe = cloneDeep(state.staged);
     Vue.delete(state.modifieds, state.recipe.id);
   },
+  updateIngredientsField: (state, field) =>
+    updateField(state.recipe.ingredients, field),
+  updateMethodsField: (state, field) =>
+    updateField(state.recipe.methods, field),
   updateField,
   // implies augmenting arrays
   addTo(state, { prop, item, index }) {
@@ -94,8 +128,11 @@ const mutations = {
       state.recipe[prop] = item;
     }
   },
+  // with set, prop may be a path[to].subProp
   replaceProperty: (state, { prop, val }) => {
-    prop && (state.recipe[prop] = val);
+    if (prop) {
+      state.recipe = set(prop, val)(state.recipe);
+    }
   },
   setModified: (state, { key, val }) => {
     if (key) {
@@ -107,7 +144,14 @@ const mutations = {
     }
   },
   update(state, recipe) {
+    // pass off to stage mutation
     this.commit('stage', recipe);
+  },
+  detailsFormValid: (state, val) => {
+    state.detailsFormValid = !!val;
+  },
+  setPreview: (state, val) => {
+    state.preview = val;
   }
 };
 

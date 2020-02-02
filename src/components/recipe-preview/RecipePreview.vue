@@ -31,6 +31,7 @@
               </template>
               <template v-else>
                 <label>Un-Published</label>
+                <i class="material-icons grey-text">visibility_off</i>
               </template>
             </div>
             <div v-if="updatedDate">
@@ -72,8 +73,8 @@
             </ul>
           </div>
         </div>
-        <div v-if="ingredientGroups.length" class="row">
-          <div class="col s12 ">
+        <div v-if="recipe.ingredients.length" class="row">
+          <div class="col s12">
             <table class="ing striped">
               <caption>
                 {{
@@ -83,51 +84,50 @@
               </caption>
               <thead>
                 <tr>
-                  <th>Qty</th>
-                  <th>Units</th>
+                  <th title="Quantity of Units">Qty</th>
+                  <th title="Unit of Measure">Units</th>
                   <th>Ingredient</th>
-                  <th>Prep</th>
-                  <th>Optional</th>
+                  <th title="preparation">Prep</th>
+                  <th title="Optional Ingredient">Opt?</th>
                 </tr>
               </thead>
-              <template>
-                <tbody v-for="(group, idxG) in ingredientGroups" :key="idxG">
-                  <tr
-                    v-if="ingredientGroups.length > 1 && ingCountByGroup(group)"
-                  >
-                    <th colspan="5">
-                      {{ group == 'default' ? 'Other' : group }}
-                    </th>
-                  </tr>
-                  <tr v-for="(ing, idxI) in group.ingredients" :key="idxI">
-                    <td>{{ ing.qty }}</td>
-                    <td>{{ ing.unit }}</td>
-                    <td>{{ ing.name }}</td>
-                    <td>{{ ing.preparation }}</td>
-                    <td>
-                      <i
-                        v-if="ing.optional"
-                        class="material-icons light-green-text "
-                        >check</i
-                      >
-                    </td>
-                  </tr>
-                </tbody>
-              </template>
+              <tbody
+                v-for="(ingIndexes, group) in groupedIngredients"
+                :key="group"
+              >
+                <tr v-if="ingredientGroups.length > 1 && ingIndexes.length">
+                  <th colspan="5">
+                    {{ group == 'default' ? 'Other' : group }}
+                  </th>
+                </tr>
+                <tr v-for="(ing, idx) in ingsByGroup(group)" :key="idx">
+                  <td>{{ ing.qty }}</td>
+                  <td>{{ ing.unit }}</td>
+                  <td>{{ ing.name }}</td>
+                  <td>{{ ing.preparation }}</td>
+                  <td>
+                    <i
+                      v-if="ing.optional"
+                      class="material-icons light-green-text "
+                      >check</i
+                    >
+                  </td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </div>
-        <div v-if="groupedMethods.length" class="row ">
+        <div v-if="recipe.methods.length" class="row ">
           <div class="col s12">
             <h3>Preparation</h3>
             <div
-              v-for="(methods, group) in groupedMethods"
+              v-for="(metIndexes, group) in groupedMethods"
               :key="group"
               class="row"
             >
               <div class="col s12">
                 <h4 v-if="group != 'default'">{{ group }}</h4>
-                <dl v-for="(met, idx) in methods" :key="idx">
+                <dl v-for="(met, idx) in metsByGroup(group)" :key="idx">
                   <dt>Step {{ met.step }}:</dt>
                   <dd v-html="transformMarkdown(met.text)"></dd>
                 </dl>
@@ -170,7 +170,7 @@
         </div>
       </div>
     </div>
-    <div class="closer" @click="$emit('close')">
+    <div class="closer" @click="closePreview">
       <i class="material-icons">close</i>
     </div>
   </section>
@@ -179,7 +179,7 @@
 <script>
 import dateFormat from 'dateformat';
 import { mapGetters } from 'vuex';
-import { isEmpty } from 'lodash';
+import { filter, isEmpty } from 'lodash/fp';
 export default {
   props: {
     transformMarkdown: {
@@ -193,14 +193,23 @@ export default {
       'staged',
       'updatedDate',
       'ingredientGroups',
+      'groupedIngredients',
+      'methodGroups',
       'groupedMethods',
       'ingCountByGroup',
       'filteredVariations',
       'filteredTags'
-    ])
+    ]),
+    ingsByGroup: ({ staged: { ingredients } }) => group =>
+      filter(['group', group == 'default' ? '' : group])(ingredients),
+    metsByGroup: ({ staged: { methods } }) => group =>
+      filter(['group', group == 'default' ? '' : group])(methods)
   },
   methods: {
     dateFormated: (date, format) => dateFormat(date, format),
+    closePreview() {
+      this.$store.dispatch('closePreview');
+    },
     isInGroup(item, group) {
       return item.group == group || (isEmpty(item.group) && group == 'default');
     }

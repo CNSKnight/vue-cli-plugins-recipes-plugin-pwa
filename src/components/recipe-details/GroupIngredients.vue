@@ -4,10 +4,11 @@
       <div class="input-field col s6 m3">
         <input
           :id="`ing-${modelIdx}-qty`"
-          v-model="ingredients[modelIdx].qty"
+          :value="ingredients[modelIdx].qty"
           :name="`ing-${modelIdx}-qty`"
           placeholder="qty?"
           type="text"
+          @change="updateIngredientQty(modelIdx, $event.target.value)"
         />
         <label :for="`ing-${modelIdx}-qty`" class="sr-only sr-only-focusable"
           >Quantity</label
@@ -85,6 +86,7 @@
 </template>
 <script>
 import { mapMultiRowFields } from 'vuex-map-fields';
+
 export default {
   props: {
     // ingredients: { type: Array, required: true },
@@ -102,6 +104,12 @@ export default {
       this.$emit('onEvent', 'deleteItem', {
         prop: 'ingredients',
         index: this.modelIdx
+      });
+    },
+    updateIngredientQty(idx, val) {
+      this.$store.dispatch('updateIngredientQty', {
+        idx,
+        val
       });
     }
   }

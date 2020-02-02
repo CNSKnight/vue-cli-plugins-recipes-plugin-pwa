@@ -7,39 +7,25 @@ import {
   findIndex,
   findLastIndex,
   isObject,
-  map,
   upperFirst
-} from 'lodash';
+} from 'lodash/fp';
+
+const contUnitsMgr = parent.acap?.ADMIN_TAPPADS?.contUnitsMgr;
 
 // for collections
 const addToStack = (
   prop,
   { state, commit, dispatch },
-  { attr, val, actionContext }
+  { attr, val = {}, actionContext }
 ) => {
-  const item = cloneDeep(recipeTemplate[prop][0]);
   const stack = state.recipe[prop];
+  const item = assign(cloneDeep(recipeTemplate[prop][0]), val);
   let index;
-  if (isObject(val)) {
-    assign(item, val);
-    if (item.group) {
-      // append to end of existing group
-      index = findLastIndex(stack, ['group', item.group]);
-      if (index == -1) {
-        // or prepend to any existing ''/'default' group
-        index = findIndex(stack, ['group', '']);
-        if (index == -1) {
-          index = undefined;
-        }
-      } else {
-        index++;
-      }
-    }
-  } else if (attr === 'group') {
-    if (find(stack, ['group', 'Unnamed'])) {
+  if (attr === 'group') {
+    if (find(['group', 'Unnamed'])(stack)) {
       const Prop = upperFirst(prop);
       return dispatch('handleError', {
-        service: `add${Prop}`,
+        service: `recipe:add${Prop}`,
         severity: 'warn',
         error: `Please first name the Unnamed ${Prop} Group.`,
         actionContext,
@@ -48,9 +34,22 @@ const addToStack = (
     }
     item.group = 'Unnamed';
     // prepend to an existing ''/default group
-    index = findIndex(stack, item => item.group == '');
+    index = findIndex(['group', ''], stack);
     if (index == -1) {
       index = undefined;
+    }
+  } else {
+    index = findLastIndex(['group', item.group], stack);
+    if (index > -1) {
+      item.step && index >= -1 && (item.step = stack[index].step + 1);
+      // append to end of existing group
+      index++;
+    } else if (item.group == '') {
+      // or prepend to any existing '' (ie default) group
+      index = findIndex(['group', ''], stack);
+      if (index == -1) {
+        index = undefined;
+      }
     }
   }
   commit('addTo', {
@@ -67,23 +66,24 @@ const updateGroup = (
   const items = state.recipe[prop];
   if (!items.length) return;
   const Prop = upperFirst(prop);
-  dispatch('clearContext', { actionContext });
-  if (filter(items, item => item.group == toGroup).length) {
+  dispatch('clearNotif', { actionContext });
+  if (filter(item => item.group == toGroup, items).length) {
     return dispatch('handleError', {
-      service: `update${Prop}Group`,
+      service: `recipe:update${Prop}Group`,
       severity: 'error',
       error: `Please ensure ${Prop} Group names are unique.
       [<span class="materialize-red-text">${toGroup}</span>]`,
       actionContext
     });
   }
-  const stack = map(state.recipe[prop], (item, idx) => {
+  const stack = state.recipe[prop].map((item, idx) => {
     const cloned = cloneDeep(item);
     grpMbrIndexes.includes(idx) && (cloned.group = toGroup);
     return cloned;
   });
   commit('replaceProperty', { prop, val: stack });
 };
+const qtyRegex = /(\w)-(\w)/;
 export default {
   selectRecipe({ dispatch }, recipe) {
     dispatch('loadRecipe', recipe);
@@ -106,6 +106,9 @@ export default {
     addToStack('ingredients', context, payload);
   },
   addMethod(context, payload) {
+    if (!payload.val) {
+      payload.val = { group: '' };
+    }
     addToStack('methods', context, payload);
   },
   // anything beyond a rote clone of the prop requested, use another action
@@ -130,7 +133,6 @@ export default {
       commit('addTo', { prop: prop, item: item });
     }
   },
-
   deleteItem({ state, commit }, { prop, index }) {
     if (
       recipeTemplate[prop] &&
@@ -166,12 +168,31 @@ export default {
   ) {
     updateGroup('methods', context, { grpMbrIndexes, toGroup, actionContext });
   },
-
-  // @todo order({ state, commit }, { prop, index }) {},
-
-  onChangeRate(value) {
-    // Set the value of the selectUA recipe's rating to the
-    // value passed up from the `rating` sub-component
-    this.recipe.rating = value;
+  updateIngredientQty({ commit }, { idx, val }) {
+    const payload = {
+      prop: `ingredients[${idx}].qty`,
+      val: val.replace(qtyRegex, '$1‑$2')
+    };
+    commit('replaceProperty', payload);
+  },
+  openPreview({ commit }) {
+    commit('setPreview', 'open');
+    contUnitsMgr &&
+      contUnitsMgr.disableModalClose &&
+      contUnitsMgr.disableModalClose('preview', 'Close Preview');
+  },
+  closePreview({ commit }) {
+    commit('setPreview', 'closed');
+    contUnitsMgr &&
+      contUnitsMgr.enableModalClose &&
+      contUnitsMgr.enableModalClose('preview');
   }
+
+  // @todo's
+  // order({ state, commit }, { prop, index }) {},
+  // onChangeRate(value) {
+  //   // Set the value of the selectUA recipe's rating to the
+  //   // value passed up from the `rating` sub-component
+  //   this.recipe.rating = value;
+  // }
 };

@@ -39,7 +39,7 @@
 </template>
 <script>
 import { mapMultiRowFields } from 'vuex-map-fields';
-import { padStart } from 'lodash';
+import { padCharsStart } from 'lodash/fp';
 export default {
   props: {
     // methods: { type: Array, required: true },
@@ -56,7 +56,7 @@ export default {
     // get textarea label
     getStepLabel() {
       return 'Step #'.concat(
-        padStart(this.methods[this.modelIdx].step.toString(), 2, '0')
+        padCharsStart('0')(2)(this.methods[this.modelIdx].step.toString())
       );
     },
     deleteStep() {
