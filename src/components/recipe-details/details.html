@@ -1,5 +1,5 @@
 <div class="recipe-details container contained">
-  <section class="formview fade" :class="preview ? 'out' : 'in'">
+  <section class="formview fade" :class="preview == 'open' ? 'out' : 'in'">
     <div v-if="! acapID">
       <p>No recipe was provided.</p>
       <p>Please return to the listing or cards and click to choose an item.</p>
@@ -11,11 +11,11 @@
           :canReset="isModified"
           :canPreview="id !== undefined"
           :canSave="true"
-          :valid="valid"
+          :valid="detailsFormValid"
           :isModified="isModified"
           @cancel="onCancel"
           @reset="onReset"
-          @preview="openPreview"
+          @preview="onOpenPreview"
         ></actions-bar>
         <div class="row">
           <div class="col s12 center-align">
@@ -74,6 +74,7 @@
               v-model="description"
             ></textarea>
             <label for="rDescript">Description</label>
+            <md-icon />
           </div>
         </div>
         <!--rating-comp-->
@@ -83,7 +84,7 @@
             <legend>Tools You May Need</legend>
             <div class="row" v-for="(tool, idx) in tools" :key="idx">
               <div class="input-field col s12 m6">
-                <input :id="`tool-${idx}`" name="`tool-${idx}`" v-model="tool.name" placeholder="Name this Tool" type="text" />
+                <input :id="`tool-${idx}`" :name="`tool-${idx}`" v-model="tool.name" placeholder="Name this Tool" type="text" />
                 <label :for="`tool-${idx}`" class="sr-only sr-only-focusable">Tool Name</label>
               </div>
               <div class="input-field col s6 m3 center-align">
@@ -114,10 +115,11 @@
               <div class="input-field col s12 m10">
                 <textarea
                   class="materialize-textarea"
-                  name="`variations-${idx}`"
+                  :name="`variations-${idx}`"
                   v-model="variation.text"
                   placeholder="Variation Content"
                 ></textarea>
+                <md-icon />
               </div>
               <div class="input-field col s12 m2 center-align">
                 <button class="btn-flat btn-sm red-text" type="button" @click="deleteItem({prop: 'variations', index: idx})">
@@ -161,7 +163,8 @@
             <legend>*Notes</legend>
             <div class="row">
               <div class="input-field col s12">
-                <textarea class="materialize-textarea" name="note" v-model="notes" placeholder="Enter Notes..."> </textarea>
+                <textarea class="materialize-textarea" name="note" v-model="notes" placeholder="Enter Notes..." />
+                <md-icon />
               </div>
             </div>
           </fieldset>
@@ -172,16 +175,16 @@
           </div>
         </div>
         <actions-bar
-          v-bind="{canCancel: false, canReset: isModified, canPreview: id !== undefined, canSave: true, isModified, valid}"
+          v-bind="{canCancel: false, canReset: isModified, canPreview: id !== undefined, canSave: true, isModified, valid: detailsFormValid}"
           v-on:cancel="onCancel"
           v-on:reset="onReset"
-          v-on:preview="openPreview"
+          v-on:preview="onOpenPreview"
         ></actions-bar>
       </form>
     </div>
   </section>
-  <transition v-if="preview" name="preview" appear>
+  <transition v-if="preview == 'open'" name="preview" appear>
     {{preview}}
-    <recipe-preview @close="closePreview" v-bind="{transformMarkdown}"></recipe-preview>
+    <recipe-preview v-bind="{transformMarkdown}"></recipe-preview>
   </transition>
 </div>

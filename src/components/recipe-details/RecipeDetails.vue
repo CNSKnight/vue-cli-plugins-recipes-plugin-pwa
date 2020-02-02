@@ -7,6 +7,7 @@ import ActionsBar from '@/components/actions-bar/ActionsBar';
 import IngredientGroups from './IngredientGroups';
 import MethodGroups from './MethodGroups';
 import NotificationsLocal from '@/components/notifications/NotificationsLocal';
+
 export default {
   components: {
     'actions-bar': ActionsBar,
@@ -23,10 +24,10 @@ export default {
     }
   },
   data() {
-    return { preview: false, actionContext: 'details' };
+    return { actionContext: 'details' };
   },
   computed: {
-    ...mapGetters(['isModified']),
+    ...mapGetters(['isModified', 'detailsFormValid', 'preview']),
     ...mapFields([
       'recipe.id',
       'recipe.acapID',
@@ -42,13 +43,7 @@ export default {
       'recipe.methods',
       'recipe.tags',
       'recipe.variations'
-    ]),
-    valid() {
-      return true;
-    }
-  },
-  created() {
-    this.preview = false;
+    ])
   },
   mounted() {
     this.onFormUpdated();
@@ -79,14 +74,14 @@ export default {
       let count = idx + 1;
       return label.toString().concat('-rTA-', count.toString());
     },
-    openPreview() {
+    onOpenPreview() {
+      this.$store.dispatch('openPreview');
       const toScroll =
         (window && window.$$ && window.$$('.modal-content')) || window;
       toScroll && toScroll.scrollTo && toScroll.scrollTo({ top: 0 });
-      this.preview = true;
     },
-    closePreview() {
-      this.preview = false;
+    onClosePreview() {
+      this.$store.dispatch('closePreview');
     }
   }
 };
@@ -139,5 +134,15 @@ export default {
 .preview-enter-active,
 .preview-leave-active {
   transition: transform 1s, opacity 0.8s;
+}
+.material-icons.mdIcon {
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAAAsklEQVRIie2Uyw3CMBBEXxA3SkkPcE0xHOkHiZQR2nADSQtcOJnL2rL8gSTaiCjKSCt7x6sZf+SFHWtAAwyAVY5etOkXEPcmlUwAKs1rcboHZdEEJQN3xLPkl4Ar1RaRK3BcJ/lzhoHnvxlY4BblqgbvaJxs8OuRWxkfmbV7JGyFG7WDMdwJMAFvhEvq5xoA1MBLos7VH+PjTIQBrsE8wTZ+8hA4agZOu2GZjurb9Y7/4gNK8aWmOkbZaAAAAABJRU5ErkJggg==);
+  background-repeat: no-repeat;
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  right: 0.75rem;
+  top: -22px;
+  cursor: help;
 }
 </style>

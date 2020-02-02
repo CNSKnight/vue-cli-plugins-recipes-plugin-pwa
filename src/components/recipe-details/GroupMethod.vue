@@ -11,10 +11,11 @@
           :id="`step-${modelIdx}-text`"
           v-model="methods[modelIdx].text"
           class="materialize-textarea"
-          name="`step-${modelIdx}-text`"
+          :name="`step-${modelIdx}-text`"
           placeholder="Step Content"
         />
         <label :for="`step-${modelIdx}-text`" v-text="getStepLabel()" />
+        <md-icon v-if="methods[modelIdx].step == 1" />
       </div>
       <div class="input-field col s12 m2 center-align">
         <button

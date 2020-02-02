@@ -170,3 +170,17 @@
     border-top: 1px solid rgb(208,208,208);
   }
 }
+
+/* hinter-icon 
+* via: https://icons8.com/icon/set/markdown/m_outlined
+* and: https://yoksel.github.io/url-encoder/
+*/
+.hinter-icon.material-icons.mdIcon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' viewBox='0 0 172 172' style=' fill:%23000000;'%3E%3Cg fill='none' fill-rule='nonzero' stroke='none' stroke-width='1' stroke-linecap='butt' stroke-linejoin='miter' stroke-miterlimit='10' stroke-dasharray='' stroke-dashoffset='0' font-family='none' font-weight='none' font-size='none' text-anchor='none' style='mix-blend-mode: normal'%3E%3Cpath d='M0,172v-172h172v172z' fill='none'%3E%3C/path%3E%3Cg id='original-icon' fill='rgba(158, 157, 36, .35)'%3E%3Cpath d='M14.33333,28.66667c-7.83362,0 -14.33333,6.49972 -14.33333,14.33333v86c0,7.83362 6.49972,14.33333 14.33333,14.33333h143.33333c7.83362,0 14.33333,-6.49972 14.33333,-14.33333v-86c0,-7.83362 -6.49972,-14.33333 -14.33333,-14.33333zM14.33333,43h143.33333v86h-143.33333zM35.83333,57.33333v57.33333h14.33333v-30.99024l4.47917,9.49024h12.54167l4.47917,-9.49024v30.99024h14.33333v-57.33333h-14.33333l-10.75,21.91992l-10.75,-21.91992zM114.66667,57.33333v28.66667h-14.33333l21.5,28.66667l21.5,-28.66667h-14.33333v-28.66667z'%3E%3C/path%3E%3C/g%3E%3Cpath d='' fill='none'%3E%3C/path%3E%3Cpath d='M86,172c-47.49649,0 -86,-38.50351 -86,-86v0c0,-47.49649 38.50351,-86 86,-86v0c47.49649,0 86,38.50351 86,86v0c0,47.49649 -38.50351,86 -86,86z' fill='none'%3E%3C/path%3E%3Cpath d='M86,168.56c-45.59663,0 -82.56,-36.96337 -82.56,-82.56v0c0,-45.59663 36.96337,-82.56 82.56,-82.56v0c45.59663,0 82.56,36.96337 82.56,82.56v0c0,45.59663 -36.96337,82.56 -82.56,82.56z' fill='none'%3E%3C/path%3E%3Cpath d='M0,172v-172h172v172z' fill='none'%3E%3C/path%3E%3Cpath d='M3.44,168.56v-165.12h165.12v165.12z' fill='none'%3E%3C/path%3E%3C/g%3E%3C/svg%3E");
+  width: 48px;
+  height: 48px;
+  background-repeat: no-repeat;
+  position: absolute;
+  right: .75rem;
+  top: -24px;
+}
