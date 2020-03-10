@@ -4,7 +4,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
-import RecipeDetails from '@/components/recipe-details/RecipeDetails';
+import RecipeDetails from '@/components/recipe-details/RecipeDetails.vue';
 import * as MarkdownIt from 'markdown-it';
 
 const md = MarkdownIt({
@@ -33,7 +33,8 @@ export default {
   },
   methods: {
     toggle(what) {
-      this.hasOwnProperty(what) && (this[what] = !this[what]);
+      Object.prototype.hasOwnProperty.call(this, what) &&
+        (this[what] = !this[what]);
     },
     ...mapActions([]),
     transformMarkdown(markdown) {

@@ -9,13 +9,13 @@ import { forOwn } from 'lodash/fp';
 Vue.use(Vuex);
 // Mongoose.Promise = global.Promise
 
-const debug = process.env.NODE_ENV !== 'production';
+const DEBUG = process.env.NODE_ENV !== 'production';
 
 const modules = {
   appModule,
   recipeModule
 };
-let plugins = debug ? [createLogger()] : [];
+let plugins = DEBUG ? [createLogger()] : [];
 forOwn(module => {
   if (module.plugins) {
     plugins = plugins.concat(module.plugins);
@@ -25,6 +25,6 @@ forOwn(module => {
 
 export default new Vuex.Store({
   modules,
-  strict: debug,
+  strict: DEBUG,
   plugins
 });

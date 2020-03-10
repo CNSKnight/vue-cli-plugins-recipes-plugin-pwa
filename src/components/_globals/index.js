@@ -15,7 +15,7 @@ const requireComponent = require.context(
   // Only include "_base-" prefixed .vue files
   // /_base-[\w-]+\.vue$/
 );
-console.log(requireComponent.keys());
+
 // For each matching file name...
 requireComponent.keys().forEach(fileName => {
   // Get the component config

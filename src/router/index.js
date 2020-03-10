@@ -4,7 +4,7 @@ import Home from '@/views/Home.vue';
 import About from '@/views/About.vue';
 // import Hello from '@/components/Hello'
 import Recipes from '@/components/recipes/Recipes';
-import RecipeDetailsPlugin from '@/components/recipe-details/RecipeDetailsPlugin';
+import RecipeDetailsPlugin from '@/components/recipe-details/RecipeDetailsPlugin.vue';
 
 Vue.use(Router);
 

@@ -12,8 +12,8 @@
 </template>
 
 <script>
-import Notifications from '@/components/notifications/Notifications';
-import RecipeDetailsPlugin from '@/components/recipe-details/RecipeDetailsPlugin';
+import Notifications from '@/components/notifications/Notifications.vue';
+import RecipeDetailsPlugin from '@/components/recipe-details/RecipeDetailsPlugin.vue';
 export default {
   name: 'DetailsPlugin',
   components: {

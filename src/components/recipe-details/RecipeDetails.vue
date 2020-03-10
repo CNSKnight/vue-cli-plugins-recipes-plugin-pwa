@@ -3,10 +3,10 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import { mapFields, mapMultiRowFields } from 'vuex-map-fields';
-import ActionsBar from '@/components/actions-bar/ActionsBar';
-import IngredientGroups from './IngredientGroups';
-import MethodGroups from './MethodGroups';
-import NotificationsLocal from '@/components/notifications/NotificationsLocal';
+import ActionsBar from '@/components/actions-bar/ActionsBar.vue';
+import IngredientGroups from './IngredientGroups.vue';
+import MethodGroups from './MethodGroups.vue';
+import NotificationsLocal from '@/components/notifications/NotificationsLocal.vue';
 
 export default {
   components: {
@@ -14,7 +14,9 @@ export default {
     'method-groups': MethodGroups,
     'ingredient-groups': IngredientGroups,
     'recipe-preview': () =>
-      import(/* webpackChunkName: "recipe-preview" */ '@/components/recipe-preview/RecipePreview'),
+      import(
+        /* webpackChunkName: "recipe-preview" */ '@/components/recipe-preview/RecipePreview'
+      ),
     'notifs-local': NotificationsLocal
   },
   props: {
@@ -24,7 +26,11 @@ export default {
     }
   },
   data() {
-    return { actionContext: 'details' };
+    return {
+      actionContext: 'details',
+      // test may change if full-app ever developed
+      isNotPlugin: process.env.NODE_ENV !== 'production'
+    };
   },
   computed: {
     ...mapGetters(['isModified', 'detailsFormValid', 'preview']),
@@ -134,15 +140,5 @@ export default {
 .preview-enter-active,
 .preview-leave-active {
   transition: transform 1s, opacity 0.8s;
-}
-.material-icons.mdIcon {
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAAAsklEQVRIie2Uyw3CMBBEXxA3SkkPcE0xHOkHiZQR2nADSQtcOJnL2rL8gSTaiCjKSCt7x6sZf+SFHWtAAwyAVY5etOkXEPcmlUwAKs1rcboHZdEEJQN3xLPkl4Ar1RaRK3BcJ/lzhoHnvxlY4BblqgbvaJxs8OuRWxkfmbV7JGyFG7WDMdwJMAFvhEvq5xoA1MBLos7VH+PjTIQBrsE8wTZ+8hA4agZOu2GZjurb9Y7/4gNK8aWmOkbZaAAAAABJRU5ErkJggg==);
-  background-repeat: no-repeat;
-  width: 24px;
-  height: 24px;
-  position: absolute;
-  right: 0.75rem;
-  top: -22px;
-  cursor: help;
 }
 </style>

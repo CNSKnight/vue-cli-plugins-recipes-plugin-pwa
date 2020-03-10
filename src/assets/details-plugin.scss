@@ -10,6 +10,28 @@
   .btn.grey.lighten-5 i {
     color: rgb(175, 180, 43) !important;
   }
+
+  .tags {
+    .box {
+      align-content: flex-start;
+      display: flex;
+      flex-flow: row wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+
+      .tag {
+        flex: 0 1 auto;
+
+        .input-field {
+          display: inline-block;
+
+          input {
+            width: auto;
+          }
+        }
+      }
+    }
+  }
 }
 
 .formview {

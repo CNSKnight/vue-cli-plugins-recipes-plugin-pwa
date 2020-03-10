@@ -30,7 +30,9 @@
       </template>
     </div>
     <div class="col s12 m7">
-      <recipe-details v-bind="{ transformMarkdown }"></recipe-details>
+      <div class="container">
+        <recipe-details v-bind="{ transformMarkdown }"></recipe-details>
+      </div>
     </div>
   </div>
 </template>
@@ -68,7 +70,8 @@ export default {
   },
   methods: {
     toggle(what) {
-      this.hasOwnProperty(what) && (this[what] = !this[what]);
+      Object.prototype.hasOwnProperty.call(this, what) &&
+        (this[what] = !this[what]);
     },
     ...mapActions([]),
     transformMarkdown(markdown) {
