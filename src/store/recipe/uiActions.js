@@ -6,7 +6,6 @@ import {
   find,
   findIndex,
   findLastIndex,
-  isObject,
   upperFirst
 } from 'lodash/fp';
 

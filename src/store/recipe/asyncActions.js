@@ -1,7 +1,15 @@
 import axios from 'axios';
 import recipeTemplate from '../models/recipeTemplate';
 import helpers from './actionHelpers';
-import { assignWith, cloneDeep, isEmpty, isNaN, isUndefined } from 'lodash/fp';
+import {
+  assignWith,
+  cloneDeep,
+  isArray,
+  isEmpty, // must be object|collection|map|set
+  isNaN,
+  isNil,
+  isUndefined
+} from 'lodash/fp';
 
 const apiBase = process.env.VUE_APP_RECIPES_APIBASE;
 const preAuthUrl = apiBase + '/preAuth/';
@@ -69,7 +77,19 @@ const fetchRecipe = async ({ commit, dispatch, getters, state }, recipe) => {
     delete recipe.method;
   // covers any newly added properties not present in existing data
   recipe = assignWith(
-    (objVal, srcVal) => (isEmpty(srcVal) && objVal) || undefined,
+    (cloneVal, recVal) => {
+      if (isNil(recVal) && !isNil(cloneVal)) {
+        return cloneVal;
+      } else if (isArray(cloneVal) && cloneVal[0].group !== undefined) {
+        // make up for legacy ingredients|methods which have no group
+        recVal.forEach(val => {
+          val.group = val.group || '';
+        });
+        return recVal;
+      } else {
+        return undefined;
+      }
+    },
     cloneDeep(recipeTemplate),
     recipe
   );

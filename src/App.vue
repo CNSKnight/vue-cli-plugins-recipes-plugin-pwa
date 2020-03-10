@@ -1,5 +1,5 @@
 <template>
-  <div class="details">
+  <section>
     <header>
       <nav class="lime darken-2 mb-lg">
         <div class="nav-wrapper">
@@ -27,7 +27,7 @@
     <main>
       <router-view />
     </main>
-  </div>
+  </section>
 </template>
 
 <script>
