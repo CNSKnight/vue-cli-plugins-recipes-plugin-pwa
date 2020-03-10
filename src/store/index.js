@@ -24,7 +24,7 @@ forOwn(module => {
     delete module.plugins;
   }
 })(modules);
-console.log('plugins: ', plugins, ' :done');
+
 export default new Vuex.Store({
   modules,
   strict: debug,

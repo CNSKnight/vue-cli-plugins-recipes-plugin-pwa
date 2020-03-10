@@ -1,5 +1,5 @@
 // const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { BundleStatsWebpackPlugin } = require('bundle-stats');
+const { BundleStatsWebpackPlugin } = require('bundle-stats-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin;
 
@@ -53,11 +53,11 @@ const pages = {
 module.exports = {
   publicPath: '/RecipeDetails/',
   // publicPath: process.env.NODE_ENV == 'production' ? '/RecipeDetails/' : '/',
-  // outputDir:
-  //   '/var/www/TAPPADS/vegrds-7109/public_html/acap-dev/plugins/RecipeDetails/dist1/',
-  // process.env.NODE_ENV == 'production'
-  //   ? '/var/www/TAPPADS/vegrds-7109/public_html/acap-dev/plugins/RecipeDetails/dist1/'
-  //   : 'dist/',
+  outputDir:
+    // '/var/www/TAPPADS/vegrds-7109/public_html/acap-dev/plugins/RecipeDetails/dist1/',
+    process.env.NODE_ENV == 'production'
+      ? '/var/www/TAPPADS/vegrds-7109/public_html/acap-dev/plugins/RecipeDetails/prod/'
+      : '/var/www/TAPPADS/vegrds-7109/public_html/acap-dev/plugins/RecipeDetails/dev/',
   pages,
 
   configureWebpack: {
