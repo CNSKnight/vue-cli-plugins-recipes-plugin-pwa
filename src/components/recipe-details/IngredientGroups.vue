@@ -44,7 +44,7 @@
             </div>
           </div>
         </template>
-        <group-ingredients
+        <group-ingredient
           v-for="modelIdx in ingIndexes"
           :key="modelIdx"
           :model-idx="modelIdx"
@@ -115,7 +115,7 @@
 
 <script>
 import NotificationsLocal from '@/components/notifications/NotificationsLocal';
-import GroupIngredients from './GroupIngredients';
+import GroupIngredient from './GroupIngredient';
 import { mapGetters } from 'vuex';
 // import { mapFields } from 'vuex-map-fields';
 import { isEqual, isObject, debounce, keys } from 'lodash';
@@ -135,7 +135,7 @@ const updateGroupNamePrev = function(group, target) {
 
 export default {
   components: {
-    'group-ingredients': GroupIngredients,
+    'group-ingredient': GroupIngredient,
     'notifs-local': NotificationsLocal
   },
   data() {

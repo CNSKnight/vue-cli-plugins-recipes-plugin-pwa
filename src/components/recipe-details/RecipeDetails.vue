@@ -5,14 +5,14 @@ import { mapGetters, mapActions } from 'vuex';
 import { mapFields, mapMultiRowFields } from 'vuex-map-fields';
 import ActionsBar from '@/components/actions-bar/ActionsBar.vue';
 import IngredientGroups from './IngredientGroups.vue';
-import MethodGroups from './MethodGroups.vue';
+import MethodStepGroups from './MethodStepGroups.vue';
 import NotificationsLocal from '@/components/notifications/NotificationsLocal.vue';
 
 export default {
   components: {
     'actions-bar': ActionsBar,
-    'method-groups': MethodGroups,
     'ingredient-groups': IngredientGroups,
+    'method-step-groups': MethodStepGroups,
     'recipe-preview': () =>
       import(
         /* webpackChunkName: "recipe-preview" */ '@/components/recipe-preview/RecipePreview'

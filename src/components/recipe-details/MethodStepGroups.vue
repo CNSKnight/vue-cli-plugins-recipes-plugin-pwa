@@ -42,7 +42,7 @@
             </div>
           </div>
         </template>
-        <group-method
+        <group-method-step
           v-for="modelIdx in stepIndexes"
           :key="modelIdx"
           :model-idx="modelIdx"
@@ -113,14 +113,14 @@
 
 <script>
 import NotificationsLocal from '@/components/notifications/NotificationsLocal';
-import GroupMethod from './GroupMethod';
+import GroupMethodStep from './GroupMethodStep';
 import { mapGetters } from 'vuex';
 // import { mapFields } from 'vuex-map-fields';
 import { isEqual, isObject, keys } from 'lodash/fp';
 
 export default {
   components: {
-    'group-method': GroupMethod,
+    'group-method-step': GroupMethodStep,
     'notifs-local': NotificationsLocal
   },
   data() {
