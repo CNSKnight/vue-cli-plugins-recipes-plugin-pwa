@@ -27,8 +27,8 @@ const addToStack = (
         service: `recipe:add${Prop}`,
         severity: 'warn',
         error: `Please first name the <strong class="legend">Unnamed ${Prop} (group)</strong>.`,
-        actionContext
-        // timeout: 5000
+        actionContext,
+        timeout: 5000
       });
     }
     item.group = 'Unnamed';

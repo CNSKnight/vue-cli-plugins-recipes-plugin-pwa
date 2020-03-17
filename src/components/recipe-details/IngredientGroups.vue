@@ -118,7 +118,7 @@ import NotificationsLocal from '@/components/notifications/NotificationsLocal';
 import GroupIngredient from './GroupIngredient';
 import { mapGetters } from 'vuex';
 // import { mapFields } from 'vuex-map-fields';
-import { isEqual, isObject, debounce, keys } from 'lodash';
+import { isEqual, isObject, keys } from 'lodash/fp';
 
 const updateGroupNamePrev = function(group, target) {
   this.$store.dispatch('updateIngredientsGroup', {
@@ -163,9 +163,6 @@ export default {
   },
   created() {
     this.groupNames = keys(this.groupedIngredients);
-    // similar to the way data should be a function that returns an object, each instance
-    // needs its own debounce function if they are supposed to act independently.
-    this.updateGroupNamePrev = debounce(updateGroupNamePrev, 700);
   },
   methods: {
     isInGroup(group, test) {
