@@ -52,7 +52,7 @@
           :id="`ing-${modelIdx}-name`"
           v-model="ingredients[modelIdx].name"
           :name="`ing-${modelIdx}-name`"
-          placeholder="Name this Ingredient"
+          placeholder="Ingredient Name"
           type="text"
           required
         />

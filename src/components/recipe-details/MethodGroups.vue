@@ -9,7 +9,7 @@
         <legend
           v-text="
             group !== 'default'
-              ? (group && `${group} (group) Method`) ||
+              ? (group && `${group} Method (group)`) ||
                 `Unnamed Method Group ${idx}`
               : 'Method (Default Group)'
           "
@@ -27,7 +27,7 @@
                 :idx="group"
                 type="text"
                 :value="group == 'Unnamed' ? '' : group"
-                placeholder="Unnamed Group"
+                placeholder="Group Name"
                 @change="
                   updateGroupName(
                     actionContext + 'Grp' + idx,

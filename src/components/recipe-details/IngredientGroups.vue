@@ -9,9 +9,9 @@
         <legend
           v-text="
             group !== 'default'
-              ? (group && `${group} (group) Ingredients`) ||
+              ? (group && `${group} Ingredients (group)`) ||
                 `Unnamed Ingredients Group ${idx}`
-              : 'Ingredients (Default Group)'
+              : 'Ingredients (default group)'
           "
         />
         <template v-if="group !== 'default'">
@@ -29,7 +29,7 @@
                 type="text"
                 :idx="group"
                 :value="group == 'Unnamed' ? '' : group"
-                placeholder="Unnamed Group"
+                placeholder="Group Name"
                 @change="
                   updateGroupName(
                     actionContext + 'Grp' + idx,

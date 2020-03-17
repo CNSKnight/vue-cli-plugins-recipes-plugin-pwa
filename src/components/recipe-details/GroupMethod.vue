@@ -12,7 +12,7 @@
           v-model="methods[modelIdx].text"
           class="materialize-textarea"
           :name="`step-${modelIdx}-text`"
-          placeholder="Step Content"
+          placeholder="Step Directions"
         />
         <label :for="`step-${modelIdx}-text`" v-text="getStepLabel()" />
         <md-icon v-if="methods[modelIdx].step == 1" />
