@@ -150,22 +150,22 @@ export default {
     let count;
     if ((count = filter(['group', 'Unnamed'], recipe.ingredients).length)) {
       valid = false;
-      errorTmpl.error = `You have ${count} <em>Unnamed</em> Ingredient Groups.`;
+      errorTmpl.message = `You have ${count} <em>Unnamed</em> Ingredient Groups.`;
       dispatch('handleError', errorTmpl);
     }
     if ((count = filter(['group', 'Unnamed'], recipe.methods).length)) {
       valid = false;
-      errorTmpl.error = `You have ${count} <em>Unnamed</em> Method Groups.`;
+      errorTmpl.message = `You have ${count} <em>Unnamed</em> Method Groups.`;
       dispatch('handleError', errorTmpl);
     }
     if ((count = checkDups(recipe.tools, 'name'))) {
       valid = false;
-      errorTmpl.error = `You have ${count} <em>Duplicate</em> Tools.`;
+      errorTmpl.message = `You have ${count} <em>Duplicate</em> Tools.`;
       dispatch('handleError', errorTmpl);
     }
     if ((count = checkDups(recipe.tags, 'text'))) {
       valid = false;
-      errorTmpl.error = `You have ${count} <em>Duplicate</em> Tags.`;
+      errorTmpl.message = `You have ${count} <em>Duplicate</em> Tags.`;
       dispatch('handleError', errorTmpl);
     }
     return valid;

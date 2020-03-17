@@ -22,9 +22,9 @@ const actions = {
     { service, severity, error, actionContext, timeout }
   ) {
     let errMsg;
-    service = `${service} ${sevMap[severity] || ''}: `;
+    service = `${service} ${sevMap[severity] || ''}`;
     if (error instanceof Response) {
-      const err = error.error || JSON.stringify(error);
+      const err = error.message || JSON.stringify(error);
       errMsg = err.status += (err.statusText && ` - ${err.statusText}`) || '';
     } else {
       errMsg = error.message || error.toString();
@@ -33,7 +33,7 @@ const actions = {
     commit('notify', {
       service,
       severity: severity || 'error',
-      error: errMsg,
+      message: errMsg,
       actionContext,
       cancelAt
     });
@@ -64,7 +64,7 @@ const mutations = {
     if (idx > -1) {
       notifs.splice(idx, 1);
     }
-    payload.error && notifs.push(payload);
+    payload.message && notifs.push(payload);
     state.notifications = notifs;
   },
   ejectIndex(state, idx) {

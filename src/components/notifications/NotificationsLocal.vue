@@ -1,15 +1,20 @@
 <template>
-  <div class="notifs-local">
-    <p v-for="(notif, idx) in localNotifs" :key="idx">
-      <BaseInfoIcon :severity="notif.severity" :title="notif.service" />
-      {{ notif.error }}
-    </p>
+  <div class="notifs local">
+    <notifs-notif
+      v-for="(notif, idx) in localNotifs"
+      :key="idx"
+      :notif="notif"
+    />
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
+import Notification from './Notification.vue';
 export default {
+  components: {
+    'notifs-notif': Notification
+  },
   props: {
     actionContext: {
       type: String,
@@ -21,10 +26,6 @@ export default {
     localNotifs() {
       return this.notifsByActionContext(this.actionContext);
     }
-  },
-  methods: {
-    getIcon: title =>
-      `<i class="material-icons left" title="${title}">info</i> `
   }
 };
 </script>

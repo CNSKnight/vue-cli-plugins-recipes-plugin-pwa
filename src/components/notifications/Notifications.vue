@@ -1,19 +1,19 @@
 <template>
   <div class="notifs">
-    <p v-for="(notif, idx) in notifications" :key="idx">
-      <BaseInfoIcon :severity="notif.severity" :title="notif.service" />
-      {{ notif.error }}
-    </p>
+    <notifs-notif
+      v-for="(notif, idx) in notifications"
+      :key="idx"
+      :notif="notif"
+    />
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
+import Notification from './Notification.vue';
 export default {
-  data() {
-    return {
-      infoIcon: '<i class="material-icons left">info</i>'
-    };
+  components: {
+    'notifs-notif': Notification
   },
   computed: mapGetters(['notifications'])
 };

@@ -15,6 +15,12 @@ const apiBase = process.env.VUE_APP_RECIPES_APIBASE;
 const preAuthUrl = apiBase + '/preAuth/';
 const contUnitsMgr = parent.acap?.ADMIN_TAPPADS?.contUnitsMgr;
 
+const newRecipeHint = `Congratulations! You're now ready to begin building your new recipe details.<br>
+            Note that we will save your details data on this device/computer between <strong>SAVE</strong>'s, but it's
+            still a good idea for you to <strong>SAVE</strong> from time to time.<br>
+            <strong>RESET</strong> will take you back to the last <strong>SAVE</strong>.<br>
+            <strong>PREVIEW</strong> will show how your <strong>SAVE</strong>d details will display when Published.`;
+
 const fetchRecipe = async ({ commit, dispatch, getters, state }, recipe) => {
   // set the stage w/the requested acapID
   // try modifieds then api, where we may or may not get back an existing
@@ -36,11 +42,7 @@ const fetchRecipe = async ({ commit, dispatch, getters, state }, recipe) => {
       dispatch('handleError', {
         service,
         severity: 'success',
-        error: `Congratulations! You're now ready to begin building your new recipe details.<br>
-            Note that we will save your details data on this device/computer between <strong>SAVE</strong>'s, but it's
-            still a good idea for you to <strong>SAVE</strong> from time to time.<br>
-            <strong>RESET</strong> will take you back to the last <strong>SAVE</strong>.<br>
-            <strong>PREVIEW</strong> will show how your <strong>SAVE</strong>d details will display when Published.`
+        error: newRecipeHint
       });
       return commit('stage', Object.assign(cloneDeep(recipeTemplate), recipe));
     } else {

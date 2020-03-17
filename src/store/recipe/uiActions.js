@@ -26,9 +26,9 @@ const addToStack = (
       return dispatch('handleError', {
         service: `recipe:add${Prop}`,
         severity: 'warn',
-        error: `Please first name the Unnamed ${Prop} Group.`,
-        actionContext,
-        timeout: 5000
+        error: `Please first name the <strong class="legend">Unnamed ${Prop} (group)</strong>.`,
+        actionContext
+        // timeout: 5000
       });
     }
     item.group = 'Unnamed';
@@ -70,7 +70,7 @@ const updateGroup = (
     return dispatch('handleError', {
       service: `recipe:update${Prop}Group`,
       severity: 'error',
-      error: `Please ensure ${Prop} Group names are unique.
+      error: `Please ensure <strong class=".legend">${Prop} (group)</strong> names are unique.
       [<span class="materialize-red-text">${toGroup}</span>]`,
       actionContext
     });
