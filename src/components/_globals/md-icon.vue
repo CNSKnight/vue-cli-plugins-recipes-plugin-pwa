@@ -1,6 +1,6 @@
 <template>
   <i
-    v-tooltip
+    v-tooltip="uiFlavour"
     class="hinter-icon material-icons mdIcon"
     alt="You can use Markdown here icon."
     data-position="left"
@@ -18,13 +18,17 @@ export default {
       bind: el => {
         jQ && jQ(el).tooltip();
       },
-      unbind: el => {
-        jQ && jQ(el).tooltip('remove');
+      unbind: function(el, { value }) {
+        jQ && jQ(el).tooltip(value == 'BS' ? 'destroy' : 'remove');
       }
     }
   },
   data: () => ({
-    jQ: window.jQuery
+    jQ: window.jQuery,
+    uiFlavour: window
+      .jQuery(document.body)
+      .find('[data-flavour]')
+      .data('flavour')
   })
 };
 </script>
