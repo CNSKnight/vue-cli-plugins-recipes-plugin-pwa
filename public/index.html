@@ -15,13 +15,14 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
 
     <!--link rel="shortcut icon" href="<%= BASE_URL %>favicon.ico"-->
-    <title>recipes-cli-plugins</title>
+    <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
 
   <body>
     <noscript>
       <strong>Oops! We're now JavaScript intensive. To continue, please enable javascript for this domain and hit refresh.</strong>
     </noscript>
+    <%= htmlWebpackPlugin.options.reminder %>
     <div id="app"></div>
     <!-- built files will be auto injected -->
   </body>

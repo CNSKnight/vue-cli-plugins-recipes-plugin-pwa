@@ -8,15 +8,17 @@
       rel="stylesheet"
       href="//fonts.googleapis.com/icon?family=Material+Icons|Roboto:100,300,400,500,700|Roboto+Condensed:100,300,400,500,700|Abel"
     />
-    <%/* rather the cdn version of materialize.css, we're using CLIENT default, matching the parent page */%>
-    <link rel="stylesheet" href="/themes/default/css/mat-custom.css" />
-    <%/* these match parent page as well */%>
+    <!-- rather the cdn version of materialize.css, we're using CLIENT default, matching the parent page -->
+    <link rel=stylesheet href=/themes/default/css/mat-custom.css media=screen> <link rel=stylesheet
+    href=/acap-dev/modules/CLIENT/templates/css/CLIENT.materialize.css media=screen>
+    <!-- these match parent page as well -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
-    <title>Recipe Details Module</title>
+    <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
 
   <body>
+    <%= htmlWebpackPlugin.options.reminder %>
     <div id="detailsPlugin"></div>
     <!-- built files will be auto injected -->
   </body>
