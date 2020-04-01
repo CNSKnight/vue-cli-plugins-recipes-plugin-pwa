@@ -31,7 +31,11 @@ const pages = {
     title: 'App Index Page',
     // chunks to include on this page, by default includes
     // extracted common chunks and vendor chunks.
-    chunks: ['index', 'chunk-big-vendors']
+    chunks: ['index', 'chunk-big-vendors'],
+    reminder:
+      process.env.NODE_ENV == 'development'
+        ? '<h6>Remember! There is no node-modules/ in dev/</h6>'
+        : ''
   },
   detailsPlugin: {
     // entry for the page
@@ -45,19 +49,29 @@ const pages = {
     title: 'Details Plugin Index Page',
     // chunks to include on this page, by default includes
     // extracted common chunks and vendor chunks.
-    chunks: ['index-plugin', 'chunk-big-vendors']
+    chunks: ['index-plugin', 'chunk-big-vendors'],
+    reminder:
+      process.env.NODE_ENV == 'development'
+        ? '<h6>Remember! There is no node-modules/ in dev/</h6>'
+        : ''
   }
 };
 
+const opBase =
+  '/var/www/TAPPADS/vegrds-7109/public_html/acap-dev/plugins/RecipeDetails/';
+
 // @todo 01/20 the `npm run server` yields nothing w/this config file in place?
 module.exports = {
-  publicPath: '/RecipeDetails/',
-  // publicPath: process.env.NODE_ENV == 'production' ? '/RecipeDetails/' : '/',
-  outputDir:
-    // '/var/www/TAPPADS/vegrds-7109/public_html/acap-dev/plugins/RecipeDetails/dist1/',
+  publicPath:
     process.env.NODE_ENV == 'production'
-      ? '/var/www/TAPPADS/vegrds-7109/public_html/acap-dev/plugins/RecipeDetails/prod/'
-      : '/var/www/TAPPADS/vegrds-7109/public_html/acap-dev/plugins/RecipeDetails/dev/',
+      ? '/RecipeDetails/'
+      : '/RecipeDetailsDev/',
+  publicPath:
+    process.env.NODE_ENV == 'production'
+      ? '/RecipeDetails/'
+      : '/RecipeDetailsDev/',
+  outputDir:
+    process.env.NODE_ENV == 'production' ? `${opBase}prod/` : `${opBase}dev/`,
   pages,
 
   configureWebpack: {
@@ -93,7 +107,7 @@ module.exports = {
       priority: 1
     };
     config.optimization.get('splitChunks').cacheGroups.common.priority = -9;
-    console.log(config.optimization.get('splitChunks'));
+    console.log('splitChunks', '\n', config.optimization.get('splitChunks'));
   },
   productionSourceMap: true
 };
