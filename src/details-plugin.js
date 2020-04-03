@@ -7,18 +7,22 @@ import DetailsPluginApp from './DetailsPluginApp';
 
 Vue.config.productionTip = false;
 
+// @see ../ADMIN_CLIENT/ADMIN_TAPPADS/templates/contunits/js/vegrds-recipe-details.source.js
+// - attach the details-plugin VueModel
+// (we may be plugging in along with, or embedding via iframe, depending on the target document)
+// TAMYACCT/ta-content-units-manager
+// ADMIN_TAPPADS/ta-content-units-manager
+const parent =
+  (window.acap && window) || (window.parent?.acap && window.parent);
+const contUnitsMgr = parent.acap?.ADMIN_TAPPADS?.contUnitsMgr;
+
 // details plugin Vue module
+// will be mounted from contUnitsMgr.onPanelFocus > mountDpVm()
 export const dpVm = new Vue({
   store,
+  // custOpt:
+  // destroyed() was not useful in iframe context - prob never triggered
   render: h => h(DetailsPluginApp)
 });
-if (
-  window.acap &&
-  window.acap.ADMIN_TAPPADS &&
-  window.acap.ADMIN_TAPPADS.contUnitsMgr
-) {
-  // @see ../ADMIN_CLIENT/ADMIN_TAPPADS/templates/contunits/js/ta-content-units-manager-details.source.js
-  window.acap.ADMIN_TAPPADS.contUnitsMgr.dpVm = dpVm;
-} else {
-  //   dpVm.$mount("#detailsPlugin");
-}
+
+contUnitsMgr && (contUnitsMgr.dpVm = dpVm);
