@@ -31,7 +31,7 @@ const pages = {
     title: 'App Index Page',
     // chunks to include on this page, by default includes
     // extracted common chunks and vendor chunks.
-    chunks: ['index', 'chunk-big-vendors'],
+    chunks: ['chunk-big-vendors', 'chunk-common', 'app'],
     reminder:
       process.env.NODE_ENV == 'development'
         ? '<h6>Remember! There is no node-modules/ in dev/</h6>'
@@ -49,7 +49,7 @@ const pages = {
     title: 'Details Plugin Index Page',
     // chunks to include on this page, by default includes
     // extracted common chunks and vendor chunks.
-    chunks: ['index-plugin', 'chunk-big-vendors'],
+    chunks: ['chunk-big-vendors', 'chunk-common', 'detailsPlugin'],
     reminder:
       process.env.NODE_ENV == 'development'
         ? '<h6>Remember! There is no node-modules/ in dev/</h6>'
@@ -107,7 +107,12 @@ module.exports = {
       priority: 1
     };
     config.optimization.get('splitChunks').cacheGroups.common.priority = -9;
-    console.log('splitChunks', '\n', config.optimization.get('splitChunks'));
+    console.log(
+      '\n',
+      'splitChunks:',
+      '\n',
+      config.optimization.get('splitChunks')
+    );
   },
   productionSourceMap: true
 };
