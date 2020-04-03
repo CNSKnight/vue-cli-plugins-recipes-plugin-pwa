@@ -166,11 +166,11 @@ export default {
   loadRecipe(context, rInfo) {
     const service = 'recipe:load';
     const { commit, dispatch } = context;
-    let acapID = rInfo && rInfo.acapID;
-    if (acapID == undefined) {
+    let acapID = rInfo?.acapID;
+    if (isNaN(acapID)) {
       // pull from the contUnitsMgr
-      rInfo = contUnitsMgr && contUnitsMgr.getInfo();
-      acapID = rInfo && rInfo.ad_unit_id;
+      rInfo = contUnitsMgr?.getInfo();
+      acapID = rInfo?.ad_unit_id;
     }
 
     // we MUST have an acapID
