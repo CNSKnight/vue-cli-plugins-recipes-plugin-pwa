@@ -2,7 +2,7 @@
 ## Includes 
 
 ### Stack
-- Vue 3-beta (Babel)
+- Vue 2.6.* (Babel)
 - vuex 3
 - vue-router 3
 - axios
@@ -10,7 +10,6 @@
 ### Features
 - Beautiful Material Design
 - Intuitive transitions
-- Complex recipe construction with published/un-published flag, ingredient groups, variations, and notes
+- Complex recipe construction with published/un-published flag, ingredient and method groups, variations, notes, and more
 - Editing persistance
 - Separately deployable Recipes Listing with Details, and Recipe Details for integration into existing apps 
-- And more to come
