@@ -41,7 +41,7 @@
     "babel-eslint": "^10.1.0",
     "babel-jest": "^25.1.0",
     "babel-plugin-lodash": "^3.3.4",
-    "bundle-stats-webpack-plugin": "^2.0.1",
+    "bundle-stats-webpack-plugin": "^2.3.0",
     "circular-json": "^0.5.9",
     "eslint": "^6.8.0",
     "eslint-plugin-lodash": "^6.0.0",
