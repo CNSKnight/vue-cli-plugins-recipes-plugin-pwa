@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --modern",
+    "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "build-dev": "vue-cli-service build --modern --mode development --report-json",
     "build-plugin-lib": "vue-cli-service build --target lib --modern --name detailsPlugin ./src/details-plugin.js",
@@ -16,7 +16,7 @@
   "dependencies": {
     "axios": "^0.19.2",
     "chromedriver": "^80.0.1",
-    "core-js": "^3.6.4",
+    "core-js": "^3.8.3",
     "dateformat": "^3.0.3",
     "eslint-plugin-prettier": "^3.1.2",
     "markdown-it": "^10.0.0",
@@ -28,14 +28,15 @@
     "vuex-persist": "^2.2.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.8.7",
+    "@babel/core": "^7.12.16",
+    "@babel/eslint-parser": "^7.12.16",
     "@babel/plugin-proposal-optional-chaining": "^7.8.3",
     "@babel/preset-env": "^7.8.7",
-    "@vue/cli-plugin-babel": "^4.5.13",
+    "@vue/cli-plugin-babel": "~5.0.0-beta.2",
     "@vue/cli-plugin-e2e-nightwatch": "^4.5.13",
-    "@vue/cli-plugin-eslint": "^4.5.13",
+    "@vue/cli-plugin-eslint": "~5.0.0-beta.2",
     "@vue/cli-plugin-unit-jest": "^4.5.13",
-    "@vue/cli-service": "^4.5.13",
+    "@vue/cli-service": "~5.0.0-beta.2",
     "@vue/eslint-config-prettier": "^6.0.0",
     "@vue/test-utils": "^1.0.0-beta.32",
     "babel-eslint": "^10.1.0",
@@ -43,16 +44,30 @@
     "babel-plugin-lodash": "^3.3.4",
     "bundle-stats-webpack-plugin": "^2.3.0",
     "circular-json": "^0.5.9",
-    "eslint": "^6.8.0",
+    "eslint": "^7.20.0",
     "eslint-plugin-lodash": "^6.0.0",
     "eslint-plugin-lodash-fp": "^2.2.0-a1",
-    "eslint-plugin-vue": "^6.2.2",
+    "eslint-plugin-vue": "^7.6.0",
     "html-webpack-plugin": "^3.2.0",
     "lodash-webpack-plugin": "^0.11.5",
     "node-sass": "^4.13.1",
     "sass-loader": "^8.0.2",
     "vue-template-compiler": "^2.6.11",
     "webpack-bundle-analyzer": "^3.6.1"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "parser": "@babel/eslint-parser"
+    },
+    "rules": {}
   },
   "prettier": {
     "singleQuote": true
@@ -65,7 +80,8 @@
   "browserslist": [
     "> 1%",
     "last 2 versions",
-    "not ie <= 11"
+    "not ie <= 11",
+    "not dead"
   ],
   "jest": {
     "moduleFileExtensions": [
@@ -88,5 +104,7 @@
     "testMatch": [
       "<rootDir>/(tests/unit/**/*.spec.(ts|tsx|js)|**/__tests__/*.(ts|tsx|js))"
     ]
-  }
+  },
+  "_id": "vue-cli-plugins-recipes-plugin-pwa@0.2.0",
+  "readme": "ERROR: No README data found!"
 }
