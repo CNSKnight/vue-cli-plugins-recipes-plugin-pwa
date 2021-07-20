@@ -157,9 +157,10 @@ export default {
   },
   watch: {
     // our locally mutable groupNames should mirror the ingredientGroups reactively
-    ingredientGoups: function(val) {
+    ingredientGoups(val) {
       !isEqual(val, this.groupNames) && (this.groupNames = [...val]);
-    }
+    },
+    deep: true
   },
   created() {
     this.groupNames = keys(this.groupedIngredients);

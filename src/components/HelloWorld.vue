@@ -90,7 +90,10 @@
 export default {
   name: 'HelloWorld',
   props: {
-    msg: String
+    msg: {
+      default: 'No Messages',
+      type: String
+    }
   }
 };
 </script>

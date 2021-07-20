@@ -141,9 +141,10 @@ export default {
   },
   watch: {
     // our locally mutable groupNames should mirror the methodGroups reactively
-    methodGroups: function(val) {
+    methodGroups(val) {
       !isEqual(val, this.groupNames) && (this.groupNames = [...val]);
-    }
+    },
+    deep: true
   },
   created() {
     this.groupNames = keys(this.groupedMethods);

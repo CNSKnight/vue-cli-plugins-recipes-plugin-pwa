@@ -10,7 +10,7 @@ const requireComponent = require.context(
   '.',
   // Do not look in subdirectories
   false,
-  // Only non-_ prefixed .vue files
+  // Only non-_-prefixed .vue files eg (!_base-button.vue)
   /\/[^_][\w-]+\.vue$/
   // Only include "_base-" prefixed .vue files
   // /_base-[\w-]+\.vue$/

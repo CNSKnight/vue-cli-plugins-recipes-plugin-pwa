@@ -2,6 +2,7 @@
   sample _globals component
   https://github.com/chrisvfritz/vue-enterprise-boilerplate/blob/master/src/components/_base-button.vue
 -->
+/** $listeners here may be @dep for $attrs.eventName */
 <template>
   <button :class="$style.button" v-on="$listeners">
     <slot />

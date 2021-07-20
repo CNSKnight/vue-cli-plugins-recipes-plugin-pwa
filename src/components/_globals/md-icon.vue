@@ -15,10 +15,10 @@ export default {
   name: 'MdIcon',
   directives: {
     tooltip: {
-      bind: el => {
+      beforeMount: el => {
         jQ && jQ(el).tooltip();
       },
-      unbind: function(el, { value }) {
+      unmounted: function(el, { value }) {
         jQ && jQ(el).tooltip(value == 'BS' ? 'destroy' : 'remove');
       }
     }

@@ -1,12 +1,9 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-import createLogger from 'vuex/dist/logger';
+import { createStore, createLogger } from 'vuex';
 // import Mongoose from 'mongoose'
 import appModule from './app/';
 import recipeModule from './recipe/';
 import { forOwn } from 'lodash/fp';
 
-Vue.use(Vuex);
 // Mongoose.Promise = global.Promise
 
 const DEBUG = process.env.NODE_ENV !== 'production';
@@ -23,7 +20,7 @@ forOwn(module => {
   }
 })(modules);
 
-export default new Vuex.Store({
+export default createStore({
   modules,
   strict: DEBUG,
   plugins

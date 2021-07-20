@@ -100,6 +100,22 @@ module.exports = {
   },
   // Option #2 - for Advanced config
   chainWebpack: config => {
+    /* new/temp */
+    config.resolve.alias.set('vue', '@vue/compat');
+    config.module
+      .rule('vue')
+      .use('vue-loader')
+      .tap(options => {
+        return {
+          ...options,
+          compilerOptions: {
+            compatConfig: {
+              MODE: 2
+            }
+          }
+        };
+      });
+    /* end new/temp */
     config.optimization.get('splitChunks').cacheGroups.bigVendors = {
       name: 'chunk-big-vendors',
       test: /\/node_modules\/(lodash|markdown-it)\//,

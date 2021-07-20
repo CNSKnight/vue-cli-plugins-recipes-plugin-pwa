@@ -59,7 +59,13 @@
         </div>
         <div class="row">
           <div class="input-field col s12">
-            <input id="rOrigUrl" name="originalUrl" v-model="originalUrl" placeholder="Address where originally published" type="url" />
+            <input
+              id="rOrigUrl"
+              name="originalUrl"
+              v-model="originalUrl"
+              placeholder="Address where originally published"
+              type="url"
+            />
             <label for="rOrigUrl">Originaly Published URL</label>
           </div>
         </div>
@@ -84,11 +90,23 @@
             <legend>Tools You May Need</legend>
             <div class="row" v-for="(tool, idx) in tools" :key="idx">
               <div class="input-field col s12 m6">
-                <input :id="`tool-${idx}`" :name="`tool-${idx}`" v-model="tool.name" placeholder="Name this Tool" type="text" />
+                <input
+                  :id="`tool-${idx}`"
+                  :name="`tool-${idx}`"
+                  v-model="tool.name"
+                  placeholder="Name this Tool"
+                  type="text"
+                />
                 <label :for="`tool-${idx}`" class="sr-only sr-only-focusable">Tool Name</label>
               </div>
               <div class="input-field col s6 m3 center-align">
-                <input :id="`tool-${idx}-req`" :name="`tool-${idx}-req`" v-model="tool.required" placeholder="required?" type="checkbox" />
+                <input
+                  :id="`tool-${idx}-req`"
+                  :name="`tool-${idx}-req`"
+                  v-model="tool.required"
+                  placeholder="required?"
+                  type="checkbox"
+                />
                 <label :for="`tool-${idx}-req`">Required?</label>
               </div>
               <div class="input-field col s6 m3 center-align">
@@ -122,7 +140,11 @@
                 <md-icon v-if="!idx" />
               </div>
               <div class="input-field col s12 m2 center-align">
-                <button class="btn-flat btn-sm red-text" type="button" @click="deleteItem({prop: 'variations', index: idx})">
+                <button
+                  class="btn-flat btn-sm red-text"
+                  type="button"
+                  @click="deleteItem({prop: 'variations', index: idx})"
+                >
                   <i class="material-icons">delete</i>
                 </button>
               </div>
@@ -144,7 +166,11 @@
                 <div class="tag" v-for="(tag, idx) in tags" :key="idx">
                   <div class="input-field">
                     <input :name="`tag-${idx}-text`" v-model="tag.text" placeholder="Hash-Tag" type="text" />
-                    <button class="btn-flat btn-sm red-text" type="button" @click="deleteItem({prop: 'tags', index: idx})">
+                    <button
+                      class="btn-flat btn-sm red-text"
+                      type="button"
+                      @click="deleteItem({prop: 'tags', index: idx})"
+                    >
                       <i class="material-icons">delete</i>
                     </button>
                   </div>
@@ -186,7 +212,6 @@
     </div>
   </section>
   <transition v-if="preview == 'open'" name="preview" appear>
-    {{preview}}
-    <recipe-preview v-bind="{transformMarkdown}"></recipe-preview>
+    <recipe-preview v-bind="{transformMarkdown}">{{preview}}</recipe-preview>
   </transition>
 </div>

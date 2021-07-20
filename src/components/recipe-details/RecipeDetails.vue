@@ -1,7 +1,7 @@
 <template class="tester" src="./details.html"></template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions, defineAsyncComponent } from 'vuex';
 import { mapFields, mapMultiRowFields } from 'vuex-map-fields';
 import ActionsBar from '@/components/actions-bar/ActionsBar.vue';
 import IngredientGroups from './IngredientGroups.vue';
@@ -13,10 +13,9 @@ export default {
     'actions-bar': ActionsBar,
     'ingredient-groups': IngredientGroups,
     'method-step-groups': MethodStepGroups,
-    'recipe-preview': () =>
-      import(
-        /* webpackChunkName: "recipe-preview" */ '@/components/recipe-preview/RecipePreview'
-      ),
+    'recipe-preview': defineAsyncComponent({
+      loader: () => import('@/components/recipe-preview/RecipePreview')
+    }),
     'notifs-local': NotificationsLocal
   },
   props: {
