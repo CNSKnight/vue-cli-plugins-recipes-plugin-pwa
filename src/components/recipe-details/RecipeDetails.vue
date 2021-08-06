@@ -1,7 +1,8 @@
 <template class="tester" src="./details.html"></template>
 
 <script>
-import { mapGetters, mapActions, defineAsyncComponent } from 'vuex';
+import { defineAsyncComponent } from 'vue';
+import { mapGetters, mapActions } from 'vuex';
 import { mapFields, mapMultiRowFields } from 'vuex-map-fields';
 import ActionsBar from '@/components/actions-bar/ActionsBar.vue';
 import IngredientGroups from './IngredientGroups.vue';
@@ -14,21 +15,21 @@ export default {
     'ingredient-groups': IngredientGroups,
     'method-step-groups': MethodStepGroups,
     'recipe-preview': defineAsyncComponent({
-      loader: () => import('@/components/recipe-preview/RecipePreview')
+      loader: () => import('@/components/recipe-preview/RecipePreview'),
     }),
-    'notifs-local': NotificationsLocal
+    'notifs-local': NotificationsLocal,
   },
   props: {
     transformMarkdown: {
       type: Function,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       actionContext: 'details',
       // test may change if full-app ever developed
-      isNotPlugin: process.env.NODE_ENV !== 'production'
+      isNotPlugin: process.env.NODE_ENV !== 'production',
     };
   },
   computed: {
@@ -41,14 +42,14 @@ export default {
       'recipe.creator',
       'recipe.originalUrl',
       'recipe.description',
-      'recipe.notes'
+      'recipe.notes',
     ]),
     ...mapMultiRowFields([
       'recipe.tools',
       'recipe.methods',
       'recipe.tags',
-      'recipe.variations'
-    ])
+      'recipe.variations',
+    ]),
   },
   mounted() {
     this.onFormUpdated();
@@ -71,7 +72,7 @@ export default {
       onCancel: 'cancel',
       onReset: 'reset',
       addItem: 'addItem',
-      deleteItem: 'deleteItem'
+      deleteItem: 'deleteItem',
     }),
     // get textarea ID
     getTAID(id, idx) {
@@ -87,8 +88,8 @@ export default {
     },
     onClosePreview() {
       this.$store.dispatch('closePreview');
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -15,20 +15,20 @@ export default {
   name: 'MdIcon',
   directives: {
     tooltip: {
-      beforeMount: el => {
+      beforeMount: (el) => {
         jQ && jQ(el).tooltip();
       },
-      unmounted: function(el, { value }) {
+      unmounted: function (el, { value }) {
         jQ && jQ(el).tooltip(value == 'BS' ? 'destroy' : 'remove');
-      }
-    }
+      },
+    },
   },
   data: () => ({
     jQ: window.jQuery,
     uiFlavour: window
       .jQuery(document.body)
       .find('[data-flavour]')
-      .data('flavour')
-  })
+      .data('flavour'),
+  }),
 };
 </script>

@@ -9,7 +9,7 @@ export default {
   name: 'InfoIcon',
   props: {
     severity: { type: String, default: 'info' },
-    title: { type: String, default: '' }
-  }
+    title: { type: String, default: '' },
+  },
 };
 </script>

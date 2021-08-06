@@ -13,19 +13,19 @@ import { mapGetters } from 'vuex';
 import Notification from './Notification.vue';
 export default {
   components: {
-    'notifs-notif': Notification
+    'notifs-notif': Notification,
   },
   props: {
     actionContext: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
     ...mapGetters(['notifsByActionContext']),
     localNotifs() {
       return this.notifsByActionContext(this.actionContext);
-    }
-  }
+    },
+  },
 };
 </script>

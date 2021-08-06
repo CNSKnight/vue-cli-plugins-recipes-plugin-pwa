@@ -29,8 +29,8 @@ export default {
   // st about modules needing to be namespaced to use mapState?
   // computed: mapState('recipesModule', ['recipes']),
   methods: {
-    ...mapActions(['selectRecipe'])
-  }
+    ...mapActions(['selectRecipe']),
+  },
 };
 </script>
 

@@ -17,7 +17,7 @@ const requireComponent = require.context(
 );
 
 // For each matching file name...
-requireComponent.keys().forEach(fileName => {
+requireComponent.keys().forEach((fileName) => {
   // Get the component config
   const componentConfig = requireComponent(fileName);
   // Get the PascalCase version of the component name
@@ -29,7 +29,7 @@ requireComponent.keys().forEach(fileName => {
     // Split up kebabs
     .split('-')
     // Upper case
-    .map(kebab => kebab.charAt(0).toUpperCase() + kebab.slice(1))
+    .map((kebab) => kebab.charAt(0).toUpperCase() + kebab.slice(1))
     // Concatenated
     .join('');
 

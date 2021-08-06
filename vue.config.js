@@ -1,7 +1,7 @@
 // const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { BundleStatsWebpackPlugin } = require('bundle-stats-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-  .BundleAnalyzerPlugin;
+// const BundleAnalyzerPlugin =
+//   require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 // DISCLAIMER: Using this plugin without enabling the proper feature sets may
 //             cause lodash functions to behave in unexpected ways.
@@ -15,7 +15,7 @@ const lmrpOpts = {
   metadata: true,
   paths: true,
   placeholders: true,
-  shorthands: true
+  shorthands: true,
 };
 
 const pages = {
@@ -35,7 +35,7 @@ const pages = {
     reminder:
       process.env.NODE_ENV == 'development'
         ? '<h6>Remember! There is no node-modules/ in dev/</h6>'
-        : ''
+        : '',
   },
   detailsPlugin: {
     // entry for the page
@@ -53,8 +53,8 @@ const pages = {
     reminder:
       process.env.NODE_ENV == 'development'
         ? '<h6>Remember! There is no node-modules/ in dev/</h6>'
-        : ''
-  }
+        : '',
+  },
 };
 
 const opBase =
@@ -62,10 +62,6 @@ const opBase =
 
 // @todo 01/20 the `npm run server` yields nothing w/this config file in place?
 module.exports = {
-  publicPath:
-    process.env.NODE_ENV == 'production'
-      ? '/RecipeDetails/'
-      : '/RecipeDetailsDev/',
   publicPath:
     process.env.NODE_ENV == 'production'
       ? '/RecipeDetails/'
@@ -78,9 +74,9 @@ module.exports = {
     plugins: [
       new LodashModuleReplacementPlugin(lmrpOpts),
       // use `$ BUNDLE_STATS_BASELINE=true npm run build` to establish baseline
-      new BundleStatsWebpackPlugin()
+      new BundleStatsWebpackPlugin(),
       // new BundleAnalyzerPlugin(),
-    ]
+    ],
     // Option #1 - for Simple configs
     // optimization: {
     //   splitChunks: {
@@ -99,20 +95,20 @@ module.exports = {
     // }
   },
   // Option #2 - for Advanced config
-  chainWebpack: config => {
+  chainWebpack: (config) => {
     /* new/temp */
     config.resolve.alias.set('vue', '@vue/compat');
     config.module
       .rule('vue')
       .use('vue-loader')
-      .tap(options => {
+      .tap((options) => {
         return {
           ...options,
           compilerOptions: {
             compatConfig: {
-              MODE: 2
-            }
-          }
+              MODE: 2,
+            },
+          },
         };
       });
     /* end new/temp */
@@ -120,7 +116,7 @@ module.exports = {
       name: 'chunk-big-vendors',
       test: /\/node_modules\/(lodash|markdown-it)\//,
       chunks: 'all',
-      priority: 1
+      priority: 1,
     };
     config.optimization.get('splitChunks').cacheGroups.common.priority = -9;
     console.log(
@@ -130,5 +126,5 @@ module.exports = {
       config.optimization.get('splitChunks')
     );
   },
-  productionSourceMap: true
+  productionSourceMap: true,
 };

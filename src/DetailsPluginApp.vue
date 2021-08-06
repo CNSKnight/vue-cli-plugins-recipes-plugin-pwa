@@ -18,8 +18,8 @@ export default {
   name: 'DetailsPlugin',
   components: {
     'app-notifications': Notifications,
-    'recipe-details-plugin': RecipeDetailsPlugin
-  }
+    'recipe-details-plugin': RecipeDetailsPlugin,
+  },
 };
 </script>
 

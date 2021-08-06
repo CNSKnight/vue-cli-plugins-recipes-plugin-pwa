@@ -10,13 +10,11 @@
           Common Measures, Units, and Abbreviations
         </div>
         <div class="collapsible-body">
-          <p>{{ value }}</p>
+          <p>{{ val }}</p>
         </div>
       </li>
-      <li v-for="{ val, idx } in values" :key="idx">
-        <div class="collapsible-header">
-          General Tips
-        </div>
+      <li v-for="{ /* val, */ idx } in values" :key="idx">
+        <div class="collapsible-header">General Tips</div>
         <div class="collapsible-body">
           <ul>
             <li>
@@ -39,9 +37,9 @@
 export default {
   data() {
     return {
-      values: {}
+      values: {},
     };
-  }
+  },
 };
 </script>
 

@@ -11,7 +11,7 @@ import {
   reject,
   toLower,
   trim,
-  uniq
+  uniq,
 } from 'lodash/fp';
 // eslint-disable-next-line lodash-fp/use-fp
 import { transform } from 'lodash';
@@ -19,7 +19,7 @@ import { transform } from 'lodash';
 const ingredient = recipeTemplate.ingredients[0];
 const method = recipeTemplate.methods[0];
 const errDateFormat = '[%A, %I:%M.%S %p]';
-const pickErrors = resp =>
+const pickErrors = (resp) =>
   get('data.error.messages', resp) ||
   get('data.error', resp) ||
   get('data', resp) ||
@@ -31,10 +31,10 @@ const filterStrAry = (ary, check = 'text') => {
   }
 
   const valids = compose(
-    filter(item =>
+    filter((item) =>
       isObject(item) ? item[check] && item[check].length : item.length
     ),
-    map(item => {
+    map((item) => {
       if (isObject(item)) {
         item[check] = trim(item[check]);
       } else {
@@ -47,27 +47,27 @@ const filterStrAry = (ary, check = 'text') => {
   return valids;
 };
 
-const filterIngredients = ingredients => {
+const filterIngredients = (ingredients) => {
   if (!ingredients || !ingredients.length) {
     return [];
   }
 
   const valids = compose(
-    filter(ing => ing.name.length),
-    map(ing => transform(ing, trimObjStrings, { ...ingredient })),
+    filter((ing) => ing.name.length),
+    map((ing) => transform(ing, trimObjStrings, { ...ingredient })),
     reject(isEmpty)
   )(ingredients);
   return valids;
 };
 
-const filterMethods = methods => {
+const filterMethods = (methods) => {
   if (!methods || !methods.length) {
     return [];
   }
 
   const valids = compose(
-    filter(met => met.text.length),
-    map(met => transform(met, trimObjStrings, { ...method })),
+    filter((met) => met.text.length),
+    map((met) => transform(met, trimObjStrings, { ...method })),
     reject(isEmpty)
   )(methods);
   return valids;
@@ -83,7 +83,7 @@ const checkDups = (ary, prop) => {
   if (!ary || ary.length < 2) {
     return 0;
   }
-  const vals = ary.map(item => {
+  const vals = ary.map((item) => {
     return toLower(item[prop]);
   });
   const uniqs = uniq(vals);
@@ -101,12 +101,12 @@ export default {
   processPreAuthErrors: (actionContext, resp, service, dispatch, fallback) => {
     const errs = pickErrors(resp);
     if (isArray(errs)) {
-      errs.forEach(mssgObj =>
+      errs.forEach((mssgObj) =>
         dispatch('handleError', {
           service,
           severity: (mssgObj.code < 7 && 'error') || 'fatal',
           error: mssgObj.msg || fallback || 'Server error',
-          actionContext
+          actionContext,
         })
       );
     } else {
@@ -114,14 +114,14 @@ export default {
         service,
         severity: 'fatal',
         error: errs.message || fallback || 'Not reported.',
-        actionContext
+        actionContext,
       });
     }
   },
   /*
    * @todo remove empty or blacklisted tags or blacklisted chars
    */
-  filterRecipe: recipe => {
+  filterRecipe: (recipe) => {
     // final filters return empty []'s rather than null|undefined,
     // in order to re-init property in document. ie not passing eg tags: [],
     // will just set tags: [{}] in collection document
@@ -144,7 +144,7 @@ export default {
       service: 'recipe:finalValidations',
       severity: 'warn',
       error: null,
-      actionContext
+      actionContext,
     };
     let valid = true;
     let count;
@@ -169,5 +169,5 @@ export default {
       dispatch('handleError', errorTmpl);
     }
     return valid;
-  }
+  },
 };

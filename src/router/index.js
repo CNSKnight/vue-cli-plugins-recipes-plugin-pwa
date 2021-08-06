@@ -1,5 +1,5 @@
 import { defineAsyncComponent } from 'vue';
-import { createRouter } from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
 import Home from '@/views/Home.vue';
 // import Hello from '@/components/Hello'
 import Recipes from '@/components/recipes/Recipes';
@@ -9,7 +9,7 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
   },
   {
     path: '/about',
@@ -18,23 +18,25 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: defineAsyncComponent({
-      loader: () => import('../views/About.vue')
-    })
+      loader: () => import('../views/About.vue'),
+    }),
   },
   {
     path: '/recipes',
     name: 'Recipes',
-    component: Recipes
+    component: Recipes,
   },
   {
     path: '/recipe-details',
     name: 'Details',
-    component: RecipeDetailsPlugin
-  }
+    component: RecipeDetailsPlugin,
+  },
 ];
 
 const router = createRouter({
-  routes
+  // some history option now required
+  history: createWebHistory(),
+  routes,
 });
 
 export default router;

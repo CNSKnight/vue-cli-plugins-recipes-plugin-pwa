@@ -1,19 +1,21 @@
 import { findIndex } from 'lodash/fp';
 
 const state = {
-  notifications: []
+  notifications: [],
 };
 
 const getters = {
-  notifications: state => state.notifications,
-  notifsByActionContext: ({ notifications }) => actionContext =>
-    notifications.filter(notif => notif.actionContext == actionContext)
+  notifications: (state) => state.notifications,
+  notifsByActionContext:
+    ({ notifications }) =>
+    (actionContext) =>
+      notifications.filter((notif) => notif.actionContext == actionContext),
 };
 
 const sevMap = {
   fatal: 'failed',
   info: '',
-  error: 'reported'
+  error: 'reported',
 };
 
 const actions = {
@@ -35,7 +37,7 @@ const actions = {
       severity: severity || 'error',
       message: errMsg,
       actionContext,
-      cancelAt
+      cancelAt,
     });
     if (cancelAt) {
       setTimeout(() => {
@@ -54,7 +56,7 @@ const actions = {
     if (idx != -1) {
       commit('ejectIndex', idx);
     }
-  }
+  },
 };
 
 const mutations = {
@@ -74,7 +76,7 @@ const mutations = {
   },
   clearState(state) {
     state.notifications = [];
-  }
+  },
 };
 
 // appModule
@@ -82,5 +84,5 @@ export default {
   state,
   getters,
   actions,
-  mutations
+  mutations,
 };

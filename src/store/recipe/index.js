@@ -11,7 +11,7 @@ import {
   isEqual,
   isFinite,
   keys,
-  set
+  set,
 } from 'lodash/fp';
 import VuexPersistence from 'vuex-persist';
 import Vue from 'vue';
@@ -24,14 +24,14 @@ const state = {
   // the syncModifiedsPlugin maintains non-db service-synced mutations until the next service sync cycle
   modifieds: {},
   detailsFormValid: true,
-  preview: 'closed'
+  preview: 'closed',
 };
 
 /**
  * takes a collection (ingredients|methods) with a group property.
  * assumes pre-sorted (as should already be stored in recipe)
  */
-const groupedKeys = collection => {
+const groupedKeys = (collection) => {
   const grouped = {};
   collection.forEach((item, modelIdx) => {
     const group = item.group || 'default';
@@ -49,27 +49,31 @@ const getters = {
   recipeId: ({ recipe: { acapID } }) => acapID,
   detailsFormValid: ({ detailsFormValid }) => detailsFormValid,
   // custom map-fields getters
-  getIngredientsField: state => getField(state.recipe.ingredients),
-  getMethodsField: state => getField(state.recipe.methods),
+  getIngredientsField: (state) => getField(state.recipe.ingredients),
+  getMethodsField: (state) => getField(state.recipe.methods),
 
   // custom grouping and filter getters
   groupedIngredients: ({ recipe: { ingredients = [] } }) =>
     groupedKeys(ingredients),
   ingredientGroups: (...[, { groupedIngredients: grouped }]) => keys(grouped),
-  ingCountByGroup: (...[, { groupedIngredients: grouped }]) => group =>
-    grouped[group] && grouped[group].length,
+  ingCountByGroup:
+    (...[, { groupedIngredients: grouped }]) =>
+    (group) =>
+      grouped[group] && grouped[group].length,
   groupedMethods: ({ recipe: { methods = [] } }) => groupedKeys(methods),
   methodGroups: (...[, { groupedMethods: grouped }]) => keys(grouped),
   // takes a group (name) and returns the methods steps count for that group
-  stepCountByGroup: (...[, { groupedMethods: grouped }]) => group =>
-    grouped[group] && grouped[group].length,
+  stepCountByGroup:
+    (...[, { groupedMethods: grouped }]) =>
+    (group) =>
+      grouped[group] && grouped[group].length,
   filteredVariations: ({ recipe: { variations = [] } }) =>
-    filter(variation => variation.text)(variations),
-  filteredTags: ({ recipe: { tags = [] } }) => filter(tag => tag.text)(tags),
+    filter((variation) => variation.text)(variations),
+  filteredTags: ({ recipe: { tags = [] } }) => filter((tag) => tag.text)(tags),
   // statistical getters
-  isModified: state => !isEqual(state.recipe, state.staged),
-  hasChanges: state => id => state.modifieds[id] !== undefined,
-  getModified: state => id => state.modifieds[id],
+  isModified: (state) => !isEqual(state.recipe, state.staged),
+  hasChanges: (state) => (id) => state.modifieds[id] !== undefined,
+  getModified: (state) => (id) => state.modifieds[id],
 
   // Logistical getters
   // return the updated if beyond 3 days of published/creation dates
@@ -87,12 +91,12 @@ const getters = {
     }
   },
   getField,
-  preview: ({ preview }) => preview
+  preview: ({ preview }) => preview,
 };
 
 const actions = {
   ...asyncActions,
-  ...uiActions
+  ...uiActions,
 };
 
 // In Vuex, mutations are synchronous transactions
@@ -102,11 +106,11 @@ const mutations = {
     state.recipe = cloneDeep(recipe);
     recipe.id && Vue.delete(state.modifieds, recipe.id);
   },
-  cancel: state => {
+  cancel: (state) => {
     state.recipe = null;
     state.staged = null;
   },
-  reset: state => {
+  reset: (state) => {
     state.recipe = cloneDeep(state.staged);
     Vue.delete(state.modifieds, state.recipe.id);
   },
@@ -152,18 +156,18 @@ const mutations = {
   },
   setPreview: (state, val) => {
     state.preview = val;
-  }
+  },
 };
 
 // called after every mutation.
 // The mutation comes in the format of `{ type, payload }`.
-const syncModifiedsPlugin = store => {
+const syncModifiedsPlugin = (store) => {
   // called when the store is initialized
   store.subscribe((mutation, state) => {
     if (['updateField', 'replaceProperty'].indexOf(mutation.type) !== -1) {
       store.commit('setModified', {
         key: state.recipeModule.recipe.id,
-        val: cloneDeep(state.recipeModule.recipe)
+        val: cloneDeep(state.recipeModule.recipe),
       });
     }
   });
@@ -171,7 +175,7 @@ const syncModifiedsPlugin = store => {
 const vuexLocal = new VuexPersistence({
   storage: window.localStorage,
   key: 'recipe',
-  reducer: state => ({ modifieds: state.recipeModule.modifieds })
+  reducer: (state) => ({ modifieds: state.recipeModule.modifieds }),
 });
 
 // recipeModule
@@ -180,5 +184,5 @@ export default {
   getters,
   actions,
   mutations,
-  plugins: [syncModifiedsPlugin, vuexLocal.plugin]
+  plugins: [syncModifiedsPlugin, vuexLocal.plugin],
 };

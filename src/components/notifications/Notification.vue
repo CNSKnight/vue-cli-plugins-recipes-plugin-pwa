@@ -13,11 +13,11 @@ export default {
       default: () => ({
         severity: String,
         service: String,
-        message: String
+        message: String,
       }),
-      required: true
-    }
-  }
+      required: true,
+    },
+  },
 };
 </script>
 

@@ -47,14 +47,14 @@ const md = MarkdownIt({
   html: true,
   linkify: false,
   html_inline: true,
-  escape: false
+  escape: false,
 });
 
 export default {
   components: {
     'recipes-listing': RecipesListing,
     'recipes-cards': RecipesCards,
-    'recipe-details': RecipeDetails
+    'recipe-details': RecipeDetails,
   },
   data: () => {
     return { showCards: false, isPreAuth: null };
@@ -63,7 +63,7 @@ export default {
   computed: {
     hasRecipes() {
       return this.$store.getters.recipes.length;
-    }
+    },
   },
   created() {
     this.$store.dispatch('loadRecipes');
@@ -76,8 +76,8 @@ export default {
     ...mapActions([]),
     transformMarkdown(markdown) {
       return markdown && md.render(markdown);
-    }
-  }
+    },
+  },
 };
 </script>
 

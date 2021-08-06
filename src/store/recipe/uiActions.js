@@ -6,7 +6,7 @@ import {
   find,
   findIndex,
   findLastIndex,
-  upperFirst
+  upperFirst,
 } from 'lodash/fp';
 
 const contUnitsMgr = parent.acap?.ADMIN_TAPPADS?.contUnitsMgr;
@@ -28,7 +28,7 @@ const addToStack = (
         severity: 'warn',
         error: `Please first name the <strong class="legend">Unnamed ${Prop} (group)</strong>.`,
         actionContext,
-        timeout: 5000
+        timeout: 5000,
       });
     }
     item.group = 'Unnamed';
@@ -54,7 +54,7 @@ const addToStack = (
   commit('addTo', {
     prop,
     item,
-    index
+    index,
   });
 };
 const updateGroup = (
@@ -66,13 +66,13 @@ const updateGroup = (
   if (!items.length) return;
   const Prop = upperFirst(prop);
   dispatch('clearNotif', { actionContext });
-  if (filter(item => item.group == toGroup, items).length) {
+  if (filter((item) => item.group == toGroup, items).length) {
     return dispatch('handleError', {
       service: `recipe:update${Prop}Group`,
       severity: 'error',
       error: `Please ensure <strong class=".legend">${Prop} (group)</strong> names are unique.
       [<span class="materialize-red-text">${toGroup}</span>]`,
-      actionContext
+      actionContext,
     });
   }
   const stack = state.recipe[prop].map((item, idx) => {
@@ -158,7 +158,7 @@ export default {
     updateGroup('ingredients', context, {
       grpMbrIndexes,
       toGroup,
-      actionContext
+      actionContext,
     });
   },
   updateMethodsGroup(
@@ -170,7 +170,7 @@ export default {
   updateIngredientQty({ commit }, { idx, val }) {
     const payload = {
       prop: `ingredients[${idx}].qty`,
-      val: val.replace(qtyRegex, '$1‑$2')
+      val: val.replace(qtyRegex, '$1‑$2'),
     };
     commit('replaceProperty', payload);
   },
@@ -185,7 +185,7 @@ export default {
     contUnitsMgr &&
       contUnitsMgr.enableModalClose &&
       contUnitsMgr.enableModalClose('preview');
-  }
+  },
 
   // @todo's
   // order({ state, commit }, { prop, index }) {},

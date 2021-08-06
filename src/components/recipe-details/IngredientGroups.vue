@@ -76,7 +76,7 @@
                 onEvent('addItem', {
                   prop: 'ingredients',
                   attr: 'group',
-                  actionContext: actionContext + '-grp-def'
+                  actionContext: actionContext + '-grp-def',
                 })
               "
             >
@@ -120,29 +120,17 @@ import { mapGetters } from 'vuex';
 // import { mapFields } from 'vuex-map-fields';
 import { isEqual, isObject, keys } from 'lodash/fp';
 
-const updateGroupNamePrev = function(group, target) {
-  this.$store.dispatch('updateIngredientsGroup', {
-    from: group,
-    to: target.value || 'Unnamed',
-    focus: target
-  });
-  const id = target.id;
-  id &&
-    this.$nextTick(function() {
-      this.$refs[target.id][0].focus();
-    });
-};
-
 export default {
   components: {
     'group-ingredient': GroupIngredient,
-    'notifs-local': NotificationsLocal
+    'notifs-local': NotificationsLocal,
   },
+  emits: ['updated'],
   data() {
     return {
       // the local mirror
       groupNames: [...this.$store.getters.ingredientGroups],
-      actionContext: 'ing-groups'
+      actionContext: 'ing-groups',
     };
   },
   computed: {
@@ -150,17 +138,17 @@ export default {
       'ingCountByGroup',
       'isModified',
       'groupedIngredients',
-      'ingredientGroups'
+      'ingredientGroups',
     ]),
     // ...mapFields(['recipe.ingredients']),
-    lastGroup: ({ ingredientGroups }) => [...ingredientGroups].pop()
+    lastGroup: ({ ingredientGroups }) => [...ingredientGroups].pop(),
   },
   watch: {
     // our locally mutable groupNames should mirror the ingredientGroups reactively
     ingredientGoups(val) {
       !isEqual(val, this.groupNames) && (this.groupNames = [...val]);
     },
-    deep: true
+    deep: true,
   },
   created() {
     this.groupNames = keys(this.groupedIngredients);
@@ -181,9 +169,9 @@ export default {
       return this.$store.dispatch('updateIngredientsGroup', {
         ingIndexes,
         toGroup: val || 'Unnamed',
-        actionContext
+        actionContext,
       });
-    }
-  }
+    },
+  },
 };
 </script>

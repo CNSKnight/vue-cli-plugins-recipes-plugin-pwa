@@ -74,7 +74,7 @@
                 onEvent('addItem', {
                   prop: 'methods',
                   attr: 'group',
-                  actionContext: actionContext + '-grp-def'
+                  actionContext: actionContext + '-grp-def',
                 })
               "
             >
@@ -121,13 +121,14 @@ import { isEqual, isObject, keys } from 'lodash/fp';
 export default {
   components: {
     'group-method-step': GroupMethodStep,
-    'notifs-local': NotificationsLocal
+    'notifs-local': NotificationsLocal,
   },
+  emits: ['updated'],
   data() {
     return {
       // the local mirror
       groupNames: [...this.$store.getters.methodGroups],
-      actionContext: 'met-groups'
+      actionContext: 'met-groups',
     };
   },
   computed: {
@@ -135,16 +136,16 @@ export default {
       'stepCountByGroup',
       'isModified',
       'groupedMethods',
-      'methodGroups'
+      'methodGroups',
     ]),
-    lastGroup: ({ methodGroups }) => [...methodGroups].pop()
+    lastGroup: ({ methodGroups }) => [...methodGroups].pop(),
   },
   watch: {
     // our locally mutable groupNames should mirror the methodGroups reactively
     methodGroups(val) {
       !isEqual(val, this.groupNames) && (this.groupNames = [...val]);
     },
-    deep: true
+    deep: true,
   },
   created() {
     this.groupNames = keys(this.groupedMethods);
@@ -165,9 +166,9 @@ export default {
       return this.$store.dispatch('updateMethodsGroup', {
         stepIndexes,
         toGroup: val || 'Unnamed',
-        actionContext
+        actionContext,
       });
-    }
-  }
+    },
+  },
 };
 </script>

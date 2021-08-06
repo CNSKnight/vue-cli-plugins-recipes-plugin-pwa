@@ -5,7 +5,7 @@
       :key="recipe.acapID"
       class="card"
       :class="{ active: selectedId === recipe.id }"
-      style="overflow: hidden;"
+      style="overflow: hidden"
     >
       <div class="card-image waves-effect waves-block waves-light">
         <img class="activator" src="images/office.jpg" />
@@ -32,7 +32,7 @@
       </div>
       <div
         class="card-reveal"
-        style="display: none; transform: translateY(0px);"
+        style="display: none; transform: translateY(0px)"
       >
         <span class="card-title grey-text text-darken-4"
           ><span @click="selectRecipe(recipe)">{{ recipe.title }}</span>
@@ -60,15 +60,16 @@ export default {
   props: {
     transformMarkdown: {
       type: Function,
-      required: true
-    }
+      required: true,
+    },
   },
+  emits: ['delete'],
   computed: { ...mapGetters(['selectedId', 'recipes', 'hasChanges']) },
   // st about modules needing to be namespaced to use mapState?
   // computed: mapState('recipesModule', ['recipes']),
   methods: {
-    ...mapActions(['selectRecipe'])
-  }
+    ...mapActions(['selectRecipe']),
+  },
 };
 </script>
 

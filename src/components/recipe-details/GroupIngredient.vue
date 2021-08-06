@@ -78,9 +78,7 @@
       class="dragWrapper"
       title="Drag-to-Reorder (coming soon)"
     >
-      <i class=" material-icons ">
-        drag_indicator
-      </i>
+      <i class="material-icons"> drag_indicator </i>
     </div>
   </div>
 </template>
@@ -91,10 +89,11 @@ export default {
   props: {
     // ingredients: { type: Array, required: true },
     modelIdx: { type: Number, required: true },
-    canDrag: Boolean
+    canDrag: Boolean,
   },
+  emits: ['updated', 'onEvent'],
   computed: {
-    ...mapMultiRowFields(['recipe.ingredients'])
+    ...mapMultiRowFields(['recipe.ingredients']),
   },
   updated() {
     this.$emit('updated');
@@ -103,16 +102,16 @@ export default {
     deleteIng() {
       this.$emit('onEvent', 'deleteItem', {
         prop: 'ingredients',
-        index: this.modelIdx
+        index: this.modelIdx,
       });
     },
     updateIngredientQty(idx, val) {
       this.$store.dispatch('updateIngredientQty', {
         idx,
-        val
+        val,
       });
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

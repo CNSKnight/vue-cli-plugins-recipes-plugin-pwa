@@ -10,10 +10,10 @@ const DEBUG = process.env.NODE_ENV !== 'production';
 
 const modules = {
   appModule,
-  recipeModule
+  recipeModule,
 };
 let plugins = DEBUG ? [createLogger()] : [];
-forOwn(module => {
+forOwn((module) => {
   if (module.plugins) {
     plugins = plugins.concat(module.plugins);
     delete module.plugins;
@@ -23,5 +23,5 @@ forOwn(module => {
 export default createStore({
   modules,
   strict: DEBUG,
-  plugins
+  plugins,
 });

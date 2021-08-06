@@ -11,12 +11,12 @@ const md = MarkdownIt({
   html: true,
   linkify: false,
   html_inline: true,
-  escape: false
+  escape: false,
 });
 
 export default {
   components: {
-    'recipe-details': RecipeDetails
+    'recipe-details': RecipeDetails,
   },
   data: () => {
     return { isPreAuth: null };
@@ -26,7 +26,7 @@ export default {
     ...mapState(['notifications']),
     hasRecipe() {
       return this.$store.getters.recipeId;
-    }
+    },
   },
   created() {
     this.$store.dispatch('loadRecipe');
@@ -39,8 +39,8 @@ export default {
     ...mapActions([]),
     transformMarkdown(markdown) {
       return markdown && md.render(markdown);
-    }
-  }
+    },
+  },
 };
 </script>
 

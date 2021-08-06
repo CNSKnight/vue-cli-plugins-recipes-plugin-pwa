@@ -32,9 +32,7 @@
       class="dragWrapper"
       title="Drag-to-Reorder (coming soon)"
     >
-      <i class=" material-icons ">
-        drag_indicator
-      </i>
+      <i class="material-icons"> drag_indicator </i>
     </div>
   </div>
 </template>
@@ -45,10 +43,11 @@ export default {
   props: {
     // methods: { type: Array, required: true },
     modelIdx: { type: Number, required: true },
-    canDrag: Boolean
+    canDrag: Boolean,
   },
+  emits: ['updated', 'onEvent'],
   computed: {
-    ...mapMultiRowFields(['recipe.methods'])
+    ...mapMultiRowFields(['recipe.methods']),
   },
   updated() {
     this.$emit('updated');
@@ -63,10 +62,10 @@ export default {
     deleteStep() {
       this.$emit('onEvent', 'deleteItem', {
         prop: 'methods',
-        index: this.modelIdx
+        index: this.modelIdx,
       });
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

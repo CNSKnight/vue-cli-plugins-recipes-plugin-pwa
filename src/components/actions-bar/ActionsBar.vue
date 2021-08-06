@@ -48,7 +48,8 @@ export default {
     canPreview: Boolean,
     canSave: Boolean,
     isModified: Boolean,
-    valid: Boolean
-  }
+    valid: Boolean,
+  },
+  emits: ['cancel', 'reset', 'preview'],
 };
 </script>

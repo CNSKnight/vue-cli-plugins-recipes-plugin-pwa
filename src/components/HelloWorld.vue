@@ -92,9 +92,9 @@ export default {
   props: {
     msg: {
       default: 'No Messages',
-      type: String
-    }
-  }
+      type: String,
+    },
+  },
 };
 </script>
 

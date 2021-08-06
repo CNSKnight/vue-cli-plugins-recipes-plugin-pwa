@@ -8,7 +8,7 @@ import {
   isEmpty, // must be object|collection|map|set
   isNaN,
   isNil,
-  isUndefined
+  isUndefined,
 } from 'lodash/fp';
 
 const apiBase = process.env.VUE_APP_RECIPES_APIBASE;
@@ -29,20 +29,20 @@ const fetchRecipe = async ({ commit, dispatch, getters, state }, recipe) => {
     return dispatch('handleError', {
       service,
       severity: 'warn',
-      error: "I didn't receive an acapID"
+      error: "I didn't receive an acapID",
     });
   }
   dispatch('clearNotifs');
 
   const resp = await axios({
-    url: apiBase + '/findOne?filter={"where":{"acapID":' + recipe.acapID + '}}'
-  }).catch(err => {
+    url: apiBase + '/findOne?filter={"where":{"acapID":' + recipe.acapID + '}}',
+  }).catch((err) => {
     dispatch('clearNotif', { service });
     if (err.response && err.response.status === 404) {
       dispatch('handleError', {
         service,
         severity: 'success',
-        error: newRecipeHint
+        error: newRecipeHint,
       });
       return commit('stage', Object.assign(cloneDeep(recipeTemplate), recipe));
     } else {
@@ -52,7 +52,7 @@ const fetchRecipe = async ({ commit, dispatch, getters, state }, recipe) => {
       return dispatch('handleError', {
         service,
         severity: 'fatal',
-        error: err.message || 'Recipe details not be fetched.'
+        error: err.message || 'Recipe details not be fetched.',
       });
     }
   });
@@ -67,7 +67,7 @@ const fetchRecipe = async ({ commit, dispatch, getters, state }, recipe) => {
       // dump our local in-progress cache
       dispatch('setModified', {
         key: state.recipeModule.recipe.id,
-        val: undefined
+        val: undefined,
       });
     }
   }
@@ -84,7 +84,7 @@ const fetchRecipe = async ({ commit, dispatch, getters, state }, recipe) => {
         return cloneVal;
       } else if (isArray(cloneVal) && cloneVal[0].group !== undefined) {
         // make up for legacy ingredients|methods which have no group
-        recVal.forEach(val => {
+        recVal.forEach((val) => {
           val.group = val.group || '';
         });
         return recVal;
@@ -106,9 +106,9 @@ const postRecipe = async ({ commit, dispatch }, recipe, actionContext) => {
   const resp = await axios
     .post(preAuthUrl, {
       recipe,
-      actionStatus
+      actionStatus,
     })
-    .catch(err => err.response || err.message);
+    .catch((err) => err.response || err.message);
   if (resp && resp.status === 200) {
     resp.data && resp.data.method && delete resp.data.method;
     resp.data && commit('update', resp.data);
@@ -116,7 +116,7 @@ const postRecipe = async ({ commit, dispatch }, recipe, actionContext) => {
       service,
       severity: 'success',
       error: `Saved recipe with id #${recipe.acapID}.`,
-      actionContext
+      actionContext,
     });
   } else {
     helpers.processPreAuthErrors(
@@ -138,9 +138,9 @@ const putRecipe = async ({ commit, dispatch }, recipe, actionContext) => {
   const resp = await axios
     .put(url, {
       recipe,
-      actionStatus
+      actionStatus,
     })
-    .catch(err => err.response || err.message);
+    .catch((err) => err.response || err.message);
   if (resp && resp.status === 200) {
     resp.data && resp.data.method && delete resp.data.method;
     resp.data && commit('update', resp.data);
@@ -148,7 +148,7 @@ const putRecipe = async ({ commit, dispatch }, recipe, actionContext) => {
       service,
       severity: 'success',
       error: `Saved recipe with id #${recipe.acapID}.`,
-      actionContext
+      actionContext,
     });
   } else {
     return helpers.processPreAuthErrors(
@@ -179,7 +179,7 @@ export default {
       return dispatch('handleError', {
         service,
         severity: 'warn',
-        error: "Weird! I didn't get an acapID?"
+        error: "Weird! I didn't get an acapID?",
       });
     }
 
@@ -195,7 +195,7 @@ export default {
     if (!state.recipe.acapID) {
       return dispatch('handleError', {
         service: 'recipe:save',
-        error: 'Recipe has no ID? ' + JSON.stringify(recipe)
+        error: 'Recipe has no ID? ' + JSON.stringify(recipe),
       });
     }
     const recipe = cloneDeep(state.recipe);
@@ -206,5 +206,5 @@ export default {
       (isUndefined(recipe.id) && postRecipe(context, recipe, actionContext)) ||
         putRecipe(context, recipe, actionContext);
     }
-  }
+  },
 };

@@ -13,8 +13,8 @@ import { mapGetters } from 'vuex';
 import Notification from './Notification.vue';
 export default {
   components: {
-    'notifs-notif': Notification
+    'notifs-notif': Notification,
   },
-  computed: mapGetters(['notifications'])
+  computed: mapGetters(['notifications']),
 };
 </script>

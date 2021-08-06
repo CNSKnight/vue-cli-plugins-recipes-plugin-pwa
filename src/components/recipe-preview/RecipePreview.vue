@@ -52,8 +52,8 @@
             v-html="transformMarkdown(recipe.description)"
           ></div>
         </div>
-        <div v-if="recipe.tools && recipe.tools.length" class="row ">
-          <div class="col s12 ">
+        <div v-if="recipe.tools && recipe.tools.length" class="row">
+          <div class="col s12">
             <ul class="collection with-header">
               <li class="collection-header">
                 <h5>You May Need</h5>
@@ -108,7 +108,7 @@
                   <td>
                     <i
                       v-if="ing.optional"
-                      class="material-icons light-green-text "
+                      class="material-icons light-green-text"
                       >check</i
                     >
                   </td>
@@ -117,7 +117,7 @@
             </table>
           </div>
         </div>
-        <div v-if="recipe.methods.length" class="row ">
+        <div v-if="recipe.methods.length" class="row">
           <div class="col s12">
             <h3>Preparation</h3>
             <div
@@ -135,8 +135,8 @@
             </div>
           </div>
         </div>
-        <div v-if="filteredVariations.length" class="row ">
-          <div class="col s12 ">
+        <div v-if="filteredVariations.length" class="row">
+          <div class="col s12">
             <ul class="collection with-header">
               <li class="collection-header">
                 <h5>Variations</h5>
@@ -150,14 +150,14 @@
             </ul>
           </div>
         </div>
-        <div v-if="recipe.notes" class="row ">
+        <div v-if="recipe.notes" class="row">
           <div class="col s12">
             <h3>Notes:</h3>
             <div class="notes" v-html="transformMarkdown(recipe.notes)" />
           </div>
         </div>
-        <div v-if="filteredTags.length" class="row ">
-          <div class="col s12 ">
+        <div v-if="filteredTags.length" class="row">
+          <div class="col s12">
             <p>
               <span
                 v-for="(tag, idx) in filteredTags"
@@ -184,8 +184,8 @@ export default {
   props: {
     transformMarkdown: {
       type: Function,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
     ...mapGetters([
@@ -198,12 +198,16 @@ export default {
       'groupedMethods',
       'ingCountByGroup',
       'filteredVariations',
-      'filteredTags'
+      'filteredTags',
     ]),
-    ingsByGroup: ({ staged: { ingredients } }) => group =>
-      filter(['group', group == 'default' ? '' : group])(ingredients),
-    metsByGroup: ({ staged: { methods } }) => group =>
-      filter(['group', group == 'default' ? '' : group])(methods)
+    ingsByGroup:
+      ({ staged: { ingredients } }) =>
+      (group) =>
+        filter(['group', group == 'default' ? '' : group])(ingredients),
+    metsByGroup:
+      ({ staged: { methods } }) =>
+      (group) =>
+        filter(['group', group == 'default' ? '' : group])(methods),
   },
   methods: {
     dateFormated: (date, format) => dateFormat(date, format),
@@ -212,7 +216,7 @@ export default {
     },
     isInGroup(item, group) {
       return item.group == group || (isEmpty(item.group) && group == 'default');
-    }
-  }
+    },
+  },
 };
 </script>
